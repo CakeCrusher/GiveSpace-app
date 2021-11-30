@@ -29,5 +29,8 @@
 ## Deadline
 ### [December 15](https://timee.io/20211114T0500?tl=Project%20Wishlist%20MVP%20deadline)
 
+## Future
+This project is only an initial stepping stone for collaborative purchases among broader fintech ambitions.
+
 ## Join
 ### [Discord](https://discord.gg/Edx24FEHmB)
