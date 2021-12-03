@@ -1,0 +1,17 @@
+import { connect, Provider } from 'react-redux'
+import { setOrganization } from '../redux/actions/organization'
+import { setImageUri } from '../redux/actions/imageUri'
+import { setSpecies } from '../redux/actions/species'
+
+const mapStateToProps = (state) => ({
+  organization: state.organization,
+  imageUri: state.imageUri,
+  species: state.species,
+})
+const mapDispatchToProps = (dispatch) => ({
+  setOrganization: (organization) => dispatch(setOrganization(organization)),
+  setImageUri: (imageUri) => dispatch(setImageUri(imageUri)),
+  setSpecies: (species) => dispatch(setSpecies(species)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CameraPage)

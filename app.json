@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Project-Wishlist",
+    "slug": "Project-Wishlist",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "permissions": [
+      "LOCATION",
+      "CONTACTS"
+    ],
+    "plugins": [
+      "expo-contacts"
+    ]
+  },
+  "name": "Project-Wishlist"
+}
