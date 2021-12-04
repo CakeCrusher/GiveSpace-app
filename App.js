@@ -1,12 +1,11 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeBaseProvider, extendTheme } from 'native-base';
-import {store} from './redux/store';
-import { Provider } from 'react-redux'
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 
-import Friends from './screens/Friends';
-import Home from './screens/Home';
+import { Home, Friends } from './screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,23 +18,21 @@ const newColorTheme = {
 };
 const theme = extendTheme({ colors: newColorTheme });
 
-
-
 export default function App() {
   return (
-    <Provider store={store} >
+    <Provider store={store}>
       <NativeBaseProvider theme={theme}>
-        <NavigationContainer >
+        <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
               name="Home"
               component={Home}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Friends"
               component={Friends}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </NavigationContainer>
@@ -43,5 +40,3 @@ export default function App() {
     </Provider>
   );
 }
-
-
