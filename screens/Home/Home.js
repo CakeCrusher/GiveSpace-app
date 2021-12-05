@@ -1,22 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Text, Button } from 'native-base';
 import { connect } from 'react-redux';
 import * as Contacts from 'expo-contacts';
+import { Text, Button, VStack } from 'native-base';
 
 import { setFriends } from '../../redux/actions/friends';
-
-import { Layout } from '../../components';
 
 // vvvvv useful function for connecting to backend vvvvv
 import { fetchGraphQL } from '../../utils/helperFunctions';
 // vvvvv Contains the query you send to the backend vvvvv
 import { SIGN_IN_USER } from '../../utils/schemas';
 
-import { SECRET } from 'react-native-dotenv';
+const sample_lists = {
+  recent: {
+    name: 'Christmas Wishlist',
+    items: [
+      { name: 'Lorem ipsum' },
+      { name: 'Lorem ipsum' },
+      { name: 'Lorem ipsum' },
+      { name: 'Lorem ipsum' },
+      { name: 'Lorem ipsum' },
+      { name: 'Lorem ipsum' },
+    ],
+  },
+  friend_activity: [
+    {
+      name: 'Christmas Wishlist',
+      items: [
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+      ],
+    },
+    {
+      name: 'Christmas Wishlist',
+      items: [
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+      ],
+    },
+    {
+      name: 'Christmas Wishlist',
+      items: [
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+      ],
+    },
+  ],
+};
 
-const Home = (props) => {
-  const [user, setUser] = useState(null);
+const Home = ({ user, setFriends }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -39,7 +82,7 @@ const Home = (props) => {
         console.log('Contact data: ', data.slice(0, 2));
 
         // saving contacts to redux
-        props.setFriends(data);
+        setFriends(data);
       } else {
         console.log('Permission not granted');
       }
@@ -62,37 +105,28 @@ const Home = (props) => {
   };
 
   return (
-    <Layout>
-      <View style={styles.container}>
-        <Text fontSize="5xl">Home</Text>
-        <Text fontSize="3xl">Test .env: {SECRET}</Text>
-        <Text fontSize="3xl">User</Text>
-        <Button onPress={handleSignIn}>Auto sign in</Button>
-        {user ? (
-          <>
-            <Text fontSize="xl">Username: {user.username}</Text>
-            <Text fontSize="xl">Password: {user.password}</Text>
-          </>
-        ) : loading ? (
-          <Text fontSize="xl">Loading...</Text>
-        ) : null}
-        <Button onPress={() => props.navigation.navigate('Friends')}>
-          Go to friends screen
-        </Button>
-      </View>
-    </Layout>
+    <VStack>
+      <Text fontSize="3xl">Hello, {user.username}</Text>
+      <Text fontSize="3xl">User</Text>
+      <Button onPress={handleSignIn}>Auto sign in</Button>
+      {user ? (
+        <>
+          <Text fontSize="xl">Username: {user.username}</Text>
+          <Text fontSize="xl">Password: {user.password}</Text>
+        </>
+      ) : loading ? (
+        <Text fontSize="xl">Loading...</Text>
+      ) : null}
+      <Button onPress={() => props.navigation.navigate('Friends')}>
+        Go to friends screen
+      </Button>
+    </VStack>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center', //Centered horizontally
-    alignItems: 'center', //Centered vertically
-    flex: 1,
-  },
+const mapStateToProps = (state) => ({
+  user: state.user.user,
 });
-
-const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
   setFriends: (friends) => dispatch(setFriends(friends)),
 });

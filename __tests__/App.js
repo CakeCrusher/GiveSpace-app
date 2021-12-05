@@ -6,7 +6,7 @@ import App from '../App';
 import renderer from 'react-test-renderer';
 
 describe('<App />', () => {
-  it('renders correctly', () => {
+  it('loads the component without errors', () => {
     const tree = renderer.create(<App />).toJSON();
     expect(tree).not.toBeNull();
   });
