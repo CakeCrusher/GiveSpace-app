@@ -17,10 +17,13 @@ export const fetchGraphQL = async (
     },
     body: graphql,
   };
-  const database_url = "https://glowing-lobster-76.hasura.app/v1/graphql";
+  const database_url = "https://givespace.hasura.app/v1/graphql";
   const res = await fetch(database_url, requestOptions).then((res) =>
     res.json()
   );
   
   return res;
 };
+
+// library for formating phone number https://www.npmjs.com/package/libphonenumber-js
+// library for inputing phone number https://www.npmjs.com/package/react-native-phone-number-input
