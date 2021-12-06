@@ -5,7 +5,7 @@ import { NativeBaseProvider, extendTheme } from 'native-base';
 import { store } from './redux/store';
 import { Provider, useSelector } from 'react-redux';
 
-import { Home, Login, Friends } from './screens';
+import { Home, Login, Friends, AllLists } from './screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +34,11 @@ const View = () => {
           <Stack.Screen
             name="Friends"
             component={Friends}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Lists"
+            component={AllLists}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

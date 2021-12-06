@@ -4,6 +4,7 @@ const promise = () =>
     setTimeout(() => {
       console.log('postUser');
       resolve({
+        id: 1,
         username: 'krabs',
         password: 'secret',
       });

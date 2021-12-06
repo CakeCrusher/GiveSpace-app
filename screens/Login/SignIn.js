@@ -19,7 +19,7 @@ const SignIn = ({ fetchUser, toSignUp }) => {
 
   const handleSubmit = () => {
     console.log('handleSubmit');
-    fetchUser(inputs.username, inputs.password);
+    fetchUser(inputs);
   };
 
   const handleChange = (evt, name) => {
@@ -43,7 +43,7 @@ const SignIn = ({ fetchUser, toSignUp }) => {
         <Center>
           <HStack>
             <Text>or </Text>
-            <Link onClick={toSignUp}>create an account</Link>
+            <Link onPress={toSignUp}>create an account</Link>
           </HStack>
         </Center>
       </VStack>

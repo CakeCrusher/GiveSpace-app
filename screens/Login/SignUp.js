@@ -24,7 +24,8 @@ const Signup = ({ postUser, toSignIn }) => {
     console.log('handleSubmit');
     const { username, password, confirm, phone } = inputs;
     if (password === confirm) {
-      postUser(username, password, phone);
+      const user = { username, password, phone };
+      postUser(user);
     } else {
       console.warn("Your passwords don't match!");
     }
@@ -52,7 +53,7 @@ const Signup = ({ postUser, toSignIn }) => {
         <Center>
           <HStack>
             <Text>or </Text>
-            <Link onClick={toSignIn}>sign in</Link>
+            <Link onPress={toSignIn}>sign in</Link>
           </HStack>
         </Center>
       </VStack>
