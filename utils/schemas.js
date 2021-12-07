@@ -33,8 +33,9 @@ query MyQuery($username: String = "", $password: String = "") {
           name
         }
       }
+      date_modified
     }
-    friend_rels {
+    friend_rels(where: {type: {_eq: "friends"}}) {
       user {
         username
         phone_number
@@ -45,7 +46,9 @@ query MyQuery($username: String = "", $password: String = "") {
               name
             }
           }
+          date_modified
         }
+        profile_pic_url
       }
       userByUserSecond {
         username
@@ -57,7 +60,9 @@ query MyQuery($username: String = "", $password: String = "") {
               name
             }
           }
+          date_modified
         }
+        profile_pic_url
       }
     }
   }
