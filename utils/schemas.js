@@ -24,21 +24,48 @@ mutation MyMutation($password: String = "", $phone_number: String = "", $usernam
 export const SIGN_IN_USER = `
 query MyQuery($username: String = "", $password: String = "") {
   user(where: {username: {_eq: $username}, password: {_eq: $password}}) {
-    password
-    id
-    date_last_accessed
-    date_created
-    birthday
-    address
     phone_number
-    profile_pic_url
     username
+    lists {
+      title
+      list_items {
+        itemByItem {
+          name
+        }
+      }
+    }
+    friend_rels {
+      user {
+        username
+        phone_number
+        lists {
+          title
+          list_items {
+            itemByItem {
+              name
+            }
+          }
+        }
+      }
+      userByUserSecond {
+        username
+        phone_number
+        lists {
+          title
+          list_items {
+            itemByItem {
+              name
+            }
+          }
+        }
+      }
+    }
   }
 }
 `
 // {
-//   "password": "secret",
 //   "username": "Krabs",
+//   "password": "secret"
 // }
 
 export const INSPECT_TEXT = `
