@@ -31,8 +31,6 @@ const initState = {
   // },
 };
 
-const initState = null;
-
 const user = (state = initState, action) => {
   switch (action.type) {
     case 'SET_USER': {
