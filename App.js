@@ -7,7 +7,7 @@ import { NativeBaseProvider, extendTheme } from 'native-base';
 import { store } from './redux/store';
 import { Provider, useSelector } from 'react-redux';
 
-import { Home, Login, Friends, AllLists, Account } from './screens';
+import { Home, Login, Friends, MyLists, Account } from './screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +21,7 @@ const newColorTheme = {
 const theme = extendTheme({ colors: newColorTheme });
 
 const View = () => {
-  const selectedData = useSelector((store) => store.user);
+  const { user } = useSelector((store) => store);
 
   useEffect(() => {
     // Async works, just need to figure out how exactly we want to handle that
@@ -36,7 +36,7 @@ const View = () => {
     fetchToken();
   });
 
-  if (selectedData.user) {
+  if (user) {
     return (
       <NavigationContainer>
         <Tab.Navigator>
@@ -51,9 +51,10 @@ const View = () => {
             options={{ headerShown: false }}
           />
           <Tab.Screen
-            name="AllLists"
-            component={AllLists}
+            name="My Lists"
+            component={MyLists}
             options={{ headerShown: false }}
+            initialParams={{ userId: user.id }}
           />
           <Tab.Screen
             name="Account"

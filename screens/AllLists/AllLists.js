@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { ListPreview } from '../../components';
 
 const sampleLists = {
-  userId: 1,
+  userId: 0,
   username: 'krabs',
   lists: [
     {
-      name: 'Christmas Wishlist',
+      title: 'Christmas Wishlist',
       items: [
         { name: 'Lorem ipsum' },
         { name: 'Lorem ipsum' },
@@ -26,7 +26,7 @@ const sampleLists = {
       ],
     },
     {
-      name: 'Graduation Gifts',
+      title: 'Graduation Gifts',
       items: [
         { name: 'Lorem ipsum' },
         { name: 'Lorem ipsum' },
@@ -34,18 +34,7 @@ const sampleLists = {
       ],
     },
     {
-      name: 'Party Wishlist',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      name: 'Christmas Wishlist',
+      title: 'Party Wishlist',
       items: [
         { name: 'Lorem ipsum' },
         { name: 'Lorem ipsum' },
@@ -56,7 +45,7 @@ const sampleLists = {
       ],
     },
     {
-      name: 'Graduation Gifts',
+      title: 'Christmas Wishlist',
       items: [
         { name: 'Lorem ipsum' },
         { name: 'Lorem ipsum' },
@@ -67,7 +56,7 @@ const sampleLists = {
       ],
     },
     {
-      name: 'Party Wishlist',
+      title: 'Graduation Gifts',
       items: [
         { name: 'Lorem ipsum' },
         { name: 'Lorem ipsum' },
@@ -78,7 +67,7 @@ const sampleLists = {
       ],
     },
     {
-      name: 'Christmas Wishlist',
+      title: 'Party Wishlist',
       items: [
         { name: 'Lorem ipsum' },
         { name: 'Lorem ipsum' },
@@ -89,7 +78,18 @@ const sampleLists = {
       ],
     },
     {
-      name: 'Graduation Gifts',
+      title: 'Christmas Wishlist',
+      items: [
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+        { name: 'Lorem ipsum' },
+      ],
+    },
+    {
+      title: 'Graduation Gifts',
       items: [
         { name: 'Lorem ipsum' },
         { name: 'Lorem ipsum' },
@@ -113,28 +113,50 @@ const sampleLists = {
   ],
 };
 
-const AllLists = ({ user }) => {
+const AllLists = ({ route, navigation, user }) => {
+  const { userId, tabName } = route.params;
+  const [lists, setLists] = useState(null);
+
+  useEffect(() => {
+    if (userId === user.id) {
+      // TODO:
+      setLists(sampleLists.lists);
+    } else {
+      // TODO:
+      setLists([]);
+    }
+  }, []);
+
+  const handleLoadList = (listData) => {
+    navigation.navigate(tabName, {
+      screen: 'List',
+      params: { listData },
+    });
+  };
+
   return (
     <VStack space="4" p="4" flex="1" bg="#dfdfdf" safeArea>
       <HStack flex="1" alignItems="center">
         <Avatar bg="#FAA" source={{ uri: '' }}>
-          EX
+          EX: {userId}
         </Avatar>
         <Heading ml="4">
-          {sampleLists.userId === user.id ? 'Your ' : `${user.username}'s `}List
+          {userId === user.id ? 'Your ' : `${user.username}'s `}
+          Lists
         </Heading>
       </HStack>
       <VStack flex="15" space="4" overflow="scroll">
-        {sampleLists.lists.map((list, index) => (
-          <ListPreview listData={list} />
-        ))}
+        {lists &&
+          lists.map((list, index) => (
+            <ListPreview listData={list} onPress={() => handleLoadList(list)} />
+          ))}
       </VStack>
     </VStack>
   );
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user.user,
+  user: state.user,
 });
 
 export default connect(mapStateToProps, {})(AllLists);

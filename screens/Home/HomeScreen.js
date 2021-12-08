@@ -6,6 +6,7 @@ import { Text, Button, HStack, VStack } from 'native-base';
 import { ListPreview } from '../../components';
 
 import { setUser } from '../../redux/actions/user';
+// TODO: Get this off MockApi
 import MockApi from '../../utils/MockApi';
 
 const HomeScreen = ({ user, logout, navigation }) => {
@@ -15,6 +16,7 @@ const HomeScreen = ({ user, logout, navigation }) => {
 
   useEffect(() => {
     const getLists = async () => {
+      // TODO: Get this off MockApi
       try {
         const recent = await MockApi.getList({ listId: 0 });
         const friends = await MockApi.getUserLists({ userId: 1 });
@@ -26,6 +28,15 @@ const HomeScreen = ({ user, logout, navigation }) => {
     };
     getLists();
   }, []);
+
+  const handleLoadList = (listData) => {
+    navigation.navigate('Home', {
+      screen: 'List',
+      params: {
+        listData,
+      },
+    });
+  };
 
   return (
     <VStack
@@ -45,20 +56,20 @@ const HomeScreen = ({ user, logout, navigation }) => {
         <Text fontSize="2xl">Recent</Text>
         {recentList && (
           <>
-            <ListPreview listData={recentList} />
+            <ListPreview mb="2" listData={recentList} />
             <Button
               variant="outline"
               bg="#fff"
               color="#000"
-              onPress={() => navigation.navigate('AllLists')}
+              onPress={() => navigation.navigate('My Lists')}
             >
               All Lists
             </Button>
           </>
         )}
-        {/*TODO: Need to decide how to "pass selected list" through navigation */}
       </VStack>
 
+      {/*TODO: Need to decide how to "pass selected list" through navigation */}
       <VStack flex="7" space="2" overflow="scroll">
         <Text fontSize="2xl">Friends</Text>
         <HStack space="2" flexWrap="wrap">
@@ -69,6 +80,7 @@ const HomeScreen = ({ user, logout, navigation }) => {
                   <ListPreview
                     key={index}
                     listData={list}
+                    onPress={() => handleLoadList(list)}
                     w="45%"
                     mt="2"
                     ml="auto"
@@ -76,7 +88,13 @@ const HomeScreen = ({ user, logout, navigation }) => {
                 );
               } else {
                 return (
-                  <ListPreview key={index} listData={list} w="45%" mt="2" />
+                  <ListPreview
+                    key={index}
+                    listData={list}
+                    onPress={() => handleLoadList(list)}
+                    w="45%"
+                    mt="2"
+                  />
                 );
               }
             })}
@@ -91,7 +109,7 @@ const HomeScreen = ({ user, logout, navigation }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user.user,
+  user: state.user,
 });
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(setUser(null)),

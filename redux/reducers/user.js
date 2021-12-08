@@ -1,11 +1,10 @@
 const initState = {
-  //user: null,
-  user: {
-    id: 0,
-    username: 'krabs',
-    password: 'password',
-  },
+  id: 0,
+  username: 'Krabs',
+  friends: [],
 };
+
+//const initState = null;
 
 const user = (state = initState, action) => {
   switch (action.type) {

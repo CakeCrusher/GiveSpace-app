@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import HomeScreen from './HomeScreen';
-import { List } from '../';
+import { AllLists, List } from '../';
 
 const Stack = createNativeStackNavigator();
 
-const HomeNavigator = ({ navigation }) => {
+const MyListsNavigator = ({ navigation, user }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
+        name="MyListsScreen"
+        component={AllLists}
+        initialParams={{ tabName: 'My Lists', userId: user.id }}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -23,4 +24,8 @@ const HomeNavigator = ({ navigation }) => {
   );
 };
 
-export default HomeNavigator;
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps, null)(MyListsNavigator);
