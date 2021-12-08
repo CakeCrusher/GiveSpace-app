@@ -14,125 +14,17 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { ListPreview } from '../../components';
 
-const sampleLists = {
-  userId: 0,
-  username: 'krabs',
-  lists: [
-    {
-      title: 'Christmas Wishlist',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      title: 'Graduation Gifts',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      title: 'Party Wishlist',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      title: 'Christmas Wishlist',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      title: 'Graduation Gifts',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      title: 'Party Wishlist',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      title: 'Christmas Wishlist',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      title: 'Graduation Gifts',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-    {
-      name: 'Party Wishlist',
-      items: [
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-        { name: 'Lorem ipsum' },
-      ],
-    },
-  ],
-};
-
-const AllLists = ({ route, navigation, user }) => {
+const AllLists = ({ route, navigation, userState }) => {
+  const { user } = userState;
   const { userId, tabName } = route.params;
   const [lists, setLists] = useState(null);
 
   useEffect(() => {
+    console.log(userId, user.id);
     if (userId === user.id) {
-      // TODO:
-      setLists(sampleLists.lists);
+      setLists(user.lists);
     } else {
-      // TODO:
+      // TODO: Make a Fetch
       setLists([]);
     }
   }, []);
@@ -179,7 +71,7 @@ const AllLists = ({ route, navigation, user }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  userState: state.user,
 });
 
 export default connect(mapStateToProps, {})(AllLists);

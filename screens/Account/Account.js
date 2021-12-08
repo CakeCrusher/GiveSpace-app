@@ -37,9 +37,10 @@ const Account = ({ navigation, userState }) => {
         </HStack>
       </HStack>
 
-      <VStack>
+      <VStack maxH="30%">
         <Text fontSize="3xl">Lists</Text>
         {/* TODO: Add ListPreviews*/}
+        {user.lists.map((e) => {})}
       </VStack>
 
       <VStack>
