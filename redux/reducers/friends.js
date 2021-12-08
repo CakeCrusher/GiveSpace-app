@@ -13,10 +13,6 @@ const friends = (state = initState, action) => {
       };
 
     default:
-      console.warn(
-        'fallthrough case in state/reducers/friends with action.type:' +
-          action.type,
-      );
       return state;
   }
 };

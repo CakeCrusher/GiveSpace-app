@@ -4,11 +4,12 @@ import { VStack, Text, Button } from 'native-base';
 import { connect } from 'react-redux';
 import * as Contacts from 'expo-contacts';
 
-import { fetchUser, postUser } from '../../redux/actions/user';
+import { signup, signin } from '../../redux/actions/user';
 
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 
+//TODO: need to rename post/fetchUser
 const Login = ({ postUser, fetchUser }) => {
   const [isSignUp, setIsSignUp] = useState(true);
 
@@ -28,8 +29,8 @@ const Login = ({ postUser, fetchUser }) => {
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
-  fetchUser: (user) => dispatch(fetchUser(user)),
-  postUser: (user) => dispatch(postUser(user)),
+  postUser: (user) => dispatch(signup(user)),
+  fetchUser: (user) => dispatch(signin(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
