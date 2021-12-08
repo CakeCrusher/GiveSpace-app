@@ -3,17 +3,8 @@ import MockApi from '../../utils/MockApi';
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { REGISTER_USER, SIGN_IN_USER, SIGN_IN_USER_BY_ID } from '../../utils/schemas';
 
-// TODO: Replace this promise with an actual fetchGraphQL call
-const promise = () =>
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        id: 1,
-        username: 'krabs',
-        password: 'secret',
-      });
-    }, 300);
-  });
+import { fetchGraphQL } from '../../utils/helperFunctions';
+import { SIGN_IN_USER } from '../../utils/schemas';
 
 export const signinById =
   ({ userId }) =>

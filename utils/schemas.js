@@ -105,7 +105,7 @@ query MyQuery($username: String = "", $password: String = "") {
     ${USER_DATA}
   }
 }
-`
+`;
 // {
 //   "username": "Krabs",
 //   "password": "secret"
@@ -117,7 +117,7 @@ mutation MyMutation($text: String = "") {
     inspected_text
   }
 }
-`
+`;
 // {
 //   "text": "Bob wants a bat to use his car with a bat for weels"
 // }
@@ -143,7 +143,7 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "", $type
     }
   }
 }
-`
+`;
 // {
 //   "user_first_id": "8549a167-e221-49c6-a87e-272a042d54ee",
 //   "user_second_id": "9f42db74-b38e-47f7-afa6-638773ae0c23",
