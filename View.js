@@ -5,28 +5,28 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 
 import { signinById } from './redux/actions/user';
-import { Home, Login, Friends, AllLists, Account } from './screens';
+import { Home, Login, Friends, MyLists, Account } from './screens';
 
 const Tab = createBottomTabNavigator();
 
-const View = ({signinById, userState}) => {
-
+const View = ({ signinById, userState }) => {
   useEffect(() => {
     const retrieveUserId = async () => {
       if (!userState.user) {
         const userId = await AsyncStorage.getItem('user_id');
         if (userId) {
           console.log('Logged in with: ', userId);
-          signinById({userId});
+          signinById({ userId });
         } else {
           console.log('Not logged in');
         }
       }
-    }
-    retrieveUserId()
+    };
+    retrieveUserId();
   }, []);
 
   if (userState.user) {
+    console.log(userState);
     return (
       <NavigationContainer>
         <Tab.Navigator>
@@ -41,8 +41,8 @@ const View = ({signinById, userState}) => {
             options={{ headerShown: false }}
           />
           <Tab.Screen
-            name="AllLists"
-            component={AllLists}
+            name="My Lists"
+            component={MyLists}
             options={{ headerShown: false }}
           />
           <Tab.Screen

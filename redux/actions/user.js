@@ -7,13 +7,28 @@ import {
   SIGN_IN_USER_BY_ID,
 } from '../../utils/schemas';
 
+const cleanUserData = (userData) => {
+  const userObject = {
+    ...userData,
+  };
+  delete userObject.friend_rels;
+  delete userObject.friendRelsByUserSecondId;
+
+  const friends1 = userData.friend_rels.map((e) => e.userByUserSecondId);
+  const friends2 = userData.friendRelsByUserSecondId.map((e) => e.user);
+
+  userObject.friends = [...friends1, ...friends2];
+  return userObject;
+};
+
 export const signinById =
   ({ userId }) =>
   async (dispatch) => {
     try {
       const user = await fetchGraphQL(SIGN_IN_USER_BY_ID, { user_id: userId });
       if (user.data.user.length) {
-        dispatch(setUser(user.data.user[0]));
+        const userObject = cleanUserData(user.data.user[0]);
+        dispatch(setUser(userObject));
         return { status: 'success' };
       } else {
         return { status: 'error', error: 'Invalid username or password' };
@@ -31,8 +46,9 @@ export const signin =
       const user = await fetchGraphQL(SIGN_IN_USER, { username, password });
       //await AsyncStorage.setItem('AuthToken', JSON.stringify({ id: user.id }));
       if (user.data.user.length) {
+        const userObject = cleanUserData(user.data.user[0]);
         await AsyncStorage.setItem('user_id', user.data.user[0].id);
-        dispatch(setUser(user.data.user[0]));
+        dispatch(setUser(userObject));
         return { status: 'success' };
       } else {
         return { status: 'error', error: 'Invalid username or password' };

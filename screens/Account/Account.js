@@ -4,7 +4,9 @@ import { Text, Heading, VStack, Box, HStack, Avatar } from 'native-base';
 
 import { ListPreview } from '../../components';
 
-const Account = ({ navigation, user }) => {
+const Account = ({ navigation, userState }) => {
+  const { user } = userState;
+
   return (
     <VStack safeArea p="4" overflowY="scroll">
       <HStack alignItems="center" space="4">
@@ -61,7 +63,7 @@ const Account = ({ navigation, user }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  userState: state.user,
 });
 
 export default connect(mapStateToProps, null)(Account);

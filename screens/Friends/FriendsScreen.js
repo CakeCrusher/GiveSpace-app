@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 
 import FriendRow from './FriendRow';
 
-const FriendsScreen = ({ navigation, user }) => {
-  console.log(user);
+const FriendsScreen = ({ navigation, userState }) => {
   return (
     <VStack safeArea>
       {/* TODO: change f_test*/}
-      {user.friends.map((friend) => (
+      {userState.user.friends.map((friend) => (
         <FriendRow
           key={friend.id}
           username={friend.username}
@@ -29,7 +28,7 @@ const FriendsScreen = ({ navigation, user }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  userState: state.user,
 });
 const mapDispatchToProps = (dispatch) => ({});
 
