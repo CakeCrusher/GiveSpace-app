@@ -1,17 +1,23 @@
 import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import HomeScreen from './HomeScreen';
-import { List } from '../';
+import FriendsScreen from './FriendsScreen';
+import { AllLists, List } from '../';
 
 const Stack = createNativeStackNavigator();
 
-const HomeNavigator = ({ navigation }) => {
+const FriendsNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
+        name="FriendsScreen"
+        component={FriendsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FriendsLists"
+        component={AllLists}
+        initialParams={{ tabName: 'Friends' }}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -23,4 +29,4 @@ const HomeNavigator = ({ navigation }) => {
   );
 };
 
-export default HomeNavigator;
+export default FriendsNavigator;

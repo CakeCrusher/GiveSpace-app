@@ -61,9 +61,10 @@ export const signup =
         phone_number,
         contacts_phone_numbers
       });
+      console.log('user!', user);
       //await AsyncStorage.setItem('AuthToken', JSON.stringify({ id: user.id }));
       if (user.data) {
-        await AsyncStorage.setItem('user_id', user.data.user[0].id)
+        await AsyncStorage.setItem('user_id', user.data.register.userIdToUser.id)
         dispatch(setUser(user.data.register.userIdToUser));
         return {status: 'success'};
       } else {

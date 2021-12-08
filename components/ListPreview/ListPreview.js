@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, VStack } from 'native-base';
+import { Text, VStack, Pressable } from 'native-base';
 
 const ListPreview = (props) => {
   const { title, items } = props.listData;
@@ -10,14 +10,16 @@ const ListPreview = (props) => {
 
   return (
     <VStack bg="#fff" p="2" {...styles}>
-      <Text isTruncated fontSize="xl">
-        {title}
-      </Text>
-      {spliced.map((e, i) => (
-        <Text key={i} isTruncated>
-          {e.name}
+      <Pressable onPress={props.onPress}>
+        <Text isTruncated fontSize="xl">
+          {title}
         </Text>
-      ))}
+        {spliced.map((e, i) => (
+          <Text key={i} isTruncated>
+            {e.name}
+          </Text>
+        ))}
+      </Pressable>
     </VStack>
   );
 };

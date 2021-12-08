@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Heading, Button, Avatar, HStack, VStack } from 'native-base';
-import { connect } from 'react-redux';
+import {
+  Text,
+  Heading,
+  Button,
+  Avatar,
+  Pressable,
+  HStack,
+  VStack,
+} from 'native-base';
 
-import { ListCard } from '../../components';
+import { ItemCard } from '../../components';
 
-const List = () => {
+const List = ({ route, navigation }) => {
+  const { listData } = route.params;
+  //TODO: Still need to figure this out, but navigation is pretty good
+  //TODO: Are we lazy fetching items?
+  console.log(route);
+
   return (
     <VStack safeArea>
-      <Text>List</Text>
+      <Pressable onPress={() => navigation.goBack()}>
+        <Text>{'<<'}</Text>
+      </Pressable>
+      <Text>{listData.title}</Text>
     </VStack>
   );
 };

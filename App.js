@@ -16,7 +16,6 @@ const newColorTheme = {
 const theme = extendTheme({ colors: newColorTheme });
 
 
-
 export default function App() {
   return (
     <Provider store={store}>
