@@ -36,7 +36,7 @@ const user = (state = initState, action) => {
     case 'SET_USER': {
       return {
         ...state,
-        ...action.payload,
+        user: action.payload,
       };
     }
 
