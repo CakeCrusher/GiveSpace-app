@@ -6,7 +6,8 @@ import { AllLists, List } from '../';
 
 const Stack = createNativeStackNavigator();
 
-const MyListsNavigator = ({ navigation, user }) => {
+const MyListsNavigator = ({ navigation, userState }) => {
+  const { user } = userState;
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -25,7 +26,7 @@ const MyListsNavigator = ({ navigation, user }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  userState: state.user,
 });
 
 export default connect(mapStateToProps, null)(MyListsNavigator);

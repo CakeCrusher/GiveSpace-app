@@ -164,9 +164,11 @@ export default {
     return new Promise((resolve, reject) => {
       const list = {
         ...lists[listId],
-        items: list_items
+        list_items: list_items
           .filter((item) => item.list === listId)
-          .map((e) => items[e.item]),
+          .map((e) => ({
+            item: items[e.item],
+          })),
       };
       console.log(list);
 
@@ -181,9 +183,11 @@ export default {
       const listItems = userLists.map((list) => {
         return {
           ...list,
-          items: list_items
+          list_items: list_items
             .filter((item) => item.list === list.id)
-            .map((e) => items[e.item]),
+            .map((e) => ({
+              item: items[e.item],
+            })),
         };
       });
 
