@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { VStack, Text, Button } from 'native-base';
 import { connect } from 'react-redux';
-import * as Contacts from 'expo-contacts';
 
-import { signup, signin } from '../../redux/actions/user';
 
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 
 //TODO: need to rename post/fetchUser
-const Login = ({ postUser, fetchUser }) => {
+const Login = ({ postUser }) => {
   const [isSignUp, setIsSignUp] = useState(true);
 
   const toSignIn = () => setIsSignUp(false);
@@ -19,9 +17,9 @@ const Login = ({ postUser, fetchUser }) => {
   return (
     <VStack flex="1" alignItems="center" justifyContent="center">
       {isSignUp ? (
-        <SignUp postUser={postUser} toSignIn={toSignIn} />
+        <SignUp toSignIn={toSignIn} />
       ) : (
-        <SignIn fetchUser={fetchUser} toSignUp={toSignUp} />
+        <SignIn toSignUp={toSignUp} />
       )}
     </VStack>
   );
@@ -29,8 +27,6 @@ const Login = ({ postUser, fetchUser }) => {
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
-  postUser: (user) => dispatch(signup(user)),
-  fetchUser: (user) => dispatch(signin(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

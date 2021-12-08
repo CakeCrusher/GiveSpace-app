@@ -10,25 +10,24 @@ import {
   HStack,
   VStack,
 } from 'native-base';
+import { connect } from 'react-redux';
+import { signin } from '../../redux/actions/user';
+import { useField } from '../../utils/helperFunctions';
 
-const SignIn = ({ fetchUser, toSignUp }) => {
-  const [inputs, setInputs] = useState({
-    username: '',
-    password: '',
-  });
+const SignIn = ({ toSignUp, fetchUser }) => {
+  const username = useField('text', 'Krabs');
+  const password = useField('password', 'secret');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = () => {
-    console.log('handleSubmit');
-    fetchUser(inputs);
-  };
-
-  const handleChange = (evt, name) => {
-    const { value } = evt.currentTarget;
-
-    setInputs((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleSubmit = async () => {
+    setError(null);
+    setIsLoading(true);
+    const reuxRes = await fetchUser({ username: username.value, password: password.value });
+    setIsLoading(false);
+    if (reuxRes.status === 'error') {
+      setError(reuxRes.error);
+    }
   };
 
   return (
@@ -40,27 +39,32 @@ const SignIn = ({ fetchUser, toSignUp }) => {
         <Text fontSize="xl" textAlign="center">
           Sign In
         </Text>
-        <Center>
+        <Center mb={4}>
           <HStack>
             <Text>or </Text>
             <Link onPress={toSignUp}>create an account</Link>
           </HStack>
         </Center>
+        {error && (
+          <Center>
+            <HStack>
+              <Text>{error}</Text>
+            </HStack>
+          </Center>
+        )}
+
       </VStack>
 
       <VStack space={4}>
         <Input
+          {...username}
           placeholder="username"
-          value={inputs.username}
-          onChange={(evt) => handleChange(evt, 'username')}
         />
         <Input
-          type="password"
+          {...password}
           placeholder="password"
-          value={inputs.password}
-          onChange={(evt) => handleChange(evt, 'password')}
         />
-        <Button onPress={handleSubmit}>Sign In</Button>
+        <Button isLoading={isLoading} onPress={handleSubmit}>Sign In</Button>
         <VStack alignItems="center">
           <Link>Forgot Your Password?</Link>
         </VStack>
@@ -69,4 +73,9 @@ const SignIn = ({ fetchUser, toSignUp }) => {
   );
 };
 
-export default SignIn;
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchUser: (user) => dispatch(signin(user)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
