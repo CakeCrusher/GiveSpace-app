@@ -1,9 +1,9 @@
 const initState = {
   //user: null,
   user: {
-    id: 1,
+    id: 0,
     username: 'krabs',
-    password: 'secret',
+    password: 'password',
   },
 };
 

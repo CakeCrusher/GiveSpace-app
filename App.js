@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 import { NativeBaseProvider, extendTheme } from 'native-base';
 import { store } from './redux/store';
 import { Provider, useSelector } from 'react-redux';
 
-import { Home, Login, Friends, AllLists } from './screens';
+import { Home, Login, Friends, AllLists, Account } from './screens';
 
-const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const newColorTheme = {
   brand: {
@@ -20,28 +22,45 @@ const theme = extendTheme({ colors: newColorTheme });
 
 const View = () => {
   const selectedData = useSelector((store) => store.user);
-  console.log(selectedData);
-  useEffect(() => {}, [selectedData]);
+
+  useEffect(() => {
+    // Async works, just need to figure out how exactly we want to handle that
+    const fetchToken = async () => {
+      try {
+        //const token = await AsyncStorage.getItem('AuthToken');
+        console.log(token);
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+    fetchToken();
+  });
+
   if (selectedData.user) {
     return (
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
+        <Tab.Navigator>
+          <Tab.Screen
             name="Home"
             component={Home}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
+          <Tab.Screen
             name="Friends"
             component={Friends}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="Lists"
+          <Tab.Screen
+            name="AllLists"
             component={AllLists}
             options={{ headerShown: false }}
           />
-        </Stack.Navigator>
+          <Tab.Screen
+            name="Account"
+            component={Account}
+            options={{ headerShown: false }}
+          />
+        </Tab.Navigator>
       </NavigationContainer>
     );
   }

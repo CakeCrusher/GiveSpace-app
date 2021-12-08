@@ -1,16 +1,22 @@
 import React from 'react';
 import { Text, VStack } from 'native-base';
 
-const ListPreview = ({ styleProps, listData }) => {
-  const { name, items } = listData;
-  const spliced = listData.items.splice(0, 5);
+const ListPreview = (props) => {
+  const { title, items } = props.listData;
+  const spliced = [...items].splice(0, 5);
+
+  const styles = { ...props };
+  delete styles.listData;
+
   return (
-    <VStack bg="#fff" p="2" {...styleProps}>
+    <VStack bg="#fff" p="2" {...styles}>
       <Text isTruncated fontSize="xl">
-        {listData.name}
+        {title}
       </Text>
       {spliced.map((e, i) => (
-        <Text isTruncated>{e.name}</Text>
+        <Text key={i} isTruncated>
+          {e.name}
+        </Text>
       ))}
     </VStack>
   );

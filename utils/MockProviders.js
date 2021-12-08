@@ -13,13 +13,10 @@ const newColorTheme = {
 
 const theme = extendTheme({ colors: newColorTheme });
 
-const MockProviders = ({children}) => (
+const MockProviders = ({ children }) => (
   <Provider store={store}>
-    <NativeBaseProvider theme={theme}>
-      {children}
-    </NativeBaseProvider>
+    <NativeBaseProvider theme={theme}>{children}</NativeBaseProvider>
   </Provider>
-)
-
+);
 
 export default MockProviders;
