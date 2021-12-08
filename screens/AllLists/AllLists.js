@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Heading, Button, Avatar, HStack, VStack } from 'native-base';
+import {
+  Text,
+  Heading,
+  Button,
+  Avatar,
+  HStack,
+  VStack,
+  Fab,
+  Icon,
+} from 'native-base';
 import { connect } from 'react-redux';
+import { AntDesign } from '@expo/vector-icons';
 
 import { ListPreview } from '../../components';
 
@@ -151,6 +161,19 @@ const AllLists = ({ route, navigation, user }) => {
             <ListPreview listData={list} onPress={() => handleLoadList(list)} />
           ))}
       </VStack>
+      {userId === user.id && (
+        <Button
+          position="absolute"
+          borderRadius="32"
+          h="16"
+          w="16"
+          bottom="4"
+          right="4"
+          zIndex="99"
+        >
+          <Icon as={<AntDesign name="plus" />} size="sm" color="white" />
+        </Button>
+      )}
     </VStack>
   );
 };

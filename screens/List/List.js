@@ -15,6 +15,7 @@ const List = ({ route, navigation }) => {
   const { listData } = route.params;
   //TODO: Still need to figure this out, but navigation is pretty good
   //TODO: Are we lazy fetching items?
+  console.log(route);
 
   return (
     <VStack safeArea>
