@@ -134,3 +134,17 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "", $type
 //   "user_second_id": "9f42db74-b38e-47f7-afa6-638773ae0c23",
 //   "type": "friends"
 // }
+
+export const REGISTER_USER = `
+mutation MyMutation($contacts_phone_numbers: [String!] = "", $password: String = "", $phone_number: String = "", $username: String = "") {
+  register(contacts_phone_numbers: $contacts_phone_numbers, password: $password, phone_number: $phone_number, username: $username) {
+    user_id
+  }
+}
+`
+// {
+//   "password": "secret",
+//   "username": "Squid",
+//   "phone_number": "+14325557297",
+//   "contacts_phone_numbers": ["+17865557297","+13335557297","+12345557297"]
+// }
