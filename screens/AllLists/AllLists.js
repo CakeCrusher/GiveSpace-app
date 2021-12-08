@@ -148,7 +148,7 @@ const AllLists = ({ route, navigation, user }) => {
     <VStack space="4" p="4" flex="1" bg="#dfdfdf" safeArea>
       <HStack flex="1" alignItems="center">
         <Avatar bg="#FAA" source={{ uri: '' }}>
-          EX: {userId}
+          EX
         </Avatar>
         <Heading ml="4">
           {userId === user.id ? 'Your ' : `${user.username}'s `}
