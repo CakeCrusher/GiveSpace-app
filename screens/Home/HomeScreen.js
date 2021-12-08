@@ -5,7 +5,7 @@ import { Text, Button, HStack, VStack } from 'native-base';
 
 import { ListPreview } from '../../components';
 
-import { setUser } from '../../redux/actions/user';
+import { setUser, logout } from '../../redux/actions/user';
 import MockApi from '../../utils/MockApi';
 
 const HomeScreen = ({ user, logout, navigation }) => {
@@ -94,7 +94,7 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
 });
 const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(setUser(null)),
+  logout: () => dispatch(logout()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
