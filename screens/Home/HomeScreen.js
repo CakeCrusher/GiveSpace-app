@@ -58,8 +58,6 @@ const HomeScreen = ({ user, logout, navigation }) => {
             <ListPreview mb="2" listData={recentList} />
             <Button
               variant="outline"
-              bg="#fff"
-              color="#000"
               onPress={() => navigation.navigate('My Lists')}
             >
               All Lists
@@ -100,7 +98,7 @@ const HomeScreen = ({ user, logout, navigation }) => {
         </HStack>
       </VStack>
 
-      <Button flex="1" onPress={logout}>
+      <Button flex="1" color="red" onPress={logout}>
         Logout
       </Button>
     </VStack>

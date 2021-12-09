@@ -6,7 +6,7 @@ mutation MyMutation($password: String = "", $phone_number: String = "", $usernam
     }
   }
 }
-`
+`;
 // {
 //   "password": "secret",
 //   "username": "Krabs",
@@ -15,78 +15,84 @@ mutation MyMutation($password: String = "", $phone_number: String = "", $usernam
 
 const USER_DATA = `
 phone_number
-username
-id
-lists {
-  title
-  date_modified
-  list_items {
-    item {
-      name
-    }
-  }
-}
-friendRelsByUserSecondId(where: {type: {_eq: "friends"}}) {
-  user {
     username
-    phone_number
-    lists {
-      title
-      list_items {
-        item {
-          name
-        }
-      }
-      date_modified
-    }
     id
-  }
-  userByUserSecondId {
-    username
-    phone_number
     lists {
-      title
-      list_items {
-        item {
-          name
-        }
-      }
+      id
       date_modified
-    }
-    id
-  }
-}
-friend_rels(where: {type: {_eq: "friends"}}) {
-  user {
-    username
-    phone_number
-    lists {
+      date_created
       title
-      list_items {
-        item {
-          name
-        }
+      user {
+        username
       }
-      date_modified
-    }
-    id
-  }
-  userByUserSecondId {
-    username
-    phone_number
-    lists {
-      title
-      list_items {
-        item {
-          name
-        }
+      items {
+        item_url
+        image_url
+        name
+        price
       }
-      date_modified
     }
-    id
-  }
-}
-`
+    friendRelsByUserSecondId(where: {type: {_eq: "friends"}}) {
+      user {
+        username
+        phone_number
+        lists {
+          title
+          list_items {
+            item {
+              name
+            }
+          }
+          date_modified
+        }
+        id
+      }
+      userByUserSecondId {
+        username
+        phone_number
+        lists {
+          title
+          list_items {
+            item {
+              name
+            }
+          }
+          date_modified
+        }
+        id
+      }
+    }
+    friend_rels(where: {type: {_eq: "friends"}}) {
+      user {
+        username
+        phone_number
+        lists {
+          title
+          list_items {
+            item {
+              name
+            }
+          }
+          date_modified
+        }
+        id
+      }
+      userByUserSecondId {
+        username
+        phone_number
+        lists {
+          title
+          list_items {
+            item {
+              name
+            }
+          }
+          date_modified
+        }
+        id
+      }
+    }
+`;
 
 export const SIGN_IN_USER_BY_ID = `
 query MyQuery($user_id: uuid = "") {
@@ -94,7 +100,7 @@ query MyQuery($user_id: uuid = "") {
     ${USER_DATA}
   }
 }
-`
+`;
 // {
 //   "user_id": "9f42db74-b38e-47f7-afa6-638773ae0c23"
 // }
@@ -159,7 +165,7 @@ mutation MyMutation($contacts_phone_numbers: [String!] = "", $password: String =
   }
 }
 
-`
+`;
 // {
 //   "password": "secret",
 //   "username": "Squid",
@@ -185,7 +191,7 @@ mutation MyMutation($title: String = "", $user_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "title": "Christmas",
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
@@ -193,21 +199,23 @@ mutation MyMutation($title: String = "", $user_id: uuid = "") {
 
 export const GET_LISTS = `
 query MyQuery($user_id: uuid = "") {
-  list(where: {user_id: {_eq: $user_id}}, order_by: {date_modified: asc}) {
-    id
-    title
-    date_modified
-    list_items {
-      item {
-        name
-        item_url
-        image_url
-        price
+  list(where: {user_id: {_eq: $user_id}}) {
+        id
+        date_modified
+        date_created
+        title
+        user {
+                username
+              }
+        items {
+                item_url
+                image_url
+                name
+                price
+              }
       }
-    }
-  }
 }
-`
+`;
 // {
-//   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52" 
+//   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
 // }

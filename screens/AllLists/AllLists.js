@@ -10,7 +10,7 @@ import {
   Icon,
 } from 'native-base';
 import { connect } from 'react-redux';
-import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 import { ListPreview } from '../../components';
 
@@ -22,6 +22,7 @@ const AllLists = ({ route, navigation, userState }) => {
   useEffect(() => {
     console.log(userId, user.id);
     if (userId === user.id) {
+      console.log(user.lists);
       setLists(user.lists);
     } else {
       // TODO: Make a Fetch
@@ -63,7 +64,7 @@ const AllLists = ({ route, navigation, userState }) => {
           right="4"
           zIndex="99"
         >
-          <Icon as={<AntDesign name="plus" />} size="sm" color="white" />
+          <Icon as={<Feather name="plus" />} size="sm" color="white" />
         </Button>
       )}
     </VStack>

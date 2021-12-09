@@ -4,6 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 
+import { Feather } from '@expo/vector-icons';
+import { Icon } from 'native-base';
+
 import { signinById } from './redux/actions/user';
 import { Home, Login, Friends, MyLists, Account } from './screens';
 
@@ -33,22 +36,42 @@ const View = ({ signinById, userState }) => {
           <Tab.Screen
             name="Home"
             component={Home}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ focused, color, size }) => (
+                <Feather name="home" size={24} />
+              ),
+            }}
           />
           <Tab.Screen
             name="Friends"
             component={Friends}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ focused, color, size }) => (
+                <Feather name="users" size={24} />
+              ),
+            }}
           />
           <Tab.Screen
             name="My Lists"
             component={MyLists}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ focused, color, size }) => (
+                <Feather name="list" size={24} />
+              ),
+            }}
           />
           <Tab.Screen
             name="Account"
             component={Account}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ focused, color, size }) => (
+                <Feather name="user" size={24} />
+              ),
+            }}
           />
         </Tab.Navigator>
       </NavigationContainer>
