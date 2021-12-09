@@ -42,12 +42,15 @@ export const signinById =
 export const signin =
   ({ username, password }) =>
   async (dispatch) => {
+    console.log(username, password);
     try {
       const user = await fetchGraphQL(SIGN_IN_USER, { username, password });
+      console.log(user);
       //await AsyncStorage.setItem('AuthToken', JSON.stringify({ id: user.id }));
       if (user.data.user.length) {
         const userObject = cleanUserData(user.data.user[0]);
         await AsyncStorage.setItem('user_id', user.data.user[0].id);
+
         dispatch(setUser(userObject));
         return { status: 'success' };
       } else {

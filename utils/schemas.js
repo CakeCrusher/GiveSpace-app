@@ -17,7 +17,7 @@ const USER_DATA = `
 phone_number
     username
     id
-    lists(where: {user_id: {_eq: $user_id}}) {
+    lists {
       id
       date_modified
       date_created
