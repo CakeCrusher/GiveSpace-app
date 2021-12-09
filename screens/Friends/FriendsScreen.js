@@ -33,10 +33,12 @@ const FriendsScreen = ({ navigation, userState }) => {
         <Flex flex="5">
           <Text fontSize="3xl">Friends</Text>
         </Flex>
+
         <HStack
           alignContent="center"
           justifyContent="space-between"
           flex="1 0 auto"
+          p="2"
         >
           <Pressable onPress={handleSearchToggle} m="auto">
             <Icon as={<Feather name="search" />} size="sm" />
