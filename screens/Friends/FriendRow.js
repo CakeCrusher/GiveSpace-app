@@ -10,7 +10,7 @@ const FriendRow = ({ username, navigation }) => {
   //};
 
   return (
-    <HStack justifyContent="space-between" p="4">
+    <HStack justifyContent="space-between">
       {/* Avatar */}
       <Flex flex="1" justifyContent="center">
         <Avatar bg="#FAA" source={{ uri: '' }}>
