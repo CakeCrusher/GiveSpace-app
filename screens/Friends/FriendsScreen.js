@@ -15,10 +15,13 @@ import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import { useField } from '../../utils/helperFunctions';
 
-import FriendRow from './FriendRow';
+import { Fab } from '../../components';
+import DisplayFriendRow from './DisplayFriendRow';
+import AddingModal from './AddingModal';
 
 const FriendsScreen = ({ navigation, userState }) => {
   const [showSearch, setShowSearch] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const search = useField('text', '');
 
   const handleSearchToggle = () => {
@@ -57,9 +60,9 @@ const FriendsScreen = ({ navigation, userState }) => {
 
       <VStack flex="15">
         {userState.user.friends.map((friend) => (
-          <FriendRow
+          <DisplayFriendRow
             key={friend.id}
-            username={friend.username}
+            user={friend}
             navigation={navigation}
           />
         ))}
@@ -72,17 +75,8 @@ const FriendsScreen = ({ navigation, userState }) => {
         />
       ))*/}
       </VStack>
-      <Button
-        position="absolute"
-        borderRadius="32"
-        h="16"
-        w="16"
-        bottom="4"
-        right="4"
-        zIndex="99"
-      >
-        <Icon as={<Feather name="plus" />} size="sm" color="white" />
-      </Button>
+      <Fab iconName="plus" onPress={() => setIsAdding(true)} />
+      <AddingModal isOpen={isAdding} onClose={() => setIsAdding(false)} />
     </VStack>
   );
 };

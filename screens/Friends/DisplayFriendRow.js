@@ -1,10 +1,7 @@
 import React from 'react';
 import { Avatar, HStack, Text, Flex, Button } from 'native-base';
 
-const FriendRow = ({ username, navigation }) => {
-  // TODO: Change userId for navigation
-  const { userId } = { userId: 2 };
-
+const DisplayFriendRow = ({ user, navigation }) => {
   //const handleLoadLists = () => {
   //  navigation.navigate('FriendsLists', { userId, screenName: 'FriendList' });
   //};
@@ -18,7 +15,7 @@ const FriendRow = ({ username, navigation }) => {
         </Avatar>
       </Flex>
       <Flex flex="3" justifyContent="center">
-        <Text fontSize="xl">{username}</Text>
+        <Text fontSize="xl">{user.username}</Text>
       </Flex>
       <Flex flex="1" my="2" justifyContent="flex-end">
         <Button onPress={() => {}}>Lists</Button>
@@ -27,4 +24,4 @@ const FriendRow = ({ username, navigation }) => {
   );
 };
 
-export default FriendRow;
+export default DisplayFriendRow;
