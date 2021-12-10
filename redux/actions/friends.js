@@ -14,3 +14,9 @@ export const signinFriends =
       dispatch({ type: 'SET_FRIENDS', payload: friends })
       return
     }
+
+export const populateListFriends = (list) => (dispatch) => {
+  console.log('populateListFriends!', list);
+  dispatch({ type: 'SET_FRIEND_LIST', payload: list })
+  return
+}

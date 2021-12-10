@@ -31,6 +31,11 @@ export const signinUser =
       return
     };
 
+export const populateListUser = (list) => (dispatch) => {
+  dispatch({ type: 'SET_USER_LIST', payload: list })
+  return
+}
+
 export const signin =
   ({ username, password }) =>
   async (dispatch) => {

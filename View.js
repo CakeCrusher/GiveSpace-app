@@ -31,7 +31,6 @@ const View = ({ signinDispatch, userState }) => {
   }, []);
 
   if (userState.id) {
-    console.log(userState);
     return (
       <NavigationContainer>
         <Tab.Navigator>

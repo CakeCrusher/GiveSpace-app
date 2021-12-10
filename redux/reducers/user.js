@@ -29,6 +29,15 @@ const user = (state = initState, action) => {
         ...action.payload,
       };
     }
+    case 'SET_USER_LIST': {
+      const newLists = [...state.lists.map(
+        list => list.id === action.payload.id ? action.payload : list
+      )]
+      return {
+        ...state,
+        lists: newLists,
+      }
+    }
 
     default: {
       return state;

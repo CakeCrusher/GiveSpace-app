@@ -20,7 +20,7 @@ id
 address
 profile_pic_url
 birthday
-lists {
+lists(order_by: {date_modified: desc}) {
   id
   date_modified
   title
@@ -33,7 +33,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
   user {
     id
     username
-    lists {
+    lists(order_by: {date_modified: desc}) {
       id
       title
       date_modified
@@ -46,7 +46,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
   userByUserSecondId {
     id
     username
-    lists {
+    lists(order_by: {date_modified: desc}) {
       id
       title
       date_modified
@@ -67,7 +67,7 @@ query MyQuery($user_id: uuid = "") {
 }
 `;
 // {
-//   "user_id": "9f42db74-b38e-47f7-afa6-638773ae0c23"
+//   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
 
 export const SIGN_IN_USER = `
@@ -183,6 +183,27 @@ query MyQuery($user_id: uuid = "") {
 `;
 // {
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
+// }
+
+export const GET_LIST = `
+query MyQuery($list_id: uuid = "") {
+  list(where: {id: {_eq: $list_id}}) {
+    title
+    date_modified
+    id
+    items {
+      image_url
+      item_url
+      name
+      price
+      date_created
+      id
+    }
+  }
+}
+`
+// {
+//   "list_id": "3cfb100a-c924-4286-b6e2-87d598c1d7df"
 // }
 
 export const SCRAPE_ITEM = `
