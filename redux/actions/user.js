@@ -21,22 +21,12 @@ const cleanUserData = (userData) => {
   return userObject;
 };
 
-export const signinById =
-  ({ userId }) =>
+export const signinByIdUser =
+  (userRes) =>
   async (dispatch) => {
-    try {
-      const user = await fetchGraphQL(SIGN_IN_USER_BY_ID, { user_id: userId });
-      if (user.data.user.length) {
-        const userObject = cleanUserData(user.data.user[0]);
-        dispatch(setUser(userObject));
-        return { status: 'success' };
-      } else {
-        return { status: 'error', error: 'Invalid username or password' };
-      }
-    } catch (err) {
-      console.log(err);
-      return { status: 'error', error: 'Invalid username or password' };
-    }
+    const user = {...userRes.data.user[0]}
+    delete user.friend_rels
+    dispatch({ type: 'SET_USER', payload: user })
   };
 
 export const signin =
@@ -51,7 +41,7 @@ export const signin =
         const userObject = cleanUserData(user.data.user[0]);
         await AsyncStorage.setItem('user_id', user.data.user[0].id);
 
-        dispatch(setUser(userObject));
+        dispatch({ type: 'SET_USER', payload: user });
         return { status: 'success' };
       } else {
         return { status: 'error', error: 'Invalid username or password' };

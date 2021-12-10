@@ -15,83 +15,48 @@ mutation MyMutation($password: String = "", $phone_number: String = "", $usernam
 
 const USER_DATA = `
 phone_number
-    username
+username
+id
+address
+profile_pic_url
+birthday
+lists {
+  id
+  date_modified
+  title
+  items {
     id
+    name
+  }
+}
+friend_rels(where: {type: {_eq: "friends"}}) {
+  user {
+    id
+    username
     lists {
       id
-      date_modified
-      date_created
       title
-      user {
-        username
-      }
+      date_modified
       items {
-        item_url
-        image_url
+        id
         name
-        price
       }
     }
-    friendRelsByUserSecondId(where: {type: {_eq: "friends"}}) {
-      user {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
+  }
+  userByUserSecondId {
+    id
+    username
+    lists {
+      id
+      title
+      date_modified
+      items {
         id
-      }
-      userByUserSecondId {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
-        id
+        name
       }
     }
-    friend_rels(where: {type: {_eq: "friends"}}) {
-      user {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
-        id
-      }
-      userByUserSecondId {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
-        id
-      }
-    }
+  }
+}
 `;
 
 export const SIGN_IN_USER_BY_ID = `
