@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import {
   Text,
   Heading,
-  Button,
   Avatar,
   Icon,
+  Button,
   Pressable,
+  Input,
   Flex,
   HStack,
   VStack,
+  ScrollView,
 } from 'native-base';
 
 import { ItemCard } from '../../components';
@@ -23,6 +25,8 @@ const dummyItem = {
 const List = ({ route, navigation, userState }) => {
   const { user } = userState;
   const { listData, userId } = route.params;
+  const [showSearch, setShowSearch] = useState(false);
+  console.log(user.id, userId);
 
   useEffect(() => {
     if (userId === user.id) {
@@ -47,48 +51,50 @@ const List = ({ route, navigation, userState }) => {
   const handleSettingsToggle = () => {};
 
   return (
-    <VStack flex="1" maxW="100%" p="4" safeArea>
-      <HStack flex="1">
+    <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
+      <HStack flex="1" alignItems="center" space="4">
         <Pressable onPress={() => navigation.goBack()}>
-          <Text>{'<<'}</Text>
+          <Icon as={<Feather name="chevron-left" />} size="xl" />
         </Pressable>
-        <Text>{listData.title}</Text>
+        <Text fontSize="3xl">{listData.title}</Text>
       </HStack>
 
-      <VStack>
-        <HStack
-          alignContent="center"
-          justifyContent="space-between"
-          flex="1 0 auto"
-          p="2"
-        >
-          <Flex flex="5">
-            <Text>Share</Text>
-          </Flex>
+      {/* Search */}
+      <HStack alignItems="center" justifyContent="space-between" flex="1">
+        <Flex flex="4" my="auto">
+          <Text>Share</Text>
+        </Flex>
+        <HStack flex="1">
+          <Pressable onPress={handleSearchToggle} m="auto">
+            <Icon as={<Feather name="search" />} size="xs" />
+          </Pressable>
+          <Pressable onPress={handleSettingsToggle} m="auto">
+            <Icon as={<Feather name="more-vertical" />} size="xs" />
+          </Pressable>
+        </HStack>
+      </HStack>
 
-          <HStack flex="1">
-            <Pressable onPress={handleSearchToggle} m="auto">
-              <Icon as={<Feather name="search" />} size="xs" />
-            </Pressable>
-            <Pressable onPress={handleSettingsToggle} m="auto">
-              <Icon as={<Feather name="more-vertical" />} size="xs" />
-            </Pressable>
+      {/* Add Item */}
+      {userId === user.id && (
+        <VStack>
+          <Text>Add an Item</Text>
+          <Input />
+        </VStack>
+      )}
+
+      <VStack flex="15">
+        <ScrollView>
+          <HStack flexWrap="wrap">
+            {listData.items.map((item, index) => (
+              <Flex onPress={handleCardPress} key={index} flex="1 0 40%" m="1">
+                <ItemCard item={item} handlePress={handleCardPress} />
+              </Flex>
+            ))}
+            {listData.items.length % 2 !== 0 && (
+              <Flex onPress={handleCardPress} flex="1 0 40%" m="1" />
+            )}
           </HStack>
-        </HStack>
-        {userId === user.id && <Text>Inputs</Text>}
-      </VStack>
-
-      <VStack flex="15" overflow="scroll">
-        <HStack flexWrap="wrap">
-          {listData.items.map((item, index) => (
-            <Flex onPress={handleCardPress} key={index} flex="1 0 40%" m="1">
-              <ItemCard item={item} handlePress={handleCardPress} />
-            </Flex>
-          ))}
-          {listData.items.length % 2 !== 0 && (
-            <Flex onPress={handleCardPress} flex="1 0 40%" m="1" />
-          )}
-        </HStack>
+        </ScrollView>
       </VStack>
     </VStack>
   );

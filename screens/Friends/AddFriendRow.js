@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, HStack, Text, Flex, Button } from 'native-base';
 
-const AddFriendRow = ({ user }) => {
+const AddFriendRow = ({ user, addFriend }) => {
   // TODO: Add Friend functionality
 
   return (
@@ -16,7 +16,7 @@ const AddFriendRow = ({ user }) => {
         <Text fontSize="md">{user.username}</Text>
       </Flex>
       <Flex flex="1" my="2" justifyContent="flex-end">
-        <Button onPress={() => {}} size="sm">
+        <Button onPress={() => addFriend(user.id)} size="sm">
           Add
         </Button>
       </Flex>

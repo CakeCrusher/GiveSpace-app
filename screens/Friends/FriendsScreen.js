@@ -17,7 +17,7 @@ import { useField } from '../../utils/helperFunctions';
 
 import { Fab } from '../../components';
 import DisplayFriendRow from './DisplayFriendRow';
-import AddingModal from './AddingModal';
+import AddFriendModal from './AddFriendModal';
 
 const FriendsScreen = ({ navigation, userState }) => {
   const [showSearch, setShowSearch] = useState(false);
@@ -40,7 +40,7 @@ const FriendsScreen = ({ navigation, userState }) => {
         <HStack
           alignContent="center"
           justifyContent="space-between"
-          flex="1 0 auto"
+          flex="1"
           p="2"
         >
           <Pressable onPress={handleSearchToggle} m="auto">
@@ -76,7 +76,7 @@ const FriendsScreen = ({ navigation, userState }) => {
       ))*/}
       </VStack>
       <Fab iconName="plus" onPress={() => setIsAdding(true)} />
-      <AddingModal isOpen={isAdding} onClose={() => setIsAdding(false)} />
+      <AddFriendModal isOpen={isAdding} onClose={() => setIsAdding(false)} />
     </VStack>
   );
 };

@@ -4,12 +4,12 @@ import { useState } from 'react';
 
 export const debounce = (func, time = 500) => {
   let timeout;
-  return ((args) => {
+  return (args) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       func(args);
     }, time);
-  })();
+  };
 };
 
 export const fetchGraphQL = async (schema, variables = {}) => {

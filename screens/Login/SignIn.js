@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   Text,
@@ -20,15 +20,18 @@ const SignIn = ({ toSignUp, fetchUser }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     setError(null);
     setIsLoading(true);
-    const reuxRes = await fetchUser({ username: username.value, password: password.value });
+    const reuxRes = await fetchUser({
+      username: username.value,
+      password: password.value,
+    });
     setIsLoading(false);
     if (reuxRes.status === 'error') {
       setError(reuxRes.error);
     }
-  };
+  }, []);
 
   return (
     <VStack space={8}>
@@ -52,19 +55,14 @@ const SignIn = ({ toSignUp, fetchUser }) => {
             </HStack>
           </Center>
         )}
-
       </VStack>
 
       <VStack space={4}>
-        <Input
-          {...username}
-          placeholder="username"
-        />
-        <Input
-          {...password}
-          placeholder="password"
-        />
-        <Button isLoading={isLoading} onPress={handleSubmit}>Sign In</Button>
+        <Input {...username} placeholder="username" />
+        <Input {...password} placeholder="password" />
+        <Button isLoading={isLoading} onPress={handleSubmit}>
+          Sign In
+        </Button>
         <VStack alignItems="center">
           <Link>Forgot Your Password?</Link>
         </VStack>

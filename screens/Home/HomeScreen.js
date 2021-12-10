@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as Contacts from 'expo-contacts';
-import { Text, Button, HStack, VStack } from 'native-base';
+import { Text, Button, HStack, VStack, ScrollView } from 'native-base';
 
 import { ListPreview } from '../../components';
 
 import { setUser, logout } from '../../redux/actions/user';
 import MockApi from '../../utils/MockApi';
 
-const HomeScreen = ({ user, logout, navigation }) => {
+const HomeScreen = ({ logout, navigation, userState }) => {
+  const { user } = userState;
   const [loading, setLoading] = useState(false);
   const [recentList, setRecentList] = useState(null);
   const [friendsList, setFriendsList] = useState(null);
 
   useEffect(() => {
     const getLists = async () => {
-      // TODO: Get this off MockApi
       try {
-        const recent = await MockApi.getList({ listId: 0 });
+        //TODO: Not 100% sure this is last
+        const last = user.lists[user.lists.length - 1];
+        //TODO: Not 100% sure how we're handling this
         const friends = await MockApi.getUserLists({ userId: 1 });
-        setRecentList(recent);
+        setRecentList(last);
         setFriendsList(friends);
       } catch (err) {
         console.warn(err);
@@ -67,46 +69,45 @@ const HomeScreen = ({ user, logout, navigation }) => {
       </VStack>
 
       {/*TODO: Need to decide how to "pass selected list" through navigation */}
-      <VStack flex="7" space="2" overflow="scroll">
-        <Text fontSize="2xl">Friends</Text>
-        <HStack space="2" flexWrap="wrap">
-          {friendsList &&
-            friendsList.map((list, index) => {
-              if ((index + 1) % 2 === 0) {
-                return (
-                  <ListPreview
-                    key={index}
-                    listData={list}
-                    onPress={() => handleLoadList(list)}
-                    w="45%"
-                    mt="2"
-                    ml="auto"
-                  />
-                );
-              } else {
-                return (
-                  <ListPreview
-                    key={index}
-                    listData={list}
-                    onPress={() => handleLoadList(list)}
-                    w="45%"
-                    mt="2"
-                  />
-                );
-              }
-            })}
-        </HStack>
+      <VStack flex="7" space="2">
+        <ScrollView>
+          <Text fontSize="2xl">Friends</Text>
+          <HStack space="2" flexWrap="wrap">
+            {/* TODO: Redo this */}
+            {friendsList &&
+              friendsList.map((list, index) => {
+                if ((index + 1) % 2 === 0) {
+                  return (
+                    <ListPreview
+                      key={index}
+                      listData={list}
+                      onPress={() => handleLoadList(list)}
+                      w="45%"
+                      mt="2"
+                      ml="auto"
+                    />
+                  );
+                } else {
+                  return (
+                    <ListPreview
+                      key={index}
+                      listData={list}
+                      onPress={() => handleLoadList(list)}
+                      w="45%"
+                      mt="2"
+                    />
+                  );
+                }
+              })}
+          </HStack>
+        </ScrollView>
       </VStack>
-
-      <Button flex="1" color="red" onPress={logout}>
-        Logout
-      </Button>
     </VStack>
   );
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  userState: state.user,
 });
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
