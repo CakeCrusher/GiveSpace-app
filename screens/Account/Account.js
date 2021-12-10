@@ -1,5 +1,5 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 import {
   Text,
   Heading,
@@ -10,18 +10,20 @@ import {
   HStack,
   View,
   Avatar,
-} from "native-base";
+} from 'native-base';
 
-import { ListPreview } from "../../components";
+import { ListPreview } from '../../components';
 
-const Account = ({ navigation, userState }) => {
+const Account = ({ navigation, userState, friendsState }) => {
   return (
     <VStack safeArea p="4">
       <ScrollView>
         <HStack alignItems="center" space="4">
-          <Avatar flex="2" bg="#FAA" size="xl" source={{ uri: "" }}>
-            EX
-          </Avatar>
+          <Box flex="2">
+            <Avatar bg="#FAA" size="xl" source={{ uri: '' }}>
+              EX
+            </Avatar>
+          </Box>
           <VStack flex="5" ml="auto">
             <Text fontSize="3xl">{userState.username}</Text>
             {/*
@@ -69,7 +71,7 @@ const Account = ({ navigation, userState }) => {
               <View h="2" />
               <Button
                 variant="outline"
-                onPress={() => navigation.navigate("My Lists")}
+                onPress={() => navigation.navigate('My Lists')}
               >
                 All Lists
               </Button>
@@ -83,7 +85,7 @@ const Account = ({ navigation, userState }) => {
           <Text fontSize="3xl">Friends</Text>
           {/* Add Friends */}
           <HStack flexWrap="wrap">
-            {userState.friends.map((e) => (
+            {friendsState.list.map((e) => (
               <Box
                 key={e.id}
                 flexBasis="25%"
@@ -102,6 +104,7 @@ const Account = ({ navigation, userState }) => {
 
 const mapStateToProps = (state) => ({
   userState: state.user,
+  friendsState: state.friends,
 });
 
 export default connect(mapStateToProps, null)(Account);

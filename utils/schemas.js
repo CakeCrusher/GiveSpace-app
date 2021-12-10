@@ -22,6 +22,7 @@ profile_pic_url
 birthday
 lists(order_by: {date_modified: desc}) {
   id
+  user_id
   date_modified
   title
   items {
@@ -35,6 +36,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
     username
     lists(order_by: {date_modified: desc}) {
       id
+      user_id
       title
       date_modified
       items {
@@ -48,6 +50,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
     username
     lists(order_by: {date_modified: desc}) {
       id
+      user_id
       title
       date_modified
       items {
@@ -143,6 +146,7 @@ mutation MyMutation($title: String = "", $user_id: uuid = "") {
   insert_list(objects: {title: $title, user_id: $user_id}) {
     returning {
       id
+      user_id
       title
       date_modified
       list_items {
@@ -167,6 +171,7 @@ export const GET_LISTS = `
 query MyQuery($user_id: uuid = "") {
   list(where: {user_id: {_eq: $user_id}}) {
         id
+        user_id
         date_modified
         date_created
         title
@@ -186,13 +191,13 @@ query MyQuery($user_id: uuid = "") {
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
 // }
 
-
 export const GET_LIST = `
 query MyQuery($list_id: uuid = "") {
   list(where: {id: {_eq: $list_id}}) {
     title
     date_modified
     id
+    user_id
     items {
       image_url
       item_url
@@ -203,7 +208,7 @@ query MyQuery($list_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "list_id": "3cfb100a-c924-4286-b6e2-87d598c1d7df"
 // }
@@ -217,7 +222,7 @@ mutation MyMutation($item_name: String = "", $list_id: String = "") {
     }
   }
 }
-`
+`;
 // {
 //   "list_id": "656e08e4-2b80-4ff4-9175-15b340ccabd9",
 //   "item_name": "television toshiba"
