@@ -219,3 +219,18 @@ query MyQuery($user_id: uuid = "") {
 // {
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
 // }
+
+export const SCRAPE_ITEM = `
+mutation MyMutation($item_name: String = "", $list_id: String = "") {
+  scrape_item(item_name: $item_name, list_id: $list_id) {
+    itemIdToItem {
+      id
+      price
+    }
+  }
+}
+`
+// {
+//   "list_id": "656e08e4-2b80-4ff4-9175-15b340ccabd9",
+//   "item_name": "television toshiba"
+// }

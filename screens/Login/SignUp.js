@@ -50,7 +50,7 @@ const Signup = ({ signup, toSignIn }) => {
         placeholder="password"
       />
       <Input
-        {...password}
+        {...passwordConfirm}
         placeholder="confirm password"
       />
       <VStack space={4}>
