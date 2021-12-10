@@ -2,6 +2,16 @@ import fetch from 'node-fetch';
 import { HASURA_ADMIN_SECRET } from 'react-native-dotenv';
 import { useState } from 'react';
 
+export const debounce = (func, time = 500) => {
+  let timeout;
+  return (args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func(args);
+    }, time);
+  };
+};
+
 export const fetchGraphQL = async (schema, variables = {}) => {
   const graphql = JSON.stringify({
     query: schema,
@@ -26,8 +36,8 @@ export const fetchGraphQL = async (schema, variables = {}) => {
 export const useField = (type, fill = '') => {
   const [value, setValue] = useState(fill);
   const onChangeText = (text) => {
-    setValue(text)
-  }
+    setValue(text);
+  };
   return {
     type,
     value,

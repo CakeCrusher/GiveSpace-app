@@ -157,6 +157,7 @@ mutation MyMutation($title: String = "", $user_id: uuid = "") {
   }
 }
 `;
+
 // {
 //   "title": "Christmas",
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
@@ -184,6 +185,7 @@ query MyQuery($user_id: uuid = "") {
 // {
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
 // }
+
 
 export const GET_LIST = `
 query MyQuery($list_id: uuid = "") {
@@ -219,4 +221,18 @@ mutation MyMutation($item_name: String = "", $list_id: String = "") {
 // {
 //   "list_id": "656e08e4-2b80-4ff4-9175-15b340ccabd9",
 //   "item_name": "television toshiba"
+// }
+
+export const SEARCH_FOR_USERS = `
+query MyQuery($search: String = "") {
+  user(where: {username: {_like: $search}}) {
+    id
+    username
+    profile_pic_url
+  }
+}
+`;
+
+// {
+//   "search": "%Kr%"
 // }

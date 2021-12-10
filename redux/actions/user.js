@@ -15,9 +15,10 @@ const cleanUserData = (userData) => {
   delete userObject.friendRelsByUserSecondId;
 
   const friends1 = userData.friend_rels.map((e) => e.userByUserSecondId);
-  const friends2 = userData.friendRelsByUserSecondId.map((e) => e.user);
+  //const friends2 = userData.friendRelsByUserSecondId.map((e) => e.user);
 
-  userObject.friends = [...friends1, ...friends2];
+  //userObject.friends = [...friends1, ...friends2];
+  userObject.friends = friends1;
   return userObject;
 };
 

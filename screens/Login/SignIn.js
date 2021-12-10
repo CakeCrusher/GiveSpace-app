@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   Text,
@@ -22,12 +22,11 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     setError(null);
     setIsLoading(true);
 
     const userRes = await fetchGraphQL(SIGN_IN_USER, { username: username.value, password: password.value });
-    
     console.log('userRes', userRes);
     if (userRes.errors || !userRes.data.user[0]) {
       setError('Invalid username or password')
@@ -60,19 +59,14 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
             </HStack>
           </Center>
         )}
-
       </VStack>
 
       <VStack space={4}>
-        <Input
-          {...username}
-          placeholder="username"
-        />
-        <Input
-          {...password}
-          placeholder="password"
-        />
-        <Button isLoading={isLoading} onPress={handleSubmit}>Sign In</Button>
+        <Input {...username} placeholder="username" />
+        <Input {...password} placeholder="password" />
+        <Button isLoading={isLoading} onPress={handleSubmit}>
+          Sign In
+        </Button>
         <VStack alignItems="center">
           <Link>Forgot Your Password?</Link>
         </VStack>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as Contacts from 'expo-contacts';
-import { Text, Button, HStack, VStack } from 'native-base';
+import { Text, Button, HStack, VStack, ScrollView } from 'native-base';
 
 import { ListPreview } from '../../components';
 
@@ -9,9 +9,6 @@ import { setUser, logout } from '../../redux/actions/user';
 import MockApi from '../../utils/MockApi';
 
 const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
-  useEffect(() => {
-    
-  }, []);
 
   const handleLoadList = (listData) => {
     navigation.navigate('Home', {
@@ -89,10 +86,6 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
             })}
         </HStack>
       </VStack>
-
-      <Button flex="1" color="red" onPress={logout}>
-        Logout
-      </Button>
     </VStack>
   );
 };

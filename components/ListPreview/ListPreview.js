@@ -3,7 +3,12 @@ import { Text, VStack, Pressable } from 'native-base';
 
 const ListPreview = (props) => {
   const { title, items } = props.listData;
+
   const spliced = items && [...items].splice(0, 5);
+  const fill = [];
+  for (let i = 0; i < 5 - spliced.length; i++) {
+    fill.push('');
+  }
 
   const styles = { ...props };
   delete styles.listData;
@@ -19,6 +24,7 @@ const ListPreview = (props) => {
               {e.name}
             </Text>
           ))}
+        {fill && fill.map((e, i) => <Text key={i}> </Text>)}
       </Pressable>
     </VStack>
   );

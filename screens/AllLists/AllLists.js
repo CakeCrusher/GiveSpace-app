@@ -4,8 +4,10 @@ import {
   Heading,
   Button,
   Avatar,
+  Box,
   HStack,
   VStack,
+  ScrollView,
   Fab,
   Icon,
 } from 'native-base';
@@ -48,11 +50,19 @@ const AllLists = ({ route, navigation, userState }) => {
           Lists
         </Heading>
       </HStack>
-      <VStack flex="15" space="4" overflow="scroll">
-        {lists &&
-          lists.map((list, index) => (
-            <ListPreview listData={list} onPress={() => handleLoadList(list)} />
-          ))}
+      <VStack flex="15">
+        <ScrollView>
+          {lists &&
+            lists.map((list, index) => (
+              <Box mb="4">
+                <ListPreview
+                  key={list.id}
+                  listData={list}
+                  onPress={() => handleLoadList(list)}
+                />
+              </Box>
+            ))}
+        </ScrollView>
       </VStack>
       {userId === user.id && (
         <Button

@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import {
   Text,
   Heading,
-  Button,
   Avatar,
   Icon,
+  Button,
   Pressable,
+  Input,
   Flex,
   HStack,
   VStack,
+  ScrollView,
 } from 'native-base';
 
 import { populateListUser } from '../../redux/actions/user';
@@ -83,14 +85,13 @@ const List = ({ route, navigation, userState, friendsState, populateListFriends,
 
   // SOME STYLING ERROR HERE
   return (
-    <VStack flex="1" maxW="100%" p="4" safeArea>
-      <HStack flex="1">
+    <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
+      <HStack flex="1" alignItems="center" space="4">
         <Pressable onPress={() => navigation.goBack()}>
-          <Text>{'<<'}</Text>
+          <Icon as={<Feather name="chevron-left" />} size="xl" />
         </Pressable>
-        <Text>{listData.title}</Text>
-      </HStack>
-      
+        <Text fontSize="3xl">{listData.title}</Text>
+      </HStack>  
       {/* <VStack>
         <HStack
           alignContent="center"
