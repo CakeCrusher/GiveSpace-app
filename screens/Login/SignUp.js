@@ -10,14 +10,16 @@ import {
   Center,
 } from 'native-base';
 import { connect } from 'react-redux';
-import { useField } from '../../utils/helperFunctions';
-import { signup } from '../../redux/actions/user';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+import { signinUser } from '../../redux/actions/user';
+import { signinFriends } from '../../redux/actions/friends';
 import * as Contacts from 'expo-contacts';
 import parsePhoneNumber from 'libphonenumber-js'
 import PhoneInput from 'react-native-phone-number-input';
+import { REGISTER_USER } from '../../utils/schemas';
 
 // TODO: Need to do a 2nd pass and implement validation
-const Signup = ({ signup, toSignIn }) => {
+const Signup = ({ signinDispatch, toSignIn }) => {
   const username = useField('text', 'DELETE')
   const password = useField('password', 'secret')
   const passwordConfirm = useField('password', 'secret')
@@ -98,16 +100,20 @@ const Signup = ({ signup, toSignIn }) => {
     setError(null)
     setIsLoading(true)
     const contactsPhoneNumbers = await getContacts()
-    const reduxRes = await signup({
+    const userRes = await fetchGraphQL(REGISTER_USER, {
       username: username.value,
       password: password.value,
       phone_number: phoneNumber.value,
-      contacts_phone_numbers: contactsPhoneNumbers
-    })
-    setIsLoading(false);
-    if (reduxRes.status === 'error') {
-      setError(reduxRes.error);
+      contacts_phone_numbers: [...contactsPhoneNumbers, '+17865557297']
+    });
+    console.log('userRes',userRes)
+    if (userRes.errors || !userRes.data.register.userIdToUser) {
+      setError('Username or phone number already exist')
+    } else {
+      signinDispatch(userRes.data.register.userIdToUser)
     }
+    setIsLoading(false);
+    return
   }
   const stepTwoStack =  (
     <VStack space={4}>
@@ -162,7 +168,10 @@ const Signup = ({ signup, toSignIn }) => {
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
-  signup: (user) => dispatch(signup(user)),
+  signinDispatch: (userRes) => {
+    dispatch(signinUser(userRes))
+    dispatch(signinFriends(userRes))
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);

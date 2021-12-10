@@ -21,13 +21,15 @@ const cleanUserData = (userData) => {
   return userObject;
 };
 
-export const signinByIdUser =
-  (userRes) =>
-  async (dispatch) => {
-    const user = {...userRes.data.user[0]}
-    delete user.friend_rels
-    dispatch({ type: 'SET_USER', payload: user })
-  };
+export const signinUser =
+  (user) =>
+    (dispatch) => {
+      AsyncStorage.setItem('user_id', user.id);
+      const userCopy = {...user}
+      delete userCopy.friend_rels
+      dispatch({ type: 'SET_USER', payload: user })
+      return
+    };
 
 export const signin =
   ({ username, password }) =>

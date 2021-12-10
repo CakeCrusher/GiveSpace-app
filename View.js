@@ -8,24 +8,23 @@ import { Feather } from '@expo/vector-icons';
 import { Icon } from 'native-base';
 
 import { fetchGraphQL } from './utils/helperFunctions'
-import { signinByIdUser } from './redux/actions/user';
-import { signinByIdFriends } from './redux/actions/friends';
+import { signinUser } from './redux/actions/user';
+import { signinFriends } from './redux/actions/friends';
 import { Home, Login, Friends, MyLists, Account } from './screens';
 import { SIGN_IN_USER_BY_ID } from './utils/schemas';
 
 const Tab = createBottomTabNavigator();
 
-const View = ({ signinByIdUser, signinByIdFriends, userState }) => {
+const View = ({ signinDispatch, userState }) => {
   useEffect(() => {
     const retrieveUserId = async () => {
-      await AsyncStorage.setItem('user_id', '7c55600d-e5f1-48f3-83d6-3c16ec918693');
+      // await AsyncStorage.setItem('user_id', '7c55600d-e5f1-48f3-83d6-3c16ec918693');
       const userId = await AsyncStorage.getItem('user_id');
-      if (!userState.user && userId) {
+      if (!userState.id && userId) {
         const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_ID, {
           "user_id": userId,
         })
-        signinByIdUser(registerRes)
-        signinByIdFriends(registerRes)
+        signinDispatch(registerRes.data.user[0])
       }
     };
     retrieveUserId();
@@ -88,8 +87,10 @@ const mapStateToProps = (state) => ({
   userState: state.user,
 });
 const mapDispatchToProps = (dispatch) => ({
-  signinByIdUser: (userRes) => dispatch(signinByIdUser(userRes)),
-  signinByIdFriends: (userRes) => dispatch(signinByIdFriends(userRes)),
+  signinDispatch: (userRes) => {
+    dispatch(signinUser(userRes))
+    dispatch(signinFriends(userRes))
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);
