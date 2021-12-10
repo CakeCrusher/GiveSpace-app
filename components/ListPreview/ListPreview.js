@@ -12,7 +12,6 @@ const ListPreview = (props) => {
 
   const styles = { ...props };
   delete styles.listData;
-
   return (
     <VStack bg="#fff" p="2" {...styles}>
       <Pressable onPress={props.onPress}>

@@ -41,9 +41,6 @@ export const useField = (type, fill = '') => {
   return {
     type,
     value,
-    onChangeText,
-  };
-};
-
-// library for formating phone number https://www.npmjs.com/package/libphonenumber-js
-// library for inputing phone number https://www.npmjs.com/package/react-native-phone-number-input
+    onChangeText
+  }
+}

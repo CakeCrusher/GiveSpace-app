@@ -15,83 +15,48 @@ mutation MyMutation($password: String = "", $phone_number: String = "", $usernam
 
 const USER_DATA = `
 phone_number
-    username
+username
+id
+address
+profile_pic_url
+birthday
+lists(order_by: {date_modified: desc}) {
+  id
+  date_modified
+  title
+  items {
     id
-    lists {
+    name
+  }
+}
+friend_rels(where: {type: {_eq: "friends"}}) {
+  user {
+    id
+    username
+    lists(order_by: {date_modified: desc}) {
       id
-      date_modified
-      date_created
       title
-      user {
-        username
-      }
+      date_modified
       items {
-        item_url
-        image_url
+        id
         name
-        price
       }
     }
-    friendRelsByUserSecondId(where: {type: {_eq: "friends"}}) {
-      user {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
+  }
+  userByUserSecondId {
+    id
+    username
+    lists(order_by: {date_modified: desc}) {
+      id
+      title
+      date_modified
+      items {
         id
-      }
-      userByUserSecondId {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
-        id
+        name
       }
     }
-    friend_rels(where: {type: {_eq: "friends"}}) {
-      user {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
-        id
-      }
-      userByUserSecondId {
-        username
-        phone_number
-        lists {
-          title
-          list_items {
-            item {
-              name
-            }
-          }
-          date_modified
-        }
-        id
-      }
-    }
+  }
+}
 `;
 
 export const SIGN_IN_USER_BY_ID = `
@@ -102,7 +67,7 @@ query MyQuery($user_id: uuid = "") {
 }
 `;
 // {
-//   "user_id": "9f42db74-b38e-47f7-afa6-638773ae0c23"
+//   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
 
 export const SIGN_IN_USER = `
@@ -219,6 +184,43 @@ query MyQuery($user_id: uuid = "") {
 `;
 // {
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
+// }
+
+
+export const GET_LIST = `
+query MyQuery($list_id: uuid = "") {
+  list(where: {id: {_eq: $list_id}}) {
+    title
+    date_modified
+    id
+    items {
+      image_url
+      item_url
+      name
+      price
+      date_created
+      id
+    }
+  }
+}
+`
+// {
+//   "list_id": "3cfb100a-c924-4286-b6e2-87d598c1d7df"
+// }
+
+export const SCRAPE_ITEM = `
+mutation MyMutation($item_name: String = "", $list_id: String = "") {
+  scrape_item(item_name: $item_name, list_id: $list_id) {
+    itemIdToItem {
+      id
+      price
+    }
+  }
+}
+`
+// {
+//   "list_id": "656e08e4-2b80-4ff4-9175-15b340ccabd9",
+//   "item_name": "television toshiba"
 // }
 
 export const SEARCH_FOR_USERS = `
