@@ -33,7 +33,7 @@ const AllLists = ({ route, navigation, userState }) => {
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
       screen: 'List',
-      params: { listData },
+      params: { listData, userId },
     });
   };
 
