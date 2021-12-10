@@ -1,22 +1,21 @@
-import React, { useState, useMemo } from 'react';
-import { connect } from 'react-redux';
-import { Modal, Text, Icon, Input, HStack } from 'native-base';
-import { Feather } from '@expo/vector-icons';
+import React, { useState, useMemo } from "react";
+import { connect } from "react-redux";
+import { Modal, Text, Icon, Input, HStack } from "native-base";
+import { Feather } from "@expo/vector-icons";
 
-import AddFriendRow from './AddFriendRow';
+import AddFriendRow from "./AddFriendRow";
 
-import { debounce } from '../../utils/helperFunctions';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { SEARCH_FOR_USERS, CREATE_FRIEND_REL } from '../../utils/schemas';
+import { debounce } from "../../utils/helperFunctions";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { SEARCH_FOR_USERS, CREATE_FRIEND_REL } from "../../utils/schemas";
 
 const AddingModal = ({ isOpen, onClose, userState }) => {
   const [results, setResults] = useState([]);
-  const { user } = userState;
 
   const handleInput = debounce((evt) => {
     const { value } = evt.target;
 
-    if (value === '') {
+    if (value === "") {
       setResults([]);
     } else {
       fetchGraphQL(SEARCH_FOR_USERS, { search: `%${value}%` })
@@ -29,7 +28,7 @@ const AddingModal = ({ isOpen, onClose, userState }) => {
           data.forEach((e) => {
             set.add(e.id);
           });
-          user.friends.forEach((e) => {
+          userState.friends.forEach((e) => {
             set.delete(e.id);
           });
 
@@ -43,7 +42,7 @@ const AddingModal = ({ isOpen, onClose, userState }) => {
 
   const handleAddFriend = (recieverId) => {
     fetchGraphQL(CREATE_FRIEND_REL, {
-      user_first_id: user.id,
+      user_first_id: userState.id,
       user_second_id: recieverId,
     })
       .then((res) => console.log(res))

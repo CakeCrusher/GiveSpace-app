@@ -26,16 +26,19 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
     setError(null);
     setIsLoading(true);
 
-    const userRes = await fetchGraphQL(SIGN_IN_USER, { username: username.value, password: password.value });
+    const userRes = await fetchGraphQL(SIGN_IN_USER, {
+      username: username.value,
+      password: password.value,
+    });
     console.log('userRes', userRes);
     if (userRes.errors || !userRes.data.user[0]) {
-      setError('Invalid username or password')
+      setError('Invalid username or password');
     } else {
       signinDispatch(userRes.data.user[0]);
     }
     setIsLoading(false);
-    return
-  };
+    return;
+  });
 
   return (
     <VStack space={8}>
@@ -78,8 +81,8 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
   signinDispatch: (userRes) => {
-    dispatch(signinUser(userRes))
-    dispatch(signinFriends(userRes))
+    dispatch(signinUser(userRes));
+    dispatch(signinFriends(userRes));
   },
 });
 

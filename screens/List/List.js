@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
@@ -13,68 +13,72 @@ import {
   HStack,
   VStack,
   ScrollView,
-} from 'native-base';
+} from "native-base";
 
-import { populateListUser } from '../../redux/actions/user';
-import { populateListFriends } from '../../redux/actions/friends';
-import { ItemCard } from '../../components';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { GET_LIST } from '../../utils/schemas';
+import { populateListUser } from "../../redux/actions/user";
+import { populateListFriends } from "../../redux/actions/friends";
+import { ItemCard } from "../../components";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { GET_LIST } from "../../utils/schemas";
 
 const dummyItem = {
-  img_url: '',
-  name: 'dummyItem',
+  img_url: "",
+  name: "dummyItem",
 };
 
-const List = ({ route, navigation, userState, friendsState, populateListFriends, populateListUser }) => {
+const List = ({
+  route,
+  navigation,
+  userState,
+  friendsState,
+  populateListFriends,
+  populateListUser,
+}) => {
+  // TODO: change all instances "user" to "userState"
   const user = userState;
   const { listData } = route.params;
   const [isUser, setIsUser] = useState(true);
 
   // ROUTES TO LIST IN STATE vvvv-list-vvvv
-  const list = isUser ?
-    userState.lists.find(list => list.id === listData.id)
-    :
-    friendsState.list.find(
-      user => user.lists.find(
-        list => list.id === listData.id
-      )
-    ).lists.find(list => list.id === listData.id)
+  const list = isUser
+    ? userState.lists.find((list) => list.id === listData.id)
+    : friendsState.list
+        .find((user) => user.lists.find((list) => list.id === listData.id))
+        .lists.find((list) => list.id === listData.id);
 
-  console.log('CURRENT LIST: ', list);
+  console.log("CURRENT LIST: ", list);
 
   useEffect(() => {
     const addListToState = async () => {
       const listRes = await fetchGraphQL(GET_LIST, {
-        "list_id": listData.id
-      })
-      console.log('addListToState!', listRes);
-      
+        list_id: listData.id,
+      });
+      console.log("addListToState!", listRes);
+
       if (listRes.errors || !listRes.data.list[0]) {
-        console.log('ERROR!',listRes.errors)
-        return
+        console.log("ERROR!", listRes.errors);
+        return;
       } else {
         if (userState.lists.find((list) => list.id === listData.id)) {
-          console.log('isUser!');
-          populateListUser(listRes.data.list[0])
+          console.log("isUser!");
+          populateListUser(listRes.data.list[0]);
         } else {
-          console.log('isFriend!');
-          setIsUser(false)
-          populateListFriends(listRes.data.list[0])
+          console.log("isFriend!");
+          setIsUser(false);
+          populateListFriends(listRes.data.list[0]);
         }
-        return
+        return;
       }
-    }
+    };
     addListToState();
   }, []);
   //TODO: Still need to figure this out, but navigation is pretty good
-
 
   //TODO: Are we lazy fetching items?
   console.log(listData);
 
   const handleCardPress = () => {
-    console.log('card press');
+    console.log("card press");
   };
 
   const handleSearchToggle = () => {
@@ -91,7 +95,7 @@ const List = ({ route, navigation, userState, friendsState, populateListFriends,
           <Icon as={<Feather name="chevron-left" />} size="xl" />
         </Pressable>
         <Text fontSize="3xl">{listData.title}</Text>
-      </HStack>  
+      </HStack>
       {/* <VStack>
         <HStack
           alignContent="center"

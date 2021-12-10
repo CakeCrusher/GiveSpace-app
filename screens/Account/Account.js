@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
@@ -10,22 +10,20 @@ import {
   HStack,
   View,
   Avatar,
-} from 'native-base';
+} from "native-base";
 
-import { ListPreview } from '../../components';
+import { ListPreview } from "../../components";
 
 const Account = ({ navigation, userState }) => {
-  const { user } = userState;
-
   return (
     <VStack safeArea p="4">
       <ScrollView>
         <HStack alignItems="center" space="4">
-          <Avatar flex="2" bg="#FAA" size="xl" source={{ uri: '' }}>
+          <Avatar flex="2" bg="#FAA" size="xl" source={{ uri: "" }}>
             EX
           </Avatar>
           <VStack flex="5" ml="auto">
-            <Text fontSize="3xl">{user.username}</Text>
+            <Text fontSize="3xl">{userState.username}</Text>
             {/*
           TODO: Description to be added
           <Text noOfLines={2}>
@@ -50,20 +48,20 @@ const Account = ({ navigation, userState }) => {
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">My Lists</Text>
-          {user.lists ? (
+          {userState.lists ? (
             <>
               <View maxH="80">
                 <ScrollView>
-                  {user.lists.map((e) => (
+                  {userState.lists.map((e) => (
                     <ListPreview key={e.id} listData={e} mb="2" />
                   ))}
-                  {user.lists.map((e) => (
+                  {userState.lists.map((e) => (
                     <ListPreview key={e.id} listData={e} mb="2" />
                   ))}
-                  {user.lists.map((e) => (
+                  {userState.lists.map((e) => (
                     <ListPreview key={e.id} listData={e} mb="2" />
                   ))}
-                  {user.lists.map((e) => (
+                  {userState.lists.map((e) => (
                     <ListPreview key={e.id} listData={e} mb="2" />
                   ))}
                 </ScrollView>
@@ -71,7 +69,7 @@ const Account = ({ navigation, userState }) => {
               <View h="2" />
               <Button
                 variant="outline"
-                onPress={() => navigation.navigate('My Lists')}
+                onPress={() => navigation.navigate("My Lists")}
               >
                 All Lists
               </Button>
@@ -85,7 +83,7 @@ const Account = ({ navigation, userState }) => {
           <Text fontSize="3xl">Friends</Text>
           {/* Add Friends */}
           <HStack flexWrap="wrap">
-            {user.friends.map((e) => (
+            {userState.friends.map((e) => (
               <Box
                 key={e.id}
                 flexBasis="25%"

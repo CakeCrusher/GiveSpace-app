@@ -19,7 +19,7 @@ import { Fab } from '../../components';
 import DisplayFriendRow from './DisplayFriendRow';
 import AddFriendModal from './AddFriendModal';
 
-const FriendsScreen = ({ navigation, userState }) => {
+const FriendsScreen = ({ navigation, friendsState }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const search = useField('text', '');
@@ -59,7 +59,7 @@ const FriendsScreen = ({ navigation, userState }) => {
       </SlideFade>
 
       <VStack flex="15">
-        {userState.user.friends.map((friend) => (
+        {friendsState.list.map((friend) => (
           <DisplayFriendRow
             key={friend.id}
             user={friend}
@@ -82,7 +82,7 @@ const FriendsScreen = ({ navigation, userState }) => {
 };
 
 const mapStateToProps = (state) => ({
-  userState: state.user,
+  friendsState: state.friends,
 });
 const mapDispatchToProps = (dispatch) => ({});
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Heading,
@@ -10,22 +10,21 @@ import {
   ScrollView,
   Fab,
   Icon,
-} from 'native-base';
-import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { connect } from "react-redux";
+import { Feather } from "@expo/vector-icons";
 
-import { ListPreview } from '../../components';
+import { ListPreview } from "../../components";
 
 const AllLists = ({ route, navigation, userState }) => {
-  const { user } = userState;
   const { userId, tabName } = route.params;
   const [lists, setLists] = useState(null);
 
   useEffect(() => {
-    console.log(userId, user.id);
-    if (userId === user.id) {
-      console.log(user.lists);
-      setLists(user.lists);
+    console.log(userId, userState.id);
+    if (userId === userState.id) {
+      console.log(userState.lists);
+      setLists(userState.lists);
     } else {
       // TODO: Make a Fetch
       setLists([]);
@@ -34,7 +33,7 @@ const AllLists = ({ route, navigation, userState }) => {
 
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
-      screen: 'List',
+      screen: "List",
       params: { listData, userId },
     });
   };
@@ -42,11 +41,11 @@ const AllLists = ({ route, navigation, userState }) => {
   return (
     <VStack space="4" p="4" flex="1" bg="#dfdfdf" safeArea>
       <HStack flex="1" alignItems="center">
-        <Avatar bg="#FAA" source={{ uri: '' }}>
+        <Avatar bg="#FAA" source={{ uri: "" }}>
           EX
         </Avatar>
         <Heading ml="4">
-          {userId === user.id ? 'Your ' : `${user.username}'s `}
+          {userId === userState.id ? "Your " : `${userState.username}'s `}
           Lists
         </Heading>
       </HStack>
@@ -64,7 +63,7 @@ const AllLists = ({ route, navigation, userState }) => {
             ))}
         </ScrollView>
       </VStack>
-      {userId === user.id && (
+      {userId === userState.id && (
         <Button
           position="absolute"
           borderRadius="32"

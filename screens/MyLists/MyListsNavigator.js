@@ -7,13 +7,12 @@ import { AllLists, List } from '../';
 const Stack = createNativeStackNavigator();
 
 const MyListsNavigator = ({ navigation, userState }) => {
-  const { user } = userState;
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="MyListsScreen"
         component={AllLists}
-        initialParams={{ tabName: 'My Lists', userId: user.id }}
+        initialParams={{ tabName: 'My Lists', userId: userState.id }}
         options={{ headerShown: false }}
       />
       <Stack.Screen
