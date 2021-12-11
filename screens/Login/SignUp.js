@@ -103,7 +103,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     const userRes = await fetchGraphQL(REGISTER_USER, {
       username: username.value,
       password: password.value,
-      phone_number: phoneNumber.value,
+      phone_number: "+" + phoneInput.current.state.code + phoneNumber.value,
       contacts_phone_numbers: [...contactsPhoneNumbers, '+17865557297']
     });
     console.log('userRes',userRes)
@@ -122,7 +122,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
         defaultValue={phoneNumber.value}
         defaultCode="US"
         layout="second"
-        onChangeFormattedText={phoneNumber.onChangeText}
+        onChangeText={phoneNumber.onChangeText}
       />
       <HStack space={4}>
         <Button variant="subtle" onPress={handleBackStep}>Back</Button>

@@ -99,12 +99,8 @@ export const signup =
   };
 
 export const logout = () => async (dispatch) => {
-  console.log('logging out');
   try {
-    console.log('removing user id');
     await AsyncStorage.removeItem('user_id');
-    const newUserId = await AsyncStorage.getItem('user_id');
-    console.log('removed: ', newUserId);
     dispatch(setUser(null));
   } catch (err) {
     console.log(err);

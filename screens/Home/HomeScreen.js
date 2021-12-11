@@ -86,6 +86,11 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
             })}
         </HStack>
       </VStack>
+      <VStack>
+        <Button
+          onPress={() => logout()}
+        >logout</Button>
+      </VStack>
     </VStack>
   );
 };
