@@ -165,30 +165,6 @@ mutation MyMutation($user_id: uuid = "") {
 //   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
 // }
 
-export const GET_LISTS = `
-query MyQuery($user_id: uuid = "") {
-  list(where: {user_id: {_eq: $user_id}}) {
-        id
-        user_id
-        date_modified
-        date_created
-        title
-        user {
-                username
-              }
-        items {
-                item_url
-                image_url
-                name
-                price
-              }
-      }
-}
-`;
-// {
-//   "user_id": "c347eed6-3b00-4308-a49b-f21ac0ac2a52"
-// }
-
 export const GET_LIST = `
 query MyQuery($list_id: uuid = "") {
   list(where: {id: {_eq: $list_id}}) {

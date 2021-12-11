@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
@@ -13,17 +13,17 @@ import {
   HStack,
   VStack,
   ScrollView,
-} from 'native-base';
+} from "native-base";
 
-import { populateListUser } from '../../redux/actions/user';
-import { populateListFriends } from '../../redux/actions/friends';
-import { ItemCard } from '../../components';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { GET_LIST } from '../../utils/schemas';
+import { populateListUser } from "../../redux/actions/user";
+import { populateListFriends } from "../../redux/actions/friends";
+import { ItemCard } from "../../components";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { GET_LIST } from "../../utils/schemas";
 
 const dummyItem = {
-  img_url: '',
-  name: 'dummyItem',
+  img_url: "",
+  name: "dummyItem",
 };
 
 const List = ({
@@ -40,42 +40,43 @@ const List = ({
   console.log(listData);
   const [isUser, setIsUser] = useState(user.id === listData.user_id);
 
-  //// ROUTES TO LIST IN STATE vvvv-list-vvvv
-  //const list = isUser
-  //  ? userState.lists.find((list) => list.id === listData.id)
-  //  : friendsState.list
-  //      .find((user) => user.lists.find((list) => list.id === listData.id))
-  //      .lists.find((list) => list.id === listData.id);
+  // ROUTES TO LIST IN STATE vvvv-list-vvvv
+  const list = isUser
+    ? userState.lists.find((list) => list.id === listData.id)
+    : friendsState.list
+        .find((user) => user.lists.find((list) => list.id === listData.id))
+        .lists.find((list) => list.id === listData.id);
+  console.log(list);
 
-  //console.log('CURRENT LIST: ', list);
+  console.log("CURRENT LIST: ", list);
 
-  //useEffect(() => {
-  //  const addListToState = async () => {
-  //    const listRes = await fetchGraphQL(GET_LIST, {
-  //      list_id: listData.id,
-  //    });
-  //    console.log('addListToState!', listRes);
+  useEffect(() => {
+    const addListToState = async () => {
+      const listRes = await fetchGraphQL(GET_LIST, {
+        list_id: listData.id,
+      });
+      console.log("addListToState!", listRes);
 
-  //    if (listRes.errors || !listRes.data.list[0]) {
-  //      console.log('ERROR!', listRes.errors);
-  //      return;
-  //    } else {
-  //      if (userState.lists.find((list) => list.id === listData.id)) {
-  //        console.log('isUser!');
-  //        populateListUser(listRes.data.list[0]);
-  //      } else {
-  //        console.log('isFriend!');
-  //        setIsUser(false);
-  //        populateListFriends(listRes.data.list[0]);
-  //      }
-  //      return;
-  //    }
-  //  };
-  //  addListToState();
-  //}, []);
+      if (listRes.errors || !listRes.data.list[0]) {
+        console.log("ERROR!", listRes.errors);
+        return;
+      } else {
+        if (userState.lists.find((list) => list.id === listData.id)) {
+          console.log("isUser!");
+          populateListUser(listRes.data.list[0]);
+        } else {
+          console.log("isFriend!");
+          setIsUser(false);
+          populateListFriends(listRes.data.list[0]);
+        }
+        return;
+      }
+    };
+    addListToState();
+  }, []);
 
   const handleCardPress = () => {
-    console.log('card press');
+    console.log("card press");
   };
 
   const handleSearchToggle = () => {
@@ -118,12 +119,12 @@ const List = ({
 
       <VStack flex="15" overflow="scroll">
         <HStack flexWrap="wrap">
-          {listData.items.map((item, index) => (
+          {list.items.map((item, index) => (
             <Flex onPress={handleCardPress} key={index} flex="1" m="1">
               <ItemCard item={item} handlePress={handleCardPress} />
             </Flex>
           ))}
-          {listData.items.length % 2 !== 0 && (
+          {list.items.length % 2 !== 0 && (
             <Flex onPress={handleCardPress} flex="1" m="1" />
           )}
         </HStack>
