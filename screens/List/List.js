@@ -17,7 +17,8 @@ import {
 
 import { populateListUser } from "../../redux/actions/user";
 import { populateListFriends } from "../../redux/actions/friends";
-import { ItemCard } from "../../components";
+import ItemCard from "../../components/Item/ItemCard";
+import ItemInput from "../../components/Item/ItemInput";
 import { fetchGraphQL } from "../../utils/helperFunctions";
 import { GET_LIST } from "../../utils/schemas";
 
@@ -114,7 +115,7 @@ const List = ({
             </Pressable>
           </HStack>
         </HStack>
-        {isUser && <Text>Inputs</Text>}
+        {(isUser && list) && <ItemInput listId={list.id} />}
       </VStack>
 
       <VStack flex="15" overflow="scroll">
@@ -124,9 +125,6 @@ const List = ({
               <ItemCard item={item} handlePress={handleCardPress} />
             </Flex>
           ))}
-          {list.items.length % 2 !== 0 && (
-            <Flex onPress={handleCardPress} flex="1" m="1" />
-          )}
         </HStack>
       </VStack>
     </VStack>

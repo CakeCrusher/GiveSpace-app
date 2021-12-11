@@ -35,6 +35,12 @@ export const populateListUser = (list) => (dispatch) => {
   return;
 };
 
+export const addListItem = (listId, item) => (dispatch) => {
+
+  dispatch({ type: 'ADD_LIST_ITEM', payload: {listId, item} });
+  return;
+}
+
 export const signin =
   ({ username, password }) =>
   async (dispatch) => {

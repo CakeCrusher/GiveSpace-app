@@ -47,6 +47,17 @@ const user = (state = initState, action) => {
         lists: [...state.lists, action.payload],
       };
     }
+    case 'ADD_LIST_ITEM': {
+      const listToAddItem = {...state.lists.find(list => list.id === action.payload.listId)}
+      listToAddItem.items.push(action.payload.item);
+      const newLists = state.lists.map((list) =>
+        list.id === action.payload.listId ? listToAddItem : list
+      )
+      return {
+        ...state,
+        lists: [...newLists]
+      }
+    }
 
     default: {
       return state;

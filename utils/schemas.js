@@ -191,14 +191,18 @@ export const SCRAPE_ITEM = `
 mutation MyMutation($item_name: String = "", $list_id: String = "") {
   scrape_item(item_name: $item_name, list_id: $list_id) {
     itemIdToItem {
-      id
+      image_url
+      item_url
+      name
       price
+      date_created
+      id
     }
   }
 }
 `;
 // {
-//   "list_id": "656e08e4-2b80-4ff4-9175-15b340ccabd9",
+//   "list_id": "3cfb100a-c924-4286-b6e2-87d598c1d7df",
 //   "item_name": "television toshiba"
 // }
 
