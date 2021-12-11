@@ -16,22 +16,31 @@ import {
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 
-import { ListPreview } from '../../components';
+import { ListPreview, LoadingScreen } from '../../components';
 
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
 import { logout } from '../../redux/actions/user';
 
-const Account = ({ route, navigation, userState, friendsState, logout }) => {
-  const [data, setData] = useState({
-    user: null,
-    friends: null,
-    lists: null,
-  });
-  const isUser = userId === userState.id;
+const AccountWrapper = ({
+  route,
+  navigation,
+  userState,
+  friendsState,
+  logout,
+}) => {
+  /** DATA_STATE = {
+   *   user:
+   *   friends:
+   *   lists:
+   * }
+   */
+  const [data, setData] = useState(null);
+  const [hasError, setHasError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { userId } = route.params;
-  console.log(userId);
+  const isUser = userId === userState.id;
 
   useEffect(() => {
     if (isUser) {
@@ -40,20 +49,51 @@ const Account = ({ route, navigation, userState, friendsState, logout }) => {
         friends: friendsState.list,
         lists: userState.lists,
       });
+      setIsLoading(false);
     } else {
       // Fetch
-      fetchGraphQL(SIGN_IN_USER_BY_ID, { user_id: userId }).then((res) => {
-        console.log(res);
-        const user = res.data.user[0];
-        setData({
-          user: user,
-          friends: user.friend_rels.map((e) => e.userByUserSecondId),
-          lists: user.lists,
-        });
-      });
+      fetchGraphQL(SIGN_IN_USER_BY_ID, { user_id: userId })
+        .then((res) => {
+          const user = res.data.user[0];
+          setData({
+            user: user,
+            friends: user.friend_rels.map((e) => e.userByUserSecondId),
+            lists: user.lists,
+          });
+        })
+        .catch((err) => setHasError(err))
+        .finally(() => setIsLoading(false));
     }
-  }, []);
+  }, [userId]);
 
+  if (hasError) {
+    return (
+      <VStack safeArea>
+        <Center mt="4">
+          <Text fontSize="xl">Uh oh. We ran into a problem.</Text>
+        </Center>
+      </VStack>
+    );
+  }
+
+  if (isLoading) {
+    return <LoadingScreen isLoading={true} />;
+  }
+
+  if (data) {
+    return <Account navigation={navigation} isUser={isUser} {...data} />;
+  }
+
+  return (
+    <VStack safeArea>
+      <Center mt="4">
+        <Text fontSize="xl">Uh oh. It seems we couldn't find this user.</Text>
+      </Center>
+    </VStack>
+  );
+};
+
+const Account = ({ navigation, isUser, user, friends, lists }) => {
   const handleLogout = () => {
     logout();
   };
@@ -63,7 +103,7 @@ const Account = ({ route, navigation, userState, friendsState, logout }) => {
   };
 
   return (
-    <VStack safeArea p="4">
+    <VStack flex="1" p="4" safeArea>
       <ScrollView>
         <HStack mb="2" alignItems="center" justifyContent="space-between">
           {/* TODO: Update these pressables */}
@@ -89,7 +129,7 @@ const Account = ({ route, navigation, userState, friendsState, logout }) => {
             </Avatar>
           </Box>
           <VStack flex="5" ml="auto">
-            <Text fontSize="3xl">{data.user && data.user.username}</Text>
+            <Text fontSize="3xl">{user && user.username}</Text>
             {/*
           TODO: Description to be added
           <Text noOfLines={2}>
@@ -104,58 +144,58 @@ const Account = ({ route, navigation, userState, friendsState, logout }) => {
           {/*TODO: Change these*/}
           <HStack space="2">
             <Text>_</Text>
-            <Text>Birthday</Text>
+            <Text>{user.birthday}</Text>
           </HStack>
           <HStack space="2">
             <Text>_</Text>
-            <Text>State, City</Text>
+            <Text>{user.address}</Text>
           </HStack>
         </HStack>
 
         <VStack flex="5" space="2">
-          <Text fontSize="2xl">My Lists</Text>
-          {data.user &&
-            (data.user.lists ? (
-              <>
-                <ScrollView>
-                  <View maxH="80">
-                    {data.lists.map((e) => (
-                      <ListPreview key={e.id} listData={e} mb="2" />
-                    ))}
-                  </View>
-                </ScrollView>
-                <View h="2" />
-                <Button
-                  variant="outline"
-                  onPress={() => navigation.navigate('My Lists')}
-                >
-                  All Lists
-                </Button>
-              </>
-            ) : (
-              <Text fontSize="2xl">
-                {isUser
-                  ? "You don't have any lists"
-                  : `${data.user.username} doesn't have any lists`}
-              </Text>
-            ))}
+          <Text fontSize="2xl">
+            {isUser ? 'My' : user.username + "'s"} Lists
+          </Text>
+          {lists ? (
+            <>
+              <ScrollView>
+                <View maxH="80">
+                  {lists.map((e) => (
+                    <ListPreview key={e.id} listData={e} mb="2" />
+                  ))}
+                </View>
+              </ScrollView>
+              <View h="2" />
+              <Button
+                variant="outline"
+                onPress={() => navigation.navigate('My Lists')}
+              >
+                All Lists
+              </Button>
+            </>
+          ) : (
+            <Text fontSize="2xl">
+              {isUser
+                ? "You don't have any lists"
+                : `${user.username} doesn't have any lists`}
+            </Text>
+          )}
         </VStack>
 
         <VStack>
           <Text fontSize="3xl">Friends</Text>
           {/* Add Friends */}
           <HStack flexWrap="wrap">
-            {data.friends &&
-              data.friends.map((e) => (
-                <Box
-                  key={e.id}
-                  flexBasis="25%"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Avatar size="md" bg="#FAF" />
-                </Box>
-              ))}
+            {friends.map((e) => (
+              <Box
+                key={e.id}
+                flexBasis="25%"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Avatar size="md" bg="#FAF" />
+              </Box>
+            ))}
           </HStack>
         </VStack>
       </ScrollView>
@@ -172,4 +212,4 @@ const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Account);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountWrapper);

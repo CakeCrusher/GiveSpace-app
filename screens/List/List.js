@@ -34,7 +34,7 @@ const ListWrapper = ({
   populateListUser,
 }) => {
   const { listData } = route.params;
-  const isUser = (userState.id = listData.user_id);
+  const isUser = userState.id === listData.user_id;
 
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(null);
@@ -43,6 +43,7 @@ const ListWrapper = ({
   useEffect(() => {
     const addListToState = async () => {
       try {
+        console.log('FETCHING');
         const listRes = await fetchGraphQL(GET_LIST, {
           list_id: listData.id,
         });
@@ -57,7 +58,6 @@ const ListWrapper = ({
             populateListUser(listRes.data.list[0]);
           } else {
             console.log('isFriend!');
-            setIsUser(false);
             setDisplayList(listRes.data.list[0]);
             populateListFriends(listRes.data.list[0]);
           }
@@ -70,26 +70,33 @@ const ListWrapper = ({
     };
 
     const checkState = () => {
+      console.log('CHECKING CACHE');
       let list;
       let needsUpdate = true;
 
       if (isUser) {
         list = userState.lists.find((list) => list.id === listData.id);
       } else {
-        list = friendsState.list
-          .find((user) => user.lists.find((list) => list.id === listData.id))
-          .lists.find((list) => list.id === listData.id);
+        const friend = friendsState.list.find(
+          (user) => user.id === listData.user_id,
+        );
+        if (friend) {
+          list = friend.lists.find((list) => list.id === listData.id);
+        }
       }
 
       if (list) {
+        console.log('check for update');
         needsUpdate =
           list.items.find((e) => Object.keys(e).length === 2) !== undefined;
-        console.log(needsUpdate);
       }
 
       if (needsUpdate) {
+        console.log(list);
+        console.log('needs update');
         addListToState();
       } else {
+        console.log('no update');
         setDisplayList(list);
         setIsLoading(false);
       }
