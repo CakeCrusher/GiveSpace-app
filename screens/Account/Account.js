@@ -5,6 +5,7 @@ import {
   Heading,
   Button,
   VStack,
+  Modal,
   ScrollView,
   Box,
   HStack,
@@ -29,6 +30,7 @@ const AccountWrapper = ({
   userState,
   friendsState,
   logout,
+  deleteAccount,
 }) => {
   /** DATA_STATE = {
    *   user:
@@ -82,7 +84,15 @@ const AccountWrapper = ({
   }
 
   if (data) {
-    return <Account navigation={navigation} isUser={isUser} {...data} />;
+    return (
+      <Account
+        navigation={navigation}
+        isUser={isUser}
+        logout={logout}
+        deleteAccount={deleteAccount}
+        {...data}
+      />
+    );
   }
 
   return (
@@ -94,7 +104,7 @@ const AccountWrapper = ({
   );
 };
 
-const UserOptions = () => {
+const UserOptions = ({ handleLogout, handleStartDelete }) => {
   return (
     <HStack flex="1" justifyContent="flex-end">
       <Box>
@@ -121,14 +131,14 @@ const UserOptions = () => {
                 </Text>
               </Box>
               <VStack>
-                <Pressable>
+                <Pressable onPress={handleLogout}>
                   <Box p="2">
-                    <Text>Test</Text>
+                    <Text>Logout</Text>
                   </Box>
                 </Pressable>
-                <Pressable>
-                  <Box p="2">
-                    <Text>Test</Text>
+                <Pressable onPress={handleStartDelete}>
+                  <Box p="2" pt="4">
+                    <Text>Delete Account</Text>
                   </Box>
                 </Pressable>
               </VStack>
@@ -140,9 +150,27 @@ const UserOptions = () => {
   );
 };
 
-const Account = ({ navigation, isUser, user, friends, lists }) => {
+const Account = ({
+  navigation,
+  isUser,
+  user,
+  friends,
+  lists,
+  logout,
+  deleteAccount,
+}) => {
+  const [showDelete, setShowDelete] = useState(false);
+
   const handleLogout = () => {
     logout();
+  };
+
+  const handleStartDelete = () => {
+    setShowDelete(true);
+  };
+
+  const handleConfirmDelte = () => {
+    deleteAccount();
   };
 
   const handleBack = () => {
@@ -159,7 +187,12 @@ const Account = ({ navigation, isUser, user, friends, lists }) => {
               <Icon as={<Feather name="chevron-left" />} size="lg" />
             </Pressable>
           </Flex>
-          {isUser && <UserOptions />}
+          {isUser && (
+            <UserOptions
+              handleLogout={handleLogout}
+              handleStartDelete={handleStartDelete}
+            />
+          )}
         </HStack>
 
         <HStack alignItems="center" space="4">
@@ -239,6 +272,23 @@ const Account = ({ navigation, isUser, user, friends, lists }) => {
           </HStack>
         </VStack>
       </ScrollView>
+      <Modal isOpen={showDelete} onClose={() => setShowDelete(false)}>
+        <Modal.Content>
+          <Modal.Header>
+            Are you sure you want to delete your account?
+          </Modal.Header>
+          <Modal.Body>
+            <HStack space="4">
+              <Button flex="1" colorScheme="info">
+                No
+              </Button>
+              <Button flex="1" colorScheme="danger">
+                Yes
+              </Button>
+            </HStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </VStack>
   );
 };
@@ -250,6 +300,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
+  deleteAccount: () => console.log('Implement account deletion'),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountWrapper);
