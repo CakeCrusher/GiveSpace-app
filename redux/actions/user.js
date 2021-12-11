@@ -22,20 +22,18 @@ const cleanUserData = (userData) => {
   return userObject;
 };
 
-export const signinUser =
-  (user) =>
-    (dispatch) => {
-      AsyncStorage.setItem('user_id', user.id);
-      const userCopy = {...user}
-      delete userCopy.friend_rels
-      dispatch({ type: 'SET_USER', payload: user })
-      return
-    };
+export const signinUser = (user) => (dispatch) => {
+  AsyncStorage.setItem('user_id', user.id);
+  const userCopy = { ...user };
+  delete userCopy.friend_rels;
+  dispatch({ type: 'SET_USER', payload: user });
+  return;
+};
 
 export const populateListUser = (list) => (dispatch) => {
-  dispatch({ type: 'SET_USER_LIST', payload: list })
-  return
-}
+  dispatch({ type: 'SET_USER_LIST', payload: list });
+  return;
+};
 
 export const signin =
   ({ username, password }) =>
@@ -106,5 +104,10 @@ export const logout = () => async (dispatch) => {
     console.log(err);
   }
 };
+
+export const addList = (listData) => ({
+  type: 'ADD_USER_LIST',
+  payload: listData,
+});
 
 export const setUser = (user) => ({ type: 'SET_USER', payload: user });

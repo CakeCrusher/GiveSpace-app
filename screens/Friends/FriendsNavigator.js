@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import FriendsScreen from './FriendsScreen';
-import { AllLists, List } from '../';
+import AllLists from '../AllLists/AllLists';
+import List from '../List/List';
 
 const Stack = createNativeStackNavigator();
 

@@ -142,20 +142,18 @@ mutation MyMutation($contacts_phone_numbers: [String!] = "", $password: String =
 // }
 
 export const CREATE_LIST = `
-mutation MyMutation($title: String = "", $user_id: uuid = "") {
-  insert_list(objects: {title: $title, user_id: $user_id}) {
+mutation MyMutation($user_id: uuid = "") {
+  insert_list(objects: {user_id: $user_id}) {
     returning {
       id
       user_id
       title
       date_modified
-      list_items {
-        item {
-          name
-          item_url
-          image_url
-          price
-        }
+      items {
+        name
+        item_url
+        image_url
+        price
       }
     }
   }

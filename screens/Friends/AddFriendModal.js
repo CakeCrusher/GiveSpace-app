@@ -11,9 +11,10 @@ import { SEARCH_FOR_USERS, CREATE_FRIEND_REL } from '../../utils/schemas';
 
 const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
   const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInput = debounce((evt) => {
-    const { value } = evt.target;
+  const handleInput = debounce((value) => {
+    setIsLoading(true);
 
     if (value === '') {
       setResults([]);
@@ -23,6 +24,7 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
           // Filtering function to make sure anyone in user.friends
           // doesn't show up in search results
           const data = res.data.user;
+          console.log(data);
           const set = new Set();
 
           data.forEach((e) => {
@@ -35,10 +37,11 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
           const resultData = data.filter((e) => set.has(e.id));
 
           setResults(resultData);
+          setIsLoading(false);
         })
         .catch((err) => console.log(err));
     }
-  }, 250);
+  }, 200);
 
   const handleAddFriend = (recieverId) => {
     fetchGraphQL(CREATE_FRIEND_REL, {
@@ -56,17 +59,23 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
         <Modal.Header>
           <HStack alignItems="center" space="2">
             <Icon as={<Feather name="search" />} size="xs" />
-            <Input onChange={handleInput} minW="35" />
+            <Input onChangeText={handleInput} minW="35" />
           </HStack>
         </Modal.Header>
         <Modal.Body>
-          {results.map((friend) => (
-            <AddFriendRow
-              key={friend.id}
-              user={friend}
-              addFriend={handleAddFriend}
-            />
-          ))}
+          {isLoading ? (
+            <Text>Searching...</Text>
+          ) : results.length === 0 ? (
+            <Text>No results</Text>
+          ) : (
+            results.map((friend) => (
+              <AddFriendRow
+                key={friend.id}
+                user={friend}
+                addFriend={handleAddFriend}
+              />
+            ))
+          )}
         </Modal.Body>
       </Modal.Content>
     </Modal>

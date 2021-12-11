@@ -30,13 +30,22 @@ const user = (state = initState, action) => {
       };
     }
     case 'SET_USER_LIST': {
-      const newLists = [...state.lists.map(
-        list => list.id === action.payload.id ? action.payload : list
-      )]
+      const newLists = [
+        ...state.lists.map((list) =>
+          list.id === action.payload.id ? action.payload : list,
+        ),
+      ];
       return {
         ...state,
         lists: newLists,
-      }
+      };
+    }
+    case 'ADD_USER_LIST': {
+      console.log(action.payload);
+      return {
+        ...state,
+        lists: [...state.lists, action.payload],
+      };
     }
 
     default: {
