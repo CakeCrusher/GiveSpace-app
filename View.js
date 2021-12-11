@@ -66,6 +66,7 @@ const View = ({ signinDispatch, userState }) => {
         <Tab.Screen
           name="Account"
           component={Account}
+          initialParams={{ userId: userState.id }}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused, color, size }) => (

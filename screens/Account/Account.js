@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   Text,
@@ -14,7 +14,41 @@ import {
 
 import { ListPreview } from '../../components';
 
-const Account = ({ navigation, userState, friendsState }) => {
+import { fetchGraphQL } from '../../utils/helperFunctions';
+import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
+
+const Account = ({ route, navigation, userState, friendsState }) => {
+  const [data, setData] = useState({
+    user: null,
+    friends: null,
+    lists: null,
+  });
+  const isUser = userId === userState.id;
+
+  const { userId } = route.params;
+  console.log(userId);
+
+  useEffect(() => {
+    if (isUser) {
+      setData({
+        user: userState,
+        friends: friendsState.list,
+        lists: userState.lists,
+      });
+    } else {
+      // Fetch
+      fetchGraphQL(SIGN_IN_USER_BY_ID, { user_id: userId }).then((res) => {
+        console.log(res);
+        const user = res.data.user[0];
+        setData({
+          user: user,
+          friends: user.friend_rels.map((e) => e.userByUserSecondId),
+          lists: user.lists,
+        });
+      });
+    }
+  }, []);
+
   return (
     <VStack safeArea p="4">
       <ScrollView>
@@ -25,7 +59,7 @@ const Account = ({ navigation, userState, friendsState }) => {
             </Avatar>
           </Box>
           <VStack flex="5" ml="auto">
-            <Text fontSize="3xl">{userState.username}</Text>
+            <Text fontSize="3xl">{data.user && data.user.username}</Text>
             {/*
           TODO: Description to be added
           <Text noOfLines={2}>
@@ -50,51 +84,48 @@ const Account = ({ navigation, userState, friendsState }) => {
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">My Lists</Text>
-          {userState.lists ? (
-            <>
-              <View maxH="80">
+          {data.user &&
+            (data.user.lists ? (
+              <>
                 <ScrollView>
-                  {userState.lists.map((e) => (
-                    <ListPreview key={e.id} listData={e} mb="2" />
-                  ))}
-                  {userState.lists.map((e) => (
-                    <ListPreview key={e.id} listData={e} mb="2" />
-                  ))}
-                  {userState.lists.map((e) => (
-                    <ListPreview key={e.id} listData={e} mb="2" />
-                  ))}
-                  {userState.lists.map((e) => (
-                    <ListPreview key={e.id} listData={e} mb="2" />
-                  ))}
+                  <View maxH="80">
+                    {data.lists.map((e) => (
+                      <ListPreview key={e.id} listData={e} mb="2" />
+                    ))}
+                  </View>
                 </ScrollView>
-              </View>
-              <View h="2" />
-              <Button
-                variant="outline"
-                onPress={() => navigation.navigate('My Lists')}
-              >
-                All Lists
-              </Button>
-            </>
-          ) : (
-            <Text fontSize="2xl">You don't have any lists!</Text>
-          )}
+                <View h="2" />
+                <Button
+                  variant="outline"
+                  onPress={() => navigation.navigate('My Lists')}
+                >
+                  All Lists
+                </Button>
+              </>
+            ) : (
+              <Text fontSize="2xl">
+                {isUser
+                  ? "You don't have any lists"
+                  : `${data.user.username} doesn't have any lists`}
+              </Text>
+            ))}
         </VStack>
 
         <VStack>
           <Text fontSize="3xl">Friends</Text>
           {/* Add Friends */}
           <HStack flexWrap="wrap">
-            {friendsState.list.map((e) => (
-              <Box
-                key={e.id}
-                flexBasis="25%"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Avatar size="md" bg="#FAF" />
-              </Box>
-            ))}
+            {data.friends &&
+              data.friends.map((e) => (
+                <Box
+                  key={e.id}
+                  flexBasis="25%"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Avatar size="md" bg="#FAF" />
+                </Box>
+              ))}
           </HStack>
         </VStack>
       </ScrollView>
