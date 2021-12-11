@@ -8,16 +8,21 @@ import {
   ScrollView,
   Box,
   HStack,
+  Flex,
   View,
   Avatar,
+  Icon,
+  Pressable,
 } from 'native-base';
+import { Feather } from '@expo/vector-icons';
 
 import { ListPreview } from '../../components';
 
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
+import { logout } from '../../redux/actions/user';
 
-const Account = ({ route, navigation, userState, friendsState }) => {
+const Account = ({ route, navigation, userState, friendsState, logout }) => {
   const [data, setData] = useState({
     user: null,
     friends: null,
@@ -49,9 +54,34 @@ const Account = ({ route, navigation, userState, friendsState }) => {
     }
   }, []);
 
+  const handleLogout = () => {
+    logout();
+  };
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <VStack safeArea p="4">
       <ScrollView>
+        <HStack mb="2" alignItems="center" justifyContent="space-between">
+          {/* TODO: Update these pressables */}
+          <Flex flex="1">
+            <Pressable p="2" onPress={handleBack}>
+              <Icon as={<Feather name="chevron-left" />} size="lg" />
+            </Pressable>
+          </Flex>
+          <HStack flex="1" justifyContent="flex-end">
+            <Pressable p="2">
+              <Icon as={<Feather name="plus" />} size="sm" />
+            </Pressable>
+            <Pressable p="2" onPress={handleLogout}>
+              <Icon as={<Feather name="more-vertical" />} size="sm" />
+            </Pressable>
+          </HStack>
+        </HStack>
+
         <HStack alignItems="center" space="4">
           <Box flex="2">
             <Avatar bg="#FAA" size="xl" source={{ uri: '' }}>
@@ -138,4 +168,8 @@ const mapStateToProps = (state) => ({
   friendsState: state.friends,
 });
 
-export default connect(mapStateToProps, null)(Account);
+const mapDispatchToProps = (dispatch) => ({
+  logout: () => dispatch(logout()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Account);
