@@ -12,6 +12,7 @@ import {
   Flex,
   HStack,
   VStack,
+  Center,
   ScrollView,
 } from 'native-base';
 
@@ -24,12 +25,7 @@ import { GET_LIST } from '../../utils/schemas';
 import SelectItemModal from './SelectItemModal';
 import { LoadingScreen } from '../../components';
 
-const dummyItem = {
-  img_url: '',
-  name: 'dummyItem',
-};
-
-const List = ({
+const ListWrapper = ({
   route,
   navigation,
   userState,
@@ -37,51 +33,101 @@ const List = ({
   populateListFriends,
   populateListUser,
 }) => {
-  // TODO: change all instances "user" to "userState"
-  const user = userState;
   const { listData } = route.params;
+  const isUser = (userState.id = listData.user_id);
 
-  const [isUser, setIsUser] = useState(user.id === listData.user_id);
-  const [selectItem, setSelectItem] = useState(null);
-  const [showNewModal, setShowNewModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // ROUTES TO LIST IN STATE vvvv-list-vvvv
-  const list = isUser
-    ? userState.lists.find((list) => list.id === listData.id)
-    : friendsState.list
-        .find((user) => user.lists.find((list) => list.id === listData.id))
-        .lists.find((list) => list.id === listData.id);
-  console.log(list);
-
-  console.log('CURRENT LIST: ', list);
+  const [hasError, setHasError] = useState(null);
+  const [displayList, setDisplayList] = useState(null);
 
   useEffect(() => {
     const addListToState = async () => {
-      const listRes = await fetchGraphQL(GET_LIST, {
-        list_id: listData.id,
-      });
-      console.log('addListToState!', listRes);
+      try {
+        const listRes = await fetchGraphQL(GET_LIST, {
+          list_id: listData.id,
+        });
+        console.log('addListToState!', listRes);
 
-      if (listRes.errors || !listRes.data.list[0]) {
-        console.log('ERROR!', listRes.errors);
-        setIsLoading(false);
-        return;
-      } else {
-        if (userState.lists.find((list) => list.id === listData.id)) {
-          console.log('isUser!');
-          populateListUser(listRes.data.list[0]);
+        if (listRes.errors || !listRes.data.list[0]) {
+          throw new Error(listRes.errors);
         } else {
-          console.log('isFriend!');
-          setIsUser(false);
-          populateListFriends(listRes.data.list[0]);
+          if (isUser) {
+            console.log('isUser!');
+            setDisplayList(listRes.data.list[0]);
+            populateListUser(listRes.data.list[0]);
+          } else {
+            console.log('isFriend!');
+            setIsUser(false);
+            setDisplayList(listRes.data.list[0]);
+            populateListFriends(listRes.data.list[0]);
+          }
         }
+      } catch (err) {
+        console.warn(err);
+      } finally {
         setIsLoading(false);
-        return;
       }
     };
-    addListToState();
-  }, []);
+
+    const checkState = () => {
+      let list;
+      let needsUpdate = true;
+
+      if (isUser) {
+        list = userState.lists.find((list) => list.id === listData.id);
+      } else {
+        list = friendsState.list
+          .find((user) => user.lists.find((list) => list.id === listData.id))
+          .lists.find((list) => list.id === listData.id);
+      }
+
+      if (list) {
+        needsUpdate =
+          list.items.find((e) => Object.keys(e).length === 2) !== undefined;
+        console.log(needsUpdate);
+      }
+
+      if (needsUpdate) {
+        addListToState();
+      } else {
+        setDisplayList(list);
+        setIsLoading(false);
+      }
+    };
+
+    checkState();
+  }, [listData]);
+
+  if (hasError) {
+    return (
+      <VStack safeArea>
+        <Center mt="4">
+          <Text fontSize="xl">Uh oh. Something went wrong.</Text>
+        </Center>
+      </VStack>
+    );
+  }
+
+  if (isLoading) {
+    return <LoadingScreen isLoading={true} />;
+  }
+
+  if (displayList) {
+    return <List navigation={navigation} isUser={isUser} list={displayList} />;
+  }
+
+  return (
+    <VStack safeArea>
+      <Center mt="4">
+        <Text fontSize="xl">Uh oh. It seems we couldn't find the list</Text>
+      </Center>
+    </VStack>
+  );
+};
+
+const List = ({ navigation, list, isUser }) => {
+  const [selectItem, setSelectItem] = useState(null);
+  const [showNewModal, setShowNewModal] = useState(false);
 
   const handleCardPress = (item) => {
     console.log(item);
@@ -92,10 +138,6 @@ const List = ({
     setSelectItem(null);
   };
 
-  const handleSearchToggle = () => {
-    setShowSearch((e) => !e);
-  };
-
   const handleSettingsToggle = () => {};
 
   return (
@@ -104,7 +146,7 @@ const List = ({
         <Pressable onPress={() => navigation.goBack()}>
           <Icon as={<Feather name="chevron-left" />} size="xl" />
         </Pressable>
-        <Text fontSize="3xl">{listData.title}</Text>
+        <Text fontSize="3xl">{list.title}</Text>
       </HStack>
       <VStack>
         <HStack
@@ -125,20 +167,16 @@ const List = ({
             </Pressable>
           </HStack>
         </HStack>
-        {isUser && list && <ItemInput listId={list.id} />}
+        {isUser && <ItemInput listId={list.id} />}
       </VStack>
 
       <VStack flex="15" overflow="scroll">
-        <HStack flexWrap="wrap">
-          {!isLoading &&
-            list.items.map((item, index) => (
-              <Flex onPress={handleCardPress} key={index} flex="1" m="1">
-                <ItemCard
-                  item={item}
-                  handlePress={() => handleCardPress(item)}
-                />
-              </Flex>
-            ))}
+        <HStack flexWrap="wrap" justifyContent="space-between">
+          {list.items.map((item, index) => (
+            <Flex onPress={handleCardPress} key={index} w="40%" p="1">
+              <ItemCard item={item} handlePress={() => handleCardPress(item)} />
+            </Flex>
+          ))}
         </HStack>
       </VStack>
 
@@ -150,7 +188,6 @@ const List = ({
           item={selectItem}
         />
       )}
-      <LoadingScreen isLoading={isLoading} />
     </VStack>
   );
 };
@@ -165,4 +202,4 @@ const mapDispatchToProps = (dispatch) => ({
   populateListUser: (list) => dispatch(populateListUser(list)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default connect(mapStateToProps, mapDispatchToProps)(ListWrapper);
