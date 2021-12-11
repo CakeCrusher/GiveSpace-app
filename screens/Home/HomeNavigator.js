@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from './HomeScreen';
-import { List } from '../';
+import List from '../List/List';
 
 const Stack = createNativeStackNavigator();
 

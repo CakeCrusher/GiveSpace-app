@@ -1,43 +1,82 @@
-import React, { useEffect } from 'react';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
-  Button,
   Avatar,
   Icon,
+  Button,
   Pressable,
+  Input,
   Flex,
   HStack,
   VStack,
-} from 'native-base';
+  ScrollView,
+} from "native-base";
 
-import { ItemCard } from '../../components';
+import { populateListUser } from "../../redux/actions/user";
+import { populateListFriends } from "../../redux/actions/friends";
+import { ItemCard } from "../../components";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { GET_LIST } from "../../utils/schemas";
 
 const dummyItem = {
-  img_url: '',
-  name: 'dummyItem',
+  img_url: "",
+  name: "dummyItem",
 };
 
-const List = ({ route, navigation, userState }) => {
-  const { user } = userState;
-  const { listData, userId } = route.params;
+const List = ({
+  route,
+  navigation,
+  userState,
+  friendsState,
+  populateListFriends,
+  populateListUser,
+}) => {
+  // TODO: change all instances "user" to "userState"
+  const user = userState;
+  const { listData } = route.params;
+  console.log(listData);
+  const [isUser, setIsUser] = useState(user.id === listData.user_id);
+
+  // ROUTES TO LIST IN STATE vvvv-list-vvvv
+  const list = isUser
+    ? userState.lists.find((list) => list.id === listData.id)
+    : friendsState.list
+        .find((user) => user.lists.find((list) => list.id === listData.id))
+        .lists.find((list) => list.id === listData.id);
+  console.log(list);
+
+  console.log("CURRENT LIST: ", list);
 
   useEffect(() => {
-    if (userId === user.id) {
-      console.log('same user');
-    } else {
-      console.log('different user');
-    }
-  }, []);
-  //TODO: Still need to figure this out, but navigation is pretty good
+    const addListToState = async () => {
+      const listRes = await fetchGraphQL(GET_LIST, {
+        list_id: listData.id,
+      });
+      console.log("addListToState!", listRes);
 
-  //TODO: Are we lazy fetching items?
-  console.log(listData);
+      if (listRes.errors || !listRes.data.list[0]) {
+        console.log("ERROR!", listRes.errors);
+        return;
+      } else {
+        if (userState.lists.find((list) => list.id === listData.id)) {
+          console.log("isUser!");
+          populateListUser(listRes.data.list[0]);
+        } else {
+          console.log("isFriend!");
+          setIsUser(false);
+          populateListFriends(listRes.data.list[0]);
+        }
+        return;
+      }
+    };
+    addListToState();
+  }, []);
 
   const handleCardPress = () => {
-    console.log('card press');
+    console.log("card press");
   };
 
   const handleSearchToggle = () => {
@@ -46,20 +85,20 @@ const List = ({ route, navigation, userState }) => {
 
   const handleSettingsToggle = () => {};
 
+  // SOME STYLING ERROR HERE
   return (
-    <VStack flex="1" maxW="100%" p="4" safeArea>
-      <HStack flex="1">
+    <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
+      <HStack flex="1" alignItems="center" space="4">
         <Pressable onPress={() => navigation.goBack()}>
-          <Text>{'<<'}</Text>
+          <Icon as={<Feather name="chevron-left" />} size="xl" />
         </Pressable>
-        <Text>{listData.title}</Text>
+        <Text fontSize="3xl">{listData.title}</Text>
       </HStack>
-
       <VStack>
         <HStack
           alignContent="center"
           justifyContent="space-between"
-          flex="1 0 auto"
+          flex="1"
           p="2"
         >
           <Flex flex="5">
@@ -75,18 +114,18 @@ const List = ({ route, navigation, userState }) => {
             </Pressable>
           </HStack>
         </HStack>
-        {userId === user.id && <Text>Inputs</Text>}
+        {isUser && <Text>Inputs</Text>}
       </VStack>
 
       <VStack flex="15" overflow="scroll">
         <HStack flexWrap="wrap">
-          {listData.items.map((item, index) => (
-            <Flex onPress={handleCardPress} key={index} flex="1 0 40%" m="1">
+          {list.items.map((item, index) => (
+            <Flex onPress={handleCardPress} key={index} flex="1" m="1">
               <ItemCard item={item} handlePress={handleCardPress} />
             </Flex>
           ))}
-          {listData.items.length % 2 !== 0 && (
-            <Flex onPress={handleCardPress} flex="1 0 40%" m="1" />
+          {list.items.length % 2 !== 0 && (
+            <Flex onPress={handleCardPress} flex="1" m="1" />
           )}
         </HStack>
       </VStack>
@@ -96,8 +135,12 @@ const List = ({ route, navigation, userState }) => {
 
 const mapStateToProps = (state) => ({
   userState: state.user,
+  friendsState: state.friends,
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  populateListFriends: (list) => dispatch(populateListFriends(list)),
+  populateListUser: (list) => dispatch(populateListUser(list)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

@@ -15,29 +15,25 @@ const cleanUserData = (userData) => {
   delete userObject.friendRelsByUserSecondId;
 
   const friends1 = userData.friend_rels.map((e) => e.userByUserSecondId);
-  const friends2 = userData.friendRelsByUserSecondId.map((e) => e.user);
+  //const friends2 = userData.friendRelsByUserSecondId.map((e) => e.user);
 
-  userObject.friends = [...friends1, ...friends2];
+  //userObject.friends = [...friends1, ...friends2];
+  userObject.friends = friends1;
   return userObject;
 };
 
-export const signinById =
-  ({ userId }) =>
-  async (dispatch) => {
-    try {
-      const user = await fetchGraphQL(SIGN_IN_USER_BY_ID, { user_id: userId });
-      if (user.data.user.length) {
-        const userObject = cleanUserData(user.data.user[0]);
-        dispatch(setUser(userObject));
-        return { status: 'success' };
-      } else {
-        return { status: 'error', error: 'Invalid username or password' };
-      }
-    } catch (err) {
-      console.log(err);
-      return { status: 'error', error: 'Invalid username or password' };
-    }
-  };
+export const signinUser = (user) => (dispatch) => {
+  AsyncStorage.setItem('user_id', user.id);
+  const userCopy = { ...user };
+  delete userCopy.friend_rels;
+  dispatch({ type: 'SET_USER', payload: user });
+  return;
+};
+
+export const populateListUser = (list) => (dispatch) => {
+  dispatch({ type: 'SET_USER_LIST', payload: list });
+  return;
+};
 
 export const signin =
   ({ username, password }) =>
@@ -51,7 +47,7 @@ export const signin =
         const userObject = cleanUserData(user.data.user[0]);
         await AsyncStorage.setItem('user_id', user.data.user[0].id);
 
-        dispatch(setUser(userObject));
+        dispatch({ type: 'SET_USER', payload: user });
         return { status: 'success' };
       } else {
         return { status: 'error', error: 'Invalid username or password' };
@@ -108,5 +104,10 @@ export const logout = () => async (dispatch) => {
     console.log(err);
   }
 };
+
+export const addList = (listData) => ({
+  type: 'ADD_USER_LIST',
+  payload: listData,
+});
 
 export const setUser = (user) => ({ type: 'SET_USER', payload: user });

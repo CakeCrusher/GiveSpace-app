@@ -1,32 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as Contacts from 'expo-contacts';
-import { Text, Button, HStack, VStack } from 'native-base';
+import { Text, Button, HStack, VStack, ScrollView } from 'native-base';
 
 import { ListPreview } from '../../components';
 
 import { setUser, logout } from '../../redux/actions/user';
 import MockApi from '../../utils/MockApi';
 
-const HomeScreen = ({ user, logout, navigation }) => {
-  const [loading, setLoading] = useState(false);
-  const [recentList, setRecentList] = useState(null);
-  const [friendsList, setFriendsList] = useState(null);
-
-  useEffect(() => {
-    const getLists = async () => {
-      // TODO: Get this off MockApi
-      try {
-        const recent = await MockApi.getList({ listId: 0 });
-        const friends = await MockApi.getUserLists({ userId: 1 });
-        setRecentList(recent);
-        setFriendsList(friends);
-      } catch (err) {
-        console.warn(err);
-      }
-    };
-    getLists();
-  }, []);
+const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
 
   const handleLoadList = (listData) => {
     navigation.navigate('Home', {
@@ -37,6 +19,7 @@ const HomeScreen = ({ user, logout, navigation }) => {
     });
   };
 
+  const friendsWithLists = friendsState.list.filter((friend) => friend.lists.length > 0)
   return (
     <VStack
       space="2"
@@ -47,15 +30,20 @@ const HomeScreen = ({ user, logout, navigation }) => {
       safeArea
     >
       <HStack justifyContent="space-between">
-        <Text fontSize="md">Hello, {user.username}</Text>
+        <Text fontSize="md">Hello, {userState.username}</Text>
         <Text fontSize="md">Nov, 28</Text>
       </HStack>
 
       <VStack flex="5" space="2">
         <Text fontSize="2xl">Recent</Text>
-        {recentList && (
+        {userState.lists[0] && (
           <>
-            <ListPreview mb="2" listData={recentList} />
+            <ListPreview
+              onPress={() => handleLoadList(userState.lists[0])}
+              mb="2"
+              username={userState.username}
+              listData={userState.lists[0]}
+            />
             <Button
               variant="outline"
               onPress={() => navigation.navigate('My Lists')}
@@ -66,18 +54,18 @@ const HomeScreen = ({ user, logout, navigation }) => {
         )}
       </VStack>
 
-      {/*TODO: Need to decide how to "pass selected list" through navigation */}
       <VStack flex="7" space="2" overflow="scroll">
         <Text fontSize="2xl">Friends</Text>
         <HStack space="2" flexWrap="wrap">
-          {friendsList &&
-            friendsList.map((list, index) => {
+          {friendsWithLists.length > 0 &&
+            friendsWithLists.map((friend, index) => {
               if ((index + 1) % 2 === 0) {
                 return (
                   <ListPreview
                     key={index}
-                    listData={list}
-                    onPress={() => handleLoadList(list)}
+                    username={friend.username}
+                    listData={friend.lists[0]}
+                    onPress={() => handleLoadList(friend.lists[0])}
                     w="45%"
                     mt="2"
                     ml="auto"
@@ -87,8 +75,9 @@ const HomeScreen = ({ user, logout, navigation }) => {
                 return (
                   <ListPreview
                     key={index}
-                    listData={list}
-                    onPress={() => handleLoadList(list)}
+                    username={friend.username}
+                    listData={friend.lists[0]}
+                    onPress={() => handleLoadList(friend.lists[0])}
                     w="45%"
                     mt="2"
                   />
@@ -97,16 +86,13 @@ const HomeScreen = ({ user, logout, navigation }) => {
             })}
         </HStack>
       </VStack>
-
-      <Button flex="1" color="red" onPress={logout}>
-        Logout
-      </Button>
     </VStack>
   );
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  userState: state.user,
+  friendsState: state.friends
 });
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),

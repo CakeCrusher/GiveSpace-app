@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   Text,
@@ -11,24 +11,34 @@ import {
   VStack,
 } from 'native-base';
 import { connect } from 'react-redux';
-import { signin } from '../../redux/actions/user';
-import { useField } from '../../utils/helperFunctions';
+import { signinFriends } from '../../redux/actions/friends';
+import { signinUser } from '../../redux/actions/user';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+import { SIGN_IN_USER } from '../../utils/schemas';
 
-const SignIn = ({ toSignUp, fetchUser }) => {
+const SignIn = ({ toSignUp, signinDispatch }) => {
   const username = useField('text', 'Krabs');
   const password = useField('password', 'secret');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     setError(null);
     setIsLoading(true);
-    const reuxRes = await fetchUser({ username: username.value, password: password.value });
-    setIsLoading(false);
-    if (reuxRes.status === 'error') {
-      setError(reuxRes.error);
+
+    const userRes = await fetchGraphQL(SIGN_IN_USER, {
+      username: username.value,
+      password: password.value,
+    });
+    console.log('userRes', userRes);
+    if (userRes.errors || !userRes.data.user[0]) {
+      setError('Invalid username or password');
+    } else {
+      signinDispatch(userRes.data.user[0]);
     }
-  };
+    setIsLoading(false);
+    return;
+  });
 
   return (
     <VStack space={8}>
@@ -52,19 +62,14 @@ const SignIn = ({ toSignUp, fetchUser }) => {
             </HStack>
           </Center>
         )}
-
       </VStack>
 
       <VStack space={4}>
-        <Input
-          {...username}
-          placeholder="username"
-        />
-        <Input
-          {...password}
-          placeholder="password"
-        />
-        <Button isLoading={isLoading} onPress={handleSubmit}>Sign In</Button>
+        <Input {...username} placeholder="username" />
+        <Input {...password} placeholder="password" />
+        <Button isLoading={isLoading} onPress={handleSubmit}>
+          Sign In
+        </Button>
         <VStack alignItems="center">
           <Link>Forgot Your Password?</Link>
         </VStack>
@@ -75,7 +80,10 @@ const SignIn = ({ toSignUp, fetchUser }) => {
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
-  fetchUser: (user) => dispatch(signin(user)),
+  signinDispatch: (userRes) => {
+    dispatch(signinUser(userRes));
+    dispatch(signinFriends(userRes));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

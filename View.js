@@ -7,29 +7,30 @@ import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import { Icon } from 'native-base';
 
-import { signinById } from './redux/actions/user';
+import { fetchGraphQL } from './utils/helperFunctions'
+import { signinUser } from './redux/actions/user';
+import { signinFriends } from './redux/actions/friends';
 import { Home, Login, Friends, MyLists, Account } from './screens';
+import { SIGN_IN_USER_BY_ID } from './utils/schemas';
 
 const Tab = createBottomTabNavigator();
 
-const View = ({ signinById, userState }) => {
+const View = ({ signinDispatch, userState }) => {
   useEffect(() => {
     const retrieveUserId = async () => {
-      if (!userState.user) {
-        const userId = await AsyncStorage.getItem('user_id');
-        if (userId) {
-          console.log('Logged in with: ', userId);
-          signinById({ userId });
-        } else {
-          console.log('Not logged in');
-        }
+      // await AsyncStorage.setItem('user_id', '7c55600d-e5f1-48f3-83d6-3c16ec918693');
+      const userId = await AsyncStorage.getItem('user_id');
+      if (!userState.id && userId) {
+        const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_ID, {
+          "user_id": userId,
+        })
+        signinDispatch(registerRes.data.user[0])
       }
     };
     retrieveUserId();
   }, []);
 
-  if (userState.user) {
-    console.log(userState);
+  if (userState.id) {
     return (
       <NavigationContainer>
         <Tab.Navigator>
@@ -85,7 +86,10 @@ const mapStateToProps = (state) => ({
   userState: state.user,
 });
 const mapDispatchToProps = (dispatch) => ({
-  signinById: (user_id) => dispatch(signinById(user_id)),
+  signinDispatch: (userRes) => {
+    dispatch(signinUser(userRes))
+    dispatch(signinFriends(userRes))
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

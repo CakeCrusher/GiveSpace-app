@@ -15,3 +15,8 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CameraPage)
+
+Create a template for the user
+immitate that for friends and other users to be stored in state
+all friend info will be stored in friend state
+

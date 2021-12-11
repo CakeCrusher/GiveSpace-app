@@ -4,37 +4,60 @@ import {
   Heading,
   Button,
   Avatar,
+  Box,
   HStack,
   VStack,
-  Fab,
+  ScrollView,
   Icon,
 } from 'native-base';
 import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 
-import { ListPreview } from '../../components';
+import { ListPreview, LoadingScreen, Fab } from '../../components';
 
-const AllLists = ({ route, navigation, userState }) => {
-  const { user } = userState;
+import { addList } from '../../redux/actions/user';
+import { fetchGraphQL } from '../../utils/helperFunctions';
+import { CREATE_LIST } from '../../utils/schemas';
+
+const AllLists = ({ route, navigation, userState, addList }) => {
   const { userId, tabName } = route.params;
   const [lists, setLists] = useState(null);
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [loadingLists, setLoadingLists] = useState(false);
 
   useEffect(() => {
-    console.log(userId, user.id);
-    if (userId === user.id) {
-      console.log(user.lists);
-      setLists(user.lists);
+    console.log(userId, userState.id);
+    if (userId === userState.id) {
+      console.log(userState.lists);
+      setLists(userState.lists);
     } else {
       // TODO: Make a Fetch
       setLists([]);
     }
-  }, []);
+  }, [userState.lists]);
 
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
       screen: 'List',
       params: { listData, userId },
     });
+  };
+
+  const handleCreateList = () => {
+    setLoadingCreate(true);
+    fetchGraphQL(CREATE_LIST, { user_id: userState.id })
+      .then((res) => {
+        console.log(res);
+        const listData = res.data.insert_list.returning[0];
+
+        setLoadingCreate(false);
+        navigation.navigate(tabName, {
+          screen: 'List',
+          params: { listData, userId: userState.id },
+        });
+        addList(listData);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -44,28 +67,28 @@ const AllLists = ({ route, navigation, userState }) => {
           EX
         </Avatar>
         <Heading ml="4">
-          {userId === user.id ? 'Your ' : `${user.username}'s `}
+          {userId === userState.id ? 'Your ' : `${userState.username}'s `}
           Lists
         </Heading>
       </HStack>
-      <VStack flex="15" space="4" overflow="scroll">
-        {lists &&
-          lists.map((list, index) => (
-            <ListPreview listData={list} onPress={() => handleLoadList(list)} />
-          ))}
+      <VStack flex="15">
+        <ScrollView>
+          {lists &&
+            lists.map((list) => (
+              <Box key={list.id} mb="4">
+                <ListPreview
+                  listData={list}
+                  onPress={() => handleLoadList(list)}
+                />
+              </Box>
+            ))}
+        </ScrollView>
       </VStack>
-      {userId === user.id && (
-        <Button
-          position="absolute"
-          borderRadius="32"
-          h="16"
-          w="16"
-          bottom="4"
-          right="4"
-          zIndex="99"
-        >
-          <Icon as={<Feather name="plus" />} size="sm" color="white" />
-        </Button>
+      {userId === userState.id && (
+        <>
+          <Fab onPress={handleCreateList} iconName="plus" />
+          <LoadingScreen isLoading={loadingCreate} />
+        </>
       )}
     </VStack>
   );
@@ -75,4 +98,8 @@ const mapStateToProps = (state) => ({
   userState: state.user,
 });
 
-export default connect(mapStateToProps, {})(AllLists);
+const mapDispatchToProps = (dispatch) => ({
+  addList: (lsitData) => dispatch(addList(listData)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AllLists);
