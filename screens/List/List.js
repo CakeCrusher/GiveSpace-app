@@ -15,12 +15,14 @@ import {
   ScrollView,
 } from 'native-base';
 
-import { populateListUser } from "../../redux/actions/user";
-import { populateListFriends } from "../../redux/actions/friends";
-import ItemCard from "../../components/Item/ItemCard";
-import ItemInput from "../../components/Item/ItemInput";
-import { fetchGraphQL } from "../../utils/helperFunctions";
-import { GET_LIST } from "../../utils/schemas";
+import { populateListUser } from '../../redux/actions/user';
+import { populateListFriends } from '../../redux/actions/friends';
+import ItemCard from '../../components/Item/ItemCard';
+import ItemInput from '../../components/Item/ItemInput';
+import { fetchGraphQL } from '../../utils/helperFunctions';
+import { GET_LIST } from '../../utils/schemas';
+import SelectItemModal from './SelectItemModal';
+import { LoadingScreen } from '../../components';
 
 const dummyItem = {
   img_url: '',
@@ -123,16 +125,20 @@ const List = ({
             </Pressable>
           </HStack>
         </HStack>
-        {(isUser && list) && <ItemInput listId={list.id} />}
+        {isUser && list && <ItemInput listId={list.id} />}
       </VStack>
 
       <VStack flex="15" overflow="scroll">
         <HStack flexWrap="wrap">
-          {list.items.map((item, index) => (
-            <Flex onPress={handleCardPress} key={index} flex="1" m="1">
-              <ItemCard item={item} handlePress={() => handleCardPress(item)} />
-            </Flex>
-          ))}
+          {!isLoading &&
+            list.items.map((item, index) => (
+              <Flex onPress={handleCardPress} key={index} flex="1" m="1">
+                <ItemCard
+                  item={item}
+                  handlePress={() => handleCardPress(item)}
+                />
+              </Flex>
+            ))}
         </HStack>
       </VStack>
 
