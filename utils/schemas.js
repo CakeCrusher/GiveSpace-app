@@ -34,6 +34,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
   user {
     id
     username
+    profile_pic_url
     lists(order_by: {date_modified: desc}) {
       id
       user_id
@@ -48,6 +49,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
   userByUserSecondId {
     id
     username
+    profile_pic_url
     lists(order_by: {date_modified: desc}) {
       id
       user_id
@@ -207,6 +209,32 @@ mutation MyMutation($item_name: String = "", $list_id: String = "") {
 //   "item_name": "television toshiba"
 // }
 
+export const PROFILE_PAGE_FOR_ID = `
+query MyQuery($user_id: uuid = "") {
+  user(where: {id: {_eq: $user_id}}) {
+    address
+    birthday
+    date_last_accessed
+    phone_number
+    profile_pic_url
+    username
+    friend_rels {
+      user {
+        id
+        username
+        profile_pic_url
+      }
+      userByUserSecondId {
+        id
+        username
+        profile_pic_url
+      }
+    }
+  }
+}
+`
+
+
 export const SEARCH_FOR_USERS = `
 query MyQuery($search: String = "") {
   user(where: {username: {_like: $search}}) {
@@ -216,7 +244,6 @@ query MyQuery($search: String = "") {
   }
 }
 `;
-
 // {
-//   "search": "%Kr%"
+//   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
