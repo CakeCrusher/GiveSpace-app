@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 import {
   Text,
   Heading,
@@ -13,7 +13,7 @@ import {
   HStack,
   VStack,
   ScrollView,
-} from "native-base";
+} from 'native-base';
 
 import { populateListUser } from "../../redux/actions/user";
 import { populateListFriends } from "../../redux/actions/friends";
@@ -23,8 +23,8 @@ import { fetchGraphQL } from "../../utils/helperFunctions";
 import { GET_LIST } from "../../utils/schemas";
 
 const dummyItem = {
-  img_url: "",
-  name: "dummyItem",
+  img_url: '',
+  name: 'dummyItem',
 };
 
 const List = ({
@@ -38,8 +38,11 @@ const List = ({
   // TODO: change all instances "user" to "userState"
   const user = userState;
   const { listData } = route.params;
-  console.log(listData);
+
   const [isUser, setIsUser] = useState(user.id === listData.user_id);
+  const [selectItem, setSelectItem] = useState(null);
+  const [showNewModal, setShowNewModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ROUTES TO LIST IN STATE vvvv-list-vvvv
   const list = isUser
@@ -49,35 +52,42 @@ const List = ({
         .lists.find((list) => list.id === listData.id);
   console.log(list);
 
-  console.log("CURRENT LIST: ", list);
+  console.log('CURRENT LIST: ', list);
 
   useEffect(() => {
     const addListToState = async () => {
       const listRes = await fetchGraphQL(GET_LIST, {
         list_id: listData.id,
       });
-      console.log("addListToState!", listRes);
+      console.log('addListToState!', listRes);
 
       if (listRes.errors || !listRes.data.list[0]) {
-        console.log("ERROR!", listRes.errors);
+        console.log('ERROR!', listRes.errors);
+        setIsLoading(false);
         return;
       } else {
         if (userState.lists.find((list) => list.id === listData.id)) {
-          console.log("isUser!");
+          console.log('isUser!');
           populateListUser(listRes.data.list[0]);
         } else {
-          console.log("isFriend!");
+          console.log('isFriend!');
           setIsUser(false);
           populateListFriends(listRes.data.list[0]);
         }
+        setIsLoading(false);
         return;
       }
     };
     addListToState();
   }, []);
 
-  const handleCardPress = () => {
-    console.log("card press");
+  const handleCardPress = (item) => {
+    console.log(item);
+    setSelectItem(item);
+  };
+
+  const handleClearSelect = () => {
+    setSelectItem(null);
   };
 
   const handleSearchToggle = () => {
@@ -86,7 +96,6 @@ const List = ({
 
   const handleSettingsToggle = () => {};
 
-  // SOME STYLING ERROR HERE
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
       <HStack flex="1" alignItems="center" space="4">
@@ -102,14 +111,13 @@ const List = ({
           flex="1"
           p="2"
         >
-          <Flex flex="5">
+          <Flex flex="2">
             <Text>Share</Text>
           </Flex>
 
-          <HStack flex="1">
-            <Pressable onPress={handleSearchToggle} m="auto">
-              <Icon as={<Feather name="search" />} size="xs" />
-            </Pressable>
+          <HStack flex="3">
+            <Input />
+            <Icon as={<Feather name="search" />} size="xs" m="auto" />
             <Pressable onPress={handleSettingsToggle} m="auto">
               <Icon as={<Feather name="more-vertical" />} size="xs" />
             </Pressable>
@@ -122,11 +130,21 @@ const List = ({
         <HStack flexWrap="wrap">
           {list.items.map((item, index) => (
             <Flex onPress={handleCardPress} key={index} flex="1" m="1">
-              <ItemCard item={item} handlePress={handleCardPress} />
+              <ItemCard item={item} handlePress={() => handleCardPress(item)} />
             </Flex>
           ))}
         </HStack>
       </VStack>
+
+      {selectItem && (
+        <SelectItemModal
+          navigation={navigation}
+          isOpen={selectItem !== null}
+          onClose={handleClearSelect}
+          item={selectItem}
+        />
+      )}
+      <LoadingScreen isLoading={isLoading} />
     </VStack>
   );
 };

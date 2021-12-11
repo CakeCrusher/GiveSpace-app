@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
-import { Modal, Text, Icon, Input, HStack } from 'native-base';
-
-import { ItemCard } from '../../components';
+import { Modal, Text, Icon, Image, Input, HStack } from 'native-base';
 
 const AddItemModal = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <Modal.Content maxWidth="85%">
+      <Modal.Content maxH="85%" maxW="85%">
         <Modal.CloseButton />
-        <Modal.Header></Modal.Header>
-
-        <Modal.Body></Modal.Body>
+        <Modal.Body>
+          <Flex flex="4">
+            <Image src={}/>
+          </Flex>
+        </Modal.Body>
       </Modal.Content>
     </Modal>
   );
