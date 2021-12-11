@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import { Icon } from 'native-base';
 
-import { fetchGraphQL } from './utils/helperFunctions'
+import { fetchGraphQL } from './utils/helperFunctions';
 import { signinUser } from './redux/actions/user';
 import { signinFriends } from './redux/actions/friends';
 import { Home, Login, Friends, MyLists, Account } from './screens';
@@ -22,9 +22,9 @@ const View = ({ signinDispatch, userState }) => {
       const userId = await AsyncStorage.getItem('user_id');
       if (!userState.id && userId) {
         const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_ID, {
-          "user_id": userId,
-        })
-        signinDispatch(registerRes.data.user[0])
+          user_id: userId,
+        });
+        signinDispatch(registerRes.data.user[0]);
       }
     };
     retrieveUserId();
@@ -32,50 +32,48 @@ const View = ({ signinDispatch, userState }) => {
 
   if (userState.id) {
     return (
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen
-            name="Home"
-            component={Home}
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ focused, color, size }) => (
-                <Feather name="home" size={24} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Friends"
-            component={Friends}
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ focused, color, size }) => (
-                <Feather name="users" size={24} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="My Lists"
-            component={MyLists}
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ focused, color, size }) => (
-                <Feather name="list" size={24} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Account"
-            component={Account}
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ focused, color, size }) => (
-                <Feather name="user" size={24} />
-              ),
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, color, size }) => (
+              <Feather name="home" size={24} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Friends"
+          component={Friends}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, color, size }) => (
+              <Feather name="users" size={24} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="My Lists"
+          component={MyLists}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, color, size }) => (
+              <Feather name="list" size={24} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Account"
+          component={Account}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, color, size }) => (
+              <Feather name="user" size={24} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     );
   }
 
@@ -87,8 +85,8 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
   signinDispatch: (userRes) => {
-    dispatch(signinUser(userRes))
-    dispatch(signinFriends(userRes))
+    dispatch(signinUser(userRes));
+    dispatch(signinFriends(userRes));
   },
 });
 

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
+import { WebView } from 'react-native-webview';
 import {
   Modal,
   Text,
@@ -11,12 +12,15 @@ import {
   Pressable,
 } from 'native-base';
 
-const SelectItemModal = ({ isOpen, onClose, item }) => {
+const SelectItemModal = ({ navigation, isOpen, onClose, item }) => {
   // TODO: Handle Web View
   console.log(item);
 
   const handleLinkPress = () => {
-    console.log('Take this to Web View');
+    onClose();
+    navigation.navigate('WebView', {
+      uri: item.item_url,
+    });
   };
 
   return (

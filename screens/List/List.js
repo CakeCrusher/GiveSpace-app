@@ -141,6 +141,7 @@ const List = ({
 
       {selectItem && (
         <SelectItemModal
+          navigation={navigation}
           isOpen={selectItem !== null}
           onClose={handleClearSelect}
           item={selectItem}
