@@ -12,6 +12,7 @@ import {
   View,
   Avatar,
   Icon,
+  Popover,
   Pressable,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
@@ -93,6 +94,52 @@ const AccountWrapper = ({
   );
 };
 
+const UserOptions = () => {
+  return (
+    <HStack flex="1" justifyContent="flex-end">
+      <Box>
+        <Pressable p="2">
+          <Icon as={<Feather name="plus" />} size="sm" />
+        </Pressable>
+      </Box>
+      <Box p="2">
+        <Popover
+          placement={'left top'}
+          trigger={(triggerProps) => {
+            return (
+              <Pressable {...triggerProps}>
+                <Icon as={<Feather name="more-vertical" />} size="sm" />
+              </Pressable>
+            );
+          }}
+        >
+          <Popover.Content>
+            <Popover.Body>
+              <Box>
+                <Text fontWeight="bold" fontSize="md">
+                  User Options
+                </Text>
+              </Box>
+              <VStack>
+                <Pressable>
+                  <Box p="2">
+                    <Text>Test</Text>
+                  </Box>
+                </Pressable>
+                <Pressable>
+                  <Box p="2">
+                    <Text>Test</Text>
+                  </Box>
+                </Pressable>
+              </VStack>
+            </Popover.Body>
+          </Popover.Content>
+        </Popover>
+      </Box>
+    </HStack>
+  );
+};
+
 const Account = ({ navigation, isUser, user, friends, lists }) => {
   const handleLogout = () => {
     logout();
@@ -112,14 +159,7 @@ const Account = ({ navigation, isUser, user, friends, lists }) => {
               <Icon as={<Feather name="chevron-left" />} size="lg" />
             </Pressable>
           </Flex>
-          <HStack flex="1" justifyContent="flex-end">
-            <Pressable p="2">
-              <Icon as={<Feather name="plus" />} size="sm" />
-            </Pressable>
-            <Pressable p="2" onPress={handleLogout}>
-              <Icon as={<Feather name="more-vertical" />} size="sm" />
-            </Pressable>
-          </HStack>
+          {isUser && <UserOptions />}
         </HStack>
 
         <HStack alignItems="center" space="4">
