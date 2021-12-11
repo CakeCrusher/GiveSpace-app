@@ -31,10 +31,10 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
       password: password.value,
     });
     console.log('userRes', userRes);
-    if (userRes.errors || !userRes.data.user[0]) {
+    if (userRes.errors || !userRes.data.login.loginUserIdToUser) {
       setError('Invalid username or password');
     } else {
-      signinDispatch(userRes.data.user[0]);
+      signinDispatch(userRes.data.login.loginUserIdToUser);
     }
     setIsLoading(false);
     return;

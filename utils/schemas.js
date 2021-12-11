@@ -74,14 +74,16 @@ query MyQuery($user_id: uuid = "") {
 // }
 
 export const SIGN_IN_USER = `
-query MyQuery($username: String = "", $password: String = "") {
-  user(where: {username: {_eq: $username}, password: {_eq: $password}}) {
-    ${USER_DATA}
+mutation MyMutation($password: String = "", $username: String = "") {
+  login(password: $password, username: $username) {
+    loginUserIdToUser {
+      ${USER_DATA}
+    }
   }
 }
 `;
 // {
-//   "username": "Krabs",
+//   "username": "DELETE",
 //   "password": "secret"
 // }
 
@@ -132,13 +134,12 @@ mutation MyMutation($contacts_phone_numbers: [String!] = "", $password: String =
     }
   }
 }
-
 `;
 // {
 //   "password": "secret",
-//   "username": "Squid",
+//   "username": "DELETE",
 //   "phone_number": "+14325557297",
-//   "contacts_phone_numbers": ["+17865557297","+13335557297","+12345557297"]
+//   "contacts_phone_numbers": ["+17865557297","+13335557297","+12345557297", "donkey number"]
 // }
 
 export const CREATE_LIST = `

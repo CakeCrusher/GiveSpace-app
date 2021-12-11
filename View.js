@@ -19,6 +19,7 @@ const View = ({ signinDispatch, userState }) => {
   useEffect(() => {
     const retrieveUserId = async () => {
       // await AsyncStorage.setItem('user_id', '7c55600d-e5f1-48f3-83d6-3c16ec918693');
+      await AsyncStorage.removeItem('user_id')
       const userId = await AsyncStorage.getItem('user_id');
       if (!userState.id && userId) {
         const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_ID, {
