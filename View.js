@@ -33,12 +33,12 @@ const View = ({ signinDispatch, userState, reloadFriends }) => {
 
   const getFriends = async () => {
     const fetchRes = await fetchGraphQL(GET_FRIEND_RELS, {
-      user_id: userState.id
-    })
-    console.log('!fetchRes', fetchRes)
-    const friends = fetchRes.data.friend_rel
-    reloadFriends(friends)
-  }
+      user_id: userState.id,
+    });
+    console.log('!fetchRes', fetchRes);
+    const friends = fetchRes.data.friend_rel;
+    reloadFriends(friends);
+  };
 
   if (userState.id) {
     return (
@@ -57,7 +57,7 @@ const View = ({ signinDispatch, userState, reloadFriends }) => {
           name="Friends"
           component={Friends}
           listeners={{
-            tabPress: (e) => getFriends()
+            tabPress: (e) => getFriends(),
           }}
           options={{
             headerShown: false,

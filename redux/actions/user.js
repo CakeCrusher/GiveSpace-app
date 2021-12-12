@@ -116,4 +116,12 @@ export const removeLists = (listIds) => ({
   payload: listIds,
 });
 
+export const removeItems = ({ deletedIds, listId }) => ({
+  type: 'REMOVE_ITEMS',
+  payload: {
+    deletedIds,
+    listId,
+  },
+});
+
 export const setUser = (user) => ({ type: 'SET_USER', payload: user });

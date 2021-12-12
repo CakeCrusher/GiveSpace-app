@@ -57,26 +57,47 @@ const user = (state = initState, action) => {
       );
       return {
         ...state,
-        lists: [...newLists],
+        lists: newLists,
       };
     }
 
     case 'REMOVE_LISTS': {
       const deletedIds = action.payload;
+
       if (deletedIds.length > 0) {
-        console.log('DELETE IDS');
-        console.log(deletedIds);
-        const newLists = [...state.lists].filter(
+        const newLists = state.lists.filter(
           (list) => !deletedIds.includes(list.id),
         );
-        console.log('DELETE IDS');
-        console.log(newLists);
         return {
           ...state,
           lists: newLists,
         };
       }
 
+      return {
+        ...state,
+        lists: [...state.lists],
+      };
+    }
+
+    case 'REMOVE_ITEMS': {
+      const { listId, deletedIds } = action.payload;
+      if (deletedIds.length > 0) {
+        const editList = { ...state.lists.find((list) => list.id === listId) };
+        const filteredItems = editList.items.filter(
+          (item) => !deletedIds.includes(item.id),
+        );
+        const newLists = state.lists.map((list) =>
+          list.id === listId ? { ...editList, items: filteredItems } : list,
+        );
+
+        console.log(newLists);
+
+        return {
+          ...state,
+          lists: newLists,
+        };
+      }
       return {
         ...state,
         lists: [...state.lists],

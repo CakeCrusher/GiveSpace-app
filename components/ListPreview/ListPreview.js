@@ -5,7 +5,7 @@ import ShadowBox from '../ShadowBox/ShadowBox';
 import InnerTitle from '../InnerTitle/InnerTitle';
 
 const ListPreview = (props) => {
-  const { avatar, username, listData, onCheck } = props;
+  const { avatar, username, listData } = props;
   const { title, items } = listData;
 
   console.log(username, avatar)
@@ -27,9 +27,6 @@ const ListPreview = (props) => {
   delete styles.username;
   delete styles.avatar;
 
-  if (onCheck !== undefined) {
-  }
-
   return (
     <ShadowBox minH="42" {...styles}>
       <VStack px="4" py="2" bg="#FFF" flex="1" borderRadius="8">
@@ -46,11 +43,6 @@ const ListPreview = (props) => {
             <InnerTitle fontSize="2xl" isTruncated>
               {title}
             </InnerTitle>
-            {onCheck !== undefined && (
-              <Pressable onPress={onCheck}>
-                <Checkbox onPress={onCheck} colorScheme="danger" />
-              </Pressable>
-            )}
           </HStack>
           <VStack pl="2">
             {spliced &&
