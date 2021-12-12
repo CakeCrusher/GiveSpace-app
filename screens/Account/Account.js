@@ -4,23 +4,24 @@ import {
   Text,
   Heading,
   Button,
-  VStack,
-  Modal,
+  Input,
+  Pressable,
   ScrollView,
-  Box,
+  VStack,
   HStack,
+  Box,
   Flex,
-  View,
+  Center,
   Avatar,
   Icon,
   Popover,
-  Pressable,
+  Modal,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 
 import { ListPreview, LoadingScreen } from '../../components';
 
-import { fetchGraphQL } from '../../utils/helperFunctions';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
 import { logout } from '../../redux/actions/user';
 
@@ -160,6 +161,7 @@ const Account = ({
   deleteAccount,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
+  const password = useField('password', '');
 
   const handleLogout = () => {
     logout();
@@ -232,13 +234,13 @@ const Account = ({
           {lists ? (
             <>
               <ScrollView>
-                <View maxH="80">
+                <Box maxH="80">
                   {lists.map((e) => (
                     <ListPreview key={e.id} listData={e} mb="2" />
                   ))}
-                </View>
+                </Box>
               </ScrollView>
-              <View h="2" />
+              <Box h="2" />
               <Button
                 variant="outline"
                 onPress={() => navigation.navigate('My Lists')}
@@ -278,14 +280,20 @@ const Account = ({
             Are you sure you want to delete your account?
           </Modal.Header>
           <Modal.Body>
-            <HStack space="4">
-              <Button flex="1" colorScheme="info">
-                No
-              </Button>
-              <Button flex="1" colorScheme="danger">
-                Yes
-              </Button>
-            </HStack>
+            <VStack space="4">
+              <Center>
+                <Text>Please enter your password:</Text>
+                <Input />
+              </Center>
+              <HStack space="4">
+                <Button flex="1" colorScheme="info">
+                  No
+                </Button>
+                <Button flex="1" colorScheme="danger">
+                  Yes
+                </Button>
+              </HStack>
+            </VStack>
           </Modal.Body>
         </Modal.Content>
       </Modal>
