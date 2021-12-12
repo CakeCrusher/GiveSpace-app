@@ -16,6 +16,7 @@ import { signinFriends } from '../../redux/actions/friends';
 import { signinUser } from '../../redux/actions/user';
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import { SIGN_IN_USER } from '../../utils/schemas';
+import { PresentsSvg } from '../../resources';
 
 const SignIn = ({ toSignUp, signinDispatch }) => {
   const username = useField('text', 'Krabs');
@@ -43,10 +44,13 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
 
   return (
     <Center flex="1" safeArea>
-      <VStack flex="2" justifyContent="flex-end">
+      <VStack flex="5" justifyContent="flex-end">
         <Heading mb={4} size="3xl" textAlign="center">
           GiftSpace
         </Heading>
+        <Flex maxH="64" maxW="64">
+          <PresentsSvg />
+        </Flex>
         <Text fontSize="xl" textAlign="center">
           Sign In
         </Text>
@@ -65,7 +69,7 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
         )}
       </VStack>
 
-      <VStack w="48" flex="3" space={4} justifyContent="flex-start">
+      <VStack w="48" flex="4" space={4} justifyContent="flex-start">
         <Flex h="8">
           <Input {...username} placeholder="username" />
         </Flex>

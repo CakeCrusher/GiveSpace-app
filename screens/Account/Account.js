@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Svg, Path } from 'react-native-svg';
 import {
   Text,
   Heading,
@@ -17,9 +18,11 @@ import {
   Popover,
   Modal,
 } from 'native-base';
+import { Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { ListPreview, LoadingScreen } from '../../components';
+import { BirthdaySvg, LocationSvg } from '../../resources';
 
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
@@ -218,12 +221,12 @@ const Account = ({
         <HStack space="4" mt="4">
           {/*TODO: Change these*/}
           <HStack space="2">
-            <Text>_</Text>
-            <Text>{user.birthday}</Text>
+            <BirthdaySvg />
+            <Text>birthday</Text>
           </HStack>
           <HStack space="2">
-            <Text>_</Text>
-            <Text>{user.address}</Text>
+            <LocationSvg />
+            <Text>address</Text>
           </HStack>
         </HStack>
 

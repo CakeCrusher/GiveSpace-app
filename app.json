@@ -3,16 +3,25 @@
     "name": "Project-Wishlist",
     "slug": "Project-Wishlist",
     "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "permissions": [
-      "LOCATION",
-      "CONTACTS"
-    ],
-    "plugins": [
-      "expo-contacts"
-    ]
+    "assetBundlePatterns": ["**/*"],
+    "permissions": ["LOCATION", "CONTACTS"],
+    "plugins": ["expo-contacts"],
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": [
+        "expo.ts",
+        "expo.tsx",
+        "expo.js",
+        "expo.jsx",
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "wasm",
+        "svg"
+      ]
+    }
   },
   "name": "Project-Wishlist"
 }
