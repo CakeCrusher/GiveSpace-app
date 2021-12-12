@@ -8,6 +8,8 @@ const ListPreview = (props) => {
   const { avatar, username, listData } = props;
   const { title, items } = listData;
 
+  console.log(username, avatar)
+
   const date = new Date(listData.date_modified);
   const dateString = date.toLocaleString('en-US', {
     month: 'short',

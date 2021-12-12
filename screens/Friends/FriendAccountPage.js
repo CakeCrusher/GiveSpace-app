@@ -24,7 +24,7 @@ const FriendAccountPage = ({ navigation, userState, friendsState }) => {
               bg="#FAA"
               size="xl"
               source={{
-                uri: "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                uri: userState.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
               }}
             >
               EX

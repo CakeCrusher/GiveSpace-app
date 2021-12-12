@@ -183,7 +183,7 @@ const Account = ({
               bg="#FAA"
               size="xl"
               source={{
-                uri: "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                uri: user.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
               }}
             >
               EX
@@ -247,14 +247,20 @@ const Account = ({
           <Text fontSize="3xl">Friends</Text>
           {/* Add Friends */}
           <HStack flexWrap="wrap">
-            {friends.map((e) => (
+            {friends.map((f) => (
               <Box
-                key={e.id}
+                key={f.id}
                 flexBasis="25%"
                 alignItems="center"
                 justifyContent="center"
               >
-                <Avatar size="md" bg="#FAF" />
+                <Avatar
+                  size="md"
+                  bg="#FAF" 
+                  source={{
+                    uri: f.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                  }}
+                />
               </Box>
             ))}
           </HStack>
