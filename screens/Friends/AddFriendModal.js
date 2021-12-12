@@ -57,7 +57,7 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
       <Modal.Content maxWidth="85%">
         <Modal.CloseButton />
         <Modal.Header>
-          <HStack alignItems="center" space="2">
+          <HStack alignItems="center" w="80%" space="2">
             <Icon as={<Feather name="search" />} size="xs" />
             <Input onChangeText={handleInput} minW="35" />
           </HStack>

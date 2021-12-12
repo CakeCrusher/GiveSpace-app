@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Heading,
@@ -9,21 +9,23 @@ import {
   VStack,
   ScrollView,
   Icon,
-} from 'native-base';
-import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { connect } from "react-redux";
+import { Feather } from "@expo/vector-icons";
 
-import { ListPreview, LoadingScreen, Fab } from '../../components';
+import { ListPreview, LoadingScreen, Fab } from "../../components";
 
-import { addList } from '../../redux/actions/user';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { CREATE_LIST } from '../../utils/schemas';
+import { addList } from "../../redux/actions/user";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { CREATE_LIST } from "../../utils/schemas";
 
 const AllLists = ({ route, navigation, userState, addList }) => {
   const { userId, tabName } = route.params;
+  console.log(userId);
+  console.log(tabName);
+
   const [lists, setLists] = useState(null);
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const [loadingLists, setLoadingLists] = useState(false);
 
   useEffect(() => {
     console.log(userId, userState.id);
@@ -38,7 +40,7 @@ const AllLists = ({ route, navigation, userState, addList }) => {
 
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
-      screen: 'List',
+      screen: "List",
       params: { listData, userId },
     });
   };
@@ -52,7 +54,7 @@ const AllLists = ({ route, navigation, userState, addList }) => {
 
         setLoadingCreate(false);
         navigation.navigate(tabName, {
-          screen: 'List',
+          screen: "List",
           params: { listData, userId: userState.id },
         });
         addList(listData);
@@ -61,13 +63,13 @@ const AllLists = ({ route, navigation, userState, addList }) => {
   };
 
   return (
-    <VStack space="4" p="4" flex="1" bg="#dfdfdf" safeArea>
+    <VStack space="4" p="4" flex="1" safeArea>
       <HStack flex="1" alignItems="center">
-        <Avatar bg="#FAA" source={{ uri: '' }}>
+        <Avatar bg="#FAA" source={{ uri: "" }}>
           EX
         </Avatar>
         <Heading ml="4">
-          {userId === userState.id ? 'Your ' : `${userState.username}'s `}
+          {userId === userState.id ? "Your " : `${userState.username}'s `}
           Lists
         </Heading>
       </HStack>

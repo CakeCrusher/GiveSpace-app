@@ -1,23 +1,31 @@
 import React from 'react';
 import { Flex, Image, Text, VStack, HStack, Pressable } from 'native-base';
 
-const ItemCard = ({ item, handlePress }) => {
+import ShadowBox from '../ShadowBox/ShadowBox';
+
+const ItemCard = (props) => {
+  const { item, handlePress } = props;
+  const styles = { ...props };
+  delete styles.item;
+  delete styles.handlePress;
   // console.log('item', );
   const imageToShow = item.image_url || 'https://via.placeholder.com/150';
   return (
-    <VStack flex="1" borderWidth="1" borderColor="black" p="2">
+    <ShadowBox minH="64" {...styles}>
       <Pressable onPress={handlePress}>
-        <Flex alignItems="center" justifyContent="center">
-          <Image source={{ uri: imageToShow }} alt="item" size="xl" />
-        </Flex>
-        <VStack mt="2">
-          <Text fontSize="md" fontWeight="bold">
-            {item.name}
-          </Text>
-          <Text fonstSize="sm">This is a description</Text>
+        <VStack p="2">
+          <Flex alignItems="center" justifyContent="center">
+            <Image source={{ uri: imageToShow }} alt="item" size="xl" />
+          </Flex>
+          <VStack mt="2">
+            <Text fontSize="md" fontWeight="bold">
+              {item.name}
+            </Text>
+            <Text fonstSize="sm">This is a description</Text>
+          </VStack>
         </VStack>
       </Pressable>
-    </VStack>
+    </ShadowBox>
   );
 };
 
