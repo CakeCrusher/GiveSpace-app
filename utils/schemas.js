@@ -30,7 +30,7 @@ lists(order_by: {date_modified: desc}) {
     name
   }
 }
-friend_rels(where: {type: {_eq: "friends"}}) {
+friend_rels {
   user {
     id
     username
@@ -61,6 +61,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
       }
     }
   }
+  type
 }
 `;
 
@@ -113,9 +114,9 @@ mutation MyMutation($text: String = "") {
 // //   "contacts_phone_numbers": ["+19545557297"]
 // // }
 
-export const GET_FRIENDS = `
+export const GET_FRIEND_RELS = `
 query MyQuery($user_id: uuid = "") {
-  friend_rel(where: {user: {id: {_eq: $user_id}}, type: {_eq: "friends"}}) {
+  friend_rel(where: {user: {id: {_eq: $user_id}}}) {
     userByUserSecondId {
       id
       username
@@ -131,6 +132,7 @@ query MyQuery($user_id: uuid = "") {
         }
       }
     }
+    type
   }
 }
 `
