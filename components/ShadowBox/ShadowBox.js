@@ -1,9 +1,13 @@
 import React from 'react';
-import { Flex, Box, ZStack } from 'native-base';
+import { Flex, Box, Pressable, Checkbox, ZStack } from 'native-base';
 
 const ShadowBox = (props) => {
+  const { check, onPress } = props;
+  console.log(check);
   const styles = { ...props };
   delete styles.children;
+  delete styles.check;
+  delete styles.onPress;
 
   return (
     <ZStack {...styles}>
@@ -27,6 +31,11 @@ const ShadowBox = (props) => {
       >
         {props.children}
       </Box>
+      {check && (
+        <Pressable position="absolute" {...check} onPress={onPress}>
+          <Checkbox colorScheme="danger" />
+        </Pressable>
+      )}
     </ZStack>
   );
 };

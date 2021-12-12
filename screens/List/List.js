@@ -9,6 +9,8 @@ import {
   Button,
   Pressable,
   Input,
+  Modal,
+  Box,
   Flex,
   HStack,
   VStack,
@@ -23,7 +25,7 @@ import ItemInput from '../../components/Item/ItemInput';
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { GET_LIST } from '../../utils/schemas';
 import SelectItemModal from './SelectItemModal';
-import { LoadingScreen } from '../../components';
+import { LoadingScreen, PopoverIcon, Fab } from '../../components';
 
 const ListWrapper = ({
   route,
@@ -105,6 +107,10 @@ const ListWrapper = ({
     checkState();
   }, [listData]);
 
+  const handleConfirmDelete = (itemIds) => {
+    console.log(itemIds);
+  };
+
   if (hasError) {
     return (
       <VStack safeArea>
@@ -120,7 +126,14 @@ const ListWrapper = ({
   }
 
   if (displayList) {
-    return <List navigation={navigation} isUser={isUser} list={displayList} />;
+    return (
+      <List
+        navigation={navigation}
+        isUser={isUser}
+        list={displayList}
+        handleConfirmDelete={handleConfirmDelete}
+      />
+    );
   }
 
   return (
@@ -132,9 +145,40 @@ const ListWrapper = ({
   );
 };
 
-const List = ({ navigation, list, isUser }) => {
+const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
   const [selectItem, setSelectItem] = useState(null);
   const [showNewModal, setShowNewModal] = useState(false);
+
+  const [enableDelete, setEnableDelete] = useState(false);
+  const [selectDelete, setSelectDelete] = useState(new Set());
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  const handleSelectDelete = (itemId) => {
+    console.log(itemId);
+    setSelectDelete((prev) => {
+      if (prev.has(itemId)) {
+        prev.delete(itemId);
+      } else {
+        prev.add(itemId);
+        console.log(prev);
+      }
+      return prev;
+    });
+  };
+
+  const handleEnableDelete = () => {
+    setEnableDelete(true);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModal(false);
+    setEnableDelete(false);
+    setSelectDelete(new Set());
+  };
+
+  const openDeleteModal = () => {
+    setDeleteModal(true);
+  };
 
   const handleCardPress = (item) => {
     console.log(item);
@@ -149,42 +193,93 @@ const List = ({ navigation, list, isUser }) => {
 
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
-      <HStack flex="1" alignItems="center" space="4">
-        <Pressable onPress={() => navigation.goBack()}>
-          <Icon as={<Feather name="chevron-left" />} size="xl" />
-        </Pressable>
-        <Text fontSize="3xl">{list.title}</Text>
+      {/* Nav, ListTitle, Username*/}
+      <HStack flex="1" alignItems="center" mx="-2">
+        <Box flex="1">
+          <Pressable onPress={() => navigation.goBack()}>
+            <Icon as={<Feather name="chevron-left" />} size="xl" />
+          </Pressable>
+        </Box>
+        <Box flex="1">
+          <Avatar
+            source={{
+              uri: 'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+            }}
+          />
+        </Box>
+        <VStack flex="5" justifyContent="center">
+          <Text fontSize="xs">{isUser ? 'You' : user.username}</Text>
+          <Text fontSize="2xl">{list.title}</Text>
+        </VStack>
       </HStack>
-      <VStack>
+
+      {/* Share, Search, Options*/}
+      <VStack flex="1">
         <HStack
-          alignContent="center"
+          alignItems="center"
           justifyContent="space-between"
           flex="1"
           p="2"
         >
-          <Flex flex="2">
+          <HStack flex="2" space="2">
+            <Icon as={<Feather name="share-2" />} size="sm" />
             <Text>Share</Text>
-          </Flex>
+          </HStack>
 
           <HStack flex="3">
-            <Input />
-            <Icon as={<Feather name="search" />} size="xs" m="auto" />
-            <Pressable onPress={handleSettingsToggle} m="auto">
-              <Icon as={<Feather name="more-vertical" />} size="xs" />
-            </Pressable>
+            <HStack ml="auto" space="4">
+              <Pressable onPress={() => {}}>
+                <Icon as={<Feather name="search" />} size="sm" />
+              </Pressable>
+              {isUser && (
+                <PopoverIcon iconName="more-vertical" menuTitle="List Options">
+                  {enableDelete ? (
+                    <Pressable onPress={handleCancelDelete}>
+                      <Box p="2">
+                        <Text color="blue.500">Cancel Delete</Text>
+                      </Box>
+                    </Pressable>
+                  ) : (
+                    <Pressable onPress={handleEnableDelete}>
+                      <Box p="2">
+                        <Text color="red.500">Delete Items</Text>
+                      </Box>
+                    </Pressable>
+                  )}
+                </PopoverIcon>
+              )}
+            </HStack>
           </HStack>
         </HStack>
-        {isUser && <ItemInput listId={list.id} />}
       </VStack>
 
-      <VStack flex="15" overflow="scroll">
-        <HStack flexWrap="wrap" justifyContent="space-between">
-          {list.items.map((item, index) => (
-            <Flex onPress={handleCardPress} key={index} w="48%">
-              <ItemCard item={item} handlePress={() => handleCardPress(item)} />
-            </Flex>
-          ))}
-        </HStack>
+      {/* Add Item, Item Modal, Display Items*/}
+      <VStack flex="1">{isUser && <ItemInput listId={list.id} />}</VStack>
+
+      <VStack flex="8">
+        <ScrollView>
+          <HStack flexWrap="wrap" justifyContent="space-between">
+            {list.items.map((item, index) => (
+              <Flex onPress={handleCardPress} key={index} w="48%">
+                {enableDelete ? (
+                  <ItemCard
+                    item={item}
+                    check={{
+                      top: '4',
+                      right: '4',
+                    }}
+                    onPress={() => handleSelectDelete(item.id)}
+                  />
+                ) : (
+                  <ItemCard
+                    item={item}
+                    handlePress={() => handleCardPress(item)}
+                  />
+                )}
+              </Flex>
+            ))}
+          </HStack>
+        </ScrollView>
       </VStack>
 
       {selectItem && (
@@ -195,6 +290,36 @@ const List = ({ navigation, list, isUser }) => {
           item={selectItem}
         />
       )}
+      {enableDelete && <Fab onPress={openDeleteModal} iconName="trash" />}
+      <Modal isOpen={deleteModal} onClose={() => setDeleteModal}>
+        <Modal.Content>
+          <Modal.Header>
+            Are you sure you want to delete these items?
+          </Modal.Header>
+          <Modal.Body>
+            <VStack space="4">
+              <HStack space="4">
+                <Button
+                  onPress={handleCancelDelete}
+                  flex="1"
+                  colorScheme="info"
+                >
+                  No
+                </Button>
+                <Button
+                  onPress={() =>
+                    handleConfirmDelete([...selectDelete], handleCancelDelete)
+                  }
+                  flex="1"
+                  colorScheme="danger"
+                >
+                  Yes
+                </Button>
+              </HStack>
+            </VStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </VStack>
   );
 };

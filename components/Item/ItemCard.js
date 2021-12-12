@@ -1,5 +1,13 @@
 import React from 'react';
-import { Flex, Image, Text, VStack, HStack, Pressable } from 'native-base';
+import {
+  Flex,
+  Image,
+  Text,
+  VStack,
+  HStack,
+  Pressable,
+  Checkbox,
+} from 'native-base';
 
 import ShadowBox from '../ShadowBox/ShadowBox';
 

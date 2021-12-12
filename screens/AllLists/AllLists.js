@@ -146,6 +146,7 @@ const AllLists = ({
   const [deleteModal, setDeleteModal] = useState(false);
 
   const handleSelectDelete = (listId) => {
+    console.log(listId);
     setSelectDelete((prev) => {
       if (prev.has(listId)) {
         prev.delete(listId);
@@ -216,7 +217,11 @@ const AllLists = ({
                   {enableDelete ? (
                     <ListPreview
                       listData={list}
-                      onCheck={() => handleSelectDelete(list.id)}
+                      check={{
+                        top: '4',
+                        right: '6',
+                      }}
+                      onPress={() => handleSelectDelete(list.id)}
                     />
                   ) : (
                     <ListPreview
