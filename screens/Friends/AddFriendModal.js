@@ -24,7 +24,6 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
           // Filtering function to make sure anyone in user.friends
           // doesn't show up in search results
           const data = res.data.user;
-          console.log(data);
           const set = new Set();
 
           data.forEach((e) => {
@@ -45,11 +44,17 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
 
   const handleAddFriend = (recieverId) => {
     fetchGraphQL(CREATE_FRIEND_REL, {
-      user_first_id: userState.id,
-      user_second_id: recieverId,
+      "friend_rels": [
+        {"user_first_id": userState.id, "user_second_id": recieverId, "type": "pending_second"},
+        {"user_first_id": recieverId, "user_second_id": userState.id, "type": "pending_first"}
+      ]
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
+      console.log('!vars', {      "friend_rels": [
+        {"user_first_id": userState.id, "user_second_id": recieverId, "type": "pending_second"},
+        {"user_first_id": recieverId, "user_second_id": userState.id, "type": "pending_first"}
+      ]})
   };
 
   return (

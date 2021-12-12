@@ -34,16 +34,31 @@ const friends = (state = initState, action) => {
       userWithList.lists = userWithList.lists.map(
         list => list.id === action.payload.id ? action.payload : list
       )
-      console.log('userWithList!', userWithList);
 
       const newFriendsList = [...state.list.map(
         friend => friend.id === userWithList.id ? userWithList : friend
       )]
-      console.log('newFriendsList!', newFriendsList);
+
       return {
         list: newFriendsList,
       };
     }
+    case 'RELOAD_FRIENDS':
+      const stateFriendsIds = state.list.map(friend => friend.id);  
+      const newList = []
+      action.payload.forEach(friend => {
+        if (stateFriendsIds.includes(friend.id)) {
+          const friendInState = state.list.find(stateFriend => stateFriend.id === friend.id);
+          newList.push({...friendInState})
+        } else {
+          newList.push({...friend})
+        }
+      })
+      
+      console.log('!newList', newList)
+      return {
+        list: newList,
+      };
     default:
       return state;
   }

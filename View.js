@@ -9,13 +9,13 @@ import { Icon } from 'native-base';
 
 import { fetchGraphQL } from './utils/helperFunctions';
 import { signinUser } from './redux/actions/user';
-import { signinFriends } from './redux/actions/friends';
+import { signinFriends, reloadFriends } from './redux/actions/friends';
 import { Home, Login, Friends, MyLists, Account } from './screens';
-import { SIGN_IN_USER_BY_ID } from './utils/schemas';
+import { SIGN_IN_USER_BY_ID, GET_FRIENDS } from './utils/schemas';
 
 const Tab = createBottomTabNavigator();
 
-const View = ({ signinDispatch, userState }) => {
+const View = ({ signinDispatch, userState, reloadFriends }) => {
   useEffect(() => {
     const retrieveUserId = async () => {
       await AsyncStorage.setItem('user_id', '7c55600d-e5f1-48f3-83d6-3c16ec918693');
@@ -30,6 +30,15 @@ const View = ({ signinDispatch, userState }) => {
     };
     retrieveUserId();
   }, []);
+
+  const getFriends = async () => {
+    const fetchRes = await fetchGraphQL(GET_FRIENDS, {
+      user_id: userState.id
+    })
+    console.log('!fetchRes', fetchRes)
+    const friends = fetchRes.data.friend_rel.map(friend => friend.userByUserSecondId)
+    reloadFriends(friends)
+  }
 
   if (userState.id) {
     return (
@@ -47,6 +56,9 @@ const View = ({ signinDispatch, userState }) => {
         <Tab.Screen
           name="Friends"
           component={Friends}
+          listeners={{
+            tabPress: (e) => getFriends()
+          }}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused, color, size }) => (
@@ -78,7 +90,6 @@ const View = ({ signinDispatch, userState }) => {
       </Tab.Navigator>
     );
   }
-
   return <Login />;
 };
 
@@ -86,6 +97,7 @@ const mapStateToProps = (state) => ({
   userState: state.user,
 });
 const mapDispatchToProps = (dispatch) => ({
+  reloadFriends: (friends) => dispatch(reloadFriends(friends)),
   signinDispatch: (userRes) => {
     dispatch(signinUser(userRes));
     dispatch(signinFriends(userRes));

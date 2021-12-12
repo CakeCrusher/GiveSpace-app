@@ -11,7 +11,6 @@ export const signinFriends = (user) => (dispatch) => {
       ? friendRel.userByUserSecondId
       : friendRel.user;
   });
-  console.log(friends);
   dispatch({ type: 'SET_FRIENDS', payload: friends });
   return;
 };
@@ -21,3 +20,9 @@ export const populateListFriends = (list) => (dispatch) => {
   dispatch({ type: 'SET_FRIEND_LIST', payload: list });
   return;
 };
+
+export const reloadFriends = (friends) => (dispatch) => {
+  console.log('!friends', friends);
+  dispatch({ type: 'RELOAD_FRIENDS', payload: friends });
+  return;
+}

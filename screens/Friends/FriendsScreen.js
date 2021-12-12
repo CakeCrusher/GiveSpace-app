@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   VStack,
   HStack,
@@ -13,13 +13,16 @@ import {
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
-import { useField } from '../../utils/helperFunctions';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 
 import { Fab } from '../../components';
 import DisplayFriendRow from './DisplayFriendRow';
 import AddFriendModal from './AddFriendModal';
+import { GET_FRIENDS } from '../../utils/schemas';
 
-const FriendsScreen = ({ navigation, friendsState }) => {
+import { reloadFriends } from '../../redux/actions/friends';
+
+const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const search = useField('text', '');
@@ -82,8 +85,11 @@ const FriendsScreen = ({ navigation, friendsState }) => {
 };
 
 const mapStateToProps = (state) => ({
+  userState: state.user,
   friendsState: state.friends,
 });
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  reloadFriends: (friends) => dispatch(reloadFriends(friends)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(FriendsScreen);
