@@ -180,7 +180,7 @@ const List = ({ navigation, list, isUser }) => {
       <VStack flex="15" overflow="scroll">
         <HStack flexWrap="wrap" justifyContent="space-between">
           {list.items.map((item, index) => (
-            <Flex onPress={handleCardPress} key={index} w="40%" p="1">
+            <Flex onPress={handleCardPress} key={index} w="48%">
               <ItemCard item={item} handlePress={() => handleCardPress(item)} />
             </Flex>
           ))}

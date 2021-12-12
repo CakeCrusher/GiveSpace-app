@@ -6,8 +6,16 @@ const DisplayFriendRow = ({ user, navigation }) => {
   //  navigation.navigate('FriendsLists', { userId, screenName: 'FriendList' });
   //};
 
+  console.log(user);
   const handleLoadAccount = () => {
     navigation.navigate('FriendAccount', {
+      userId: user.id,
+    });
+  };
+
+  const handleLoadLists = () => {
+    navigation.navigate('FriendsLists', {
+      tabName: 'Friends',
       userId: user.id,
     });
   };
@@ -26,7 +34,7 @@ const DisplayFriendRow = ({ user, navigation }) => {
         <Text fontSize="xl">{user.username}</Text>
       </Flex>
       <Flex flex="1" my="2" justifyContent="flex-end">
-        <Button onPress={() => {}}>Lists</Button>
+        <Button onPress={handleLoadLists}>Lists</Button>
       </Flex>
     </HStack>
   );
