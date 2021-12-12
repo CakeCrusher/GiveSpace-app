@@ -16,18 +16,20 @@ const ListPreview = (props) => {
   delete styles.listData;
   return (
     <ShadowBox minH="40" {...styles}>
-      <VStack p="2" bg="#FFF" flex="1" borderRadius="8">
+      <VStack px="4" py="2" bg="#FFF" flex="1" borderRadius="8">
         <Pressable onPress={props.onPress}>
-          <Text isTruncated fontSize="xl">
+          <Text isTruncated fontSize="lg">
             {title}
           </Text>
-          {spliced &&
-            spliced.map((e, i) => (
-              <Text key={i} isTruncated>
-                {e.name}
-              </Text>
-            ))}
-          {fill && fill.map((e, i) => <Text key={i}> </Text>)}
+          <VStack pl="2">
+            {spliced &&
+              spliced.map((e, i) => (
+                <Text key={i} isTruncated>
+                  &#8226;&nbsp;{e.name}
+                </Text>
+              ))}
+            {fill && fill.map((e, i) => <Text key={i}> </Text>)}
+          </VStack>
         </Pressable>
       </VStack>
     </ShadowBox>

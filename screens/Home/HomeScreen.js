@@ -63,51 +63,17 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
         <Text fontSize="2xl">Friends</Text>
         <VStack flex="1" space="2" flexWrap="wrap">
           {friendsWithLists.length > 0 &&
-            splitFriends.map((listPair) => (
-              <HStack flex="1">
-                {listPair.map((friend, index) => (
-                  <Box h="40" w="48%">
-                    <ListPreview
-                      key={index}
-                      username={friend.username}
-                      listData={friend.lists[0]}
-                      onPress={() => handleLoadList(friend.lists[0])}
-                      flex="1"
-                    />
-                  </Box>
-                ))}
-              </HStack>
+            friendsWithLists.map((friend, index) => (
+              <Box h="40" key={friend.id}>
+                <ListPreview
+                  key={index}
+                  username={friend.username}
+                  listData={friend.lists[0]}
+                  onPress={() => handleLoadList(friend.lists[0])}
+                  flex="1"
+                />
+              </Box>
             ))}
-          {/*friendsWithLists.length > 0 &&
-            friendsWithLists.map((friend, index) => {
-              if (index % 2 === 0) {
-                return (
-                  <Box w="45%">
-                    <ListPreview
-                      key={index}
-                      username={friend.username}
-                      listData={friend.lists[0]}
-                      onPress={() => handleLoadList(friend.lists[0])}
-                      flex="1"
-                      maxH="79"
-                    />
-                  </Box>
-                );
-              } else {
-                return (
-                  <Box w="45%">
-                    <ListPreview
-                      key={index}
-                      username={friend.username}
-                      listData={friend.lists[0]}
-                      onPress={() => handleLoadList(friend.lists[0])}
-                      flex="1"
-                      maxH="10"
-                    />
-                  </Box>
-                );
-              }
-            })*/}
         </VStack>
       </VStack>
       <VStack>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   Heading,
@@ -9,38 +9,36 @@ import {
   VStack,
   ScrollView,
   Icon,
-} from "native-base";
-import { connect } from "react-redux";
-import { Feather } from "@expo/vector-icons";
+} from 'native-base';
+import { connect } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
 
-import { ListPreview, LoadingScreen, Fab } from "../../components";
+import { ListPreview, LoadingScreen, Fab } from '../../components';
 
-import { addList } from "../../redux/actions/user";
-import { fetchGraphQL } from "../../utils/helperFunctions";
-import { CREATE_LIST } from "../../utils/schemas";
+import { addList } from '../../redux/actions/user';
+import { fetchGraphQL } from '../../utils/helperFunctions';
+import { CREATE_LIST } from '../../utils/schemas';
 
-const AllLists = ({ route, navigation, userState, addList }) => {
+const AllLists = ({ route, navigation, userState, friendsState, addList }) => {
   const { userId, tabName } = route.params;
-  console.log(userId);
-  console.log(tabName);
 
-  const [lists, setLists] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loadingCreate, setLoadingCreate] = useState(false);
 
   useEffect(() => {
-    console.log(userId, userState.id);
     if (userId === userState.id) {
-      console.log(userState.lists);
-      setLists(userState.lists);
+      setUserData(userState);
     } else {
       // TODO: Make a Fetch
-      setLists([]);
+      const friend = friendsState.list.find((e) => e.id === userId);
+      console.log(friend);
+      setUserData(friend);
     }
   }, [userState.lists]);
 
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
-      screen: "List",
+      screen: 'List',
       params: { listData, userId },
     });
   };
@@ -54,7 +52,7 @@ const AllLists = ({ route, navigation, userState, addList }) => {
 
         setLoadingCreate(false);
         navigation.navigate(tabName, {
-          screen: "List",
+          screen: 'List',
           params: { listData, userId: userState.id },
         });
         addList(listData);
@@ -65,24 +63,29 @@ const AllLists = ({ route, navigation, userState, addList }) => {
   return (
     <VStack space="4" p="4" flex="1" safeArea>
       <HStack flex="1" alignItems="center">
-        <Avatar bg="#FAA" source={{ uri: "" }}>
+        <Avatar bg="#FAA" source={{ uri: '' }}>
           EX
         </Avatar>
         <Heading ml="4">
-          {userId === userState.id ? "Your " : `${userState.username}'s `}
+          {userData &&
+            (userId === userState.id ? 'Your ' : `${userData.username}'s `)}
           Lists
         </Heading>
       </HStack>
       <VStack flex="15">
         <ScrollView>
-          {lists &&
-            lists.map((list) => (
-              <Box key={list.id} mb="4">
-                <ListPreview
-                  listData={list}
-                  onPress={() => handleLoadList(list)}
-                />
-              </Box>
+          {userData &&
+            (userData.lists.length > 0 ? (
+              userData.lists.map((list) => (
+                <Box key={list.id} mb="4">
+                  <ListPreview
+                    listData={list}
+                    onPress={() => handleLoadList(list)}
+                  />
+                </Box>
+              ))
+            ) : (
+              <Text>{userData.username} doesn't have any lists.</Text>
             ))}
         </ScrollView>
       </VStack>
@@ -98,6 +101,7 @@ const AllLists = ({ route, navigation, userState, addList }) => {
 
 const mapStateToProps = (state) => ({
   userState: state.user,
+  friendsState: state.friends,
 });
 
 const mapDispatchToProps = (dispatch) => ({
