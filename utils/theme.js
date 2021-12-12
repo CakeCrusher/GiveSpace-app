@@ -26,6 +26,9 @@ const theme = extendTheme({
       500: '#D95F78',
     },
   },
+  sizes: {
+    52: 208,
+  },
   components: {
     Button: {
       baseStyle: {

@@ -1,10 +1,19 @@
 import React from 'react';
-import { Text, VStack, Pressable } from 'native-base';
+import { Avatar, Text, HStack, VStack, Pressable } from 'native-base';
 
 import ShadowBox from '../ShadowBox/ShadowBox';
+import InnerTitle from '../InnerTitle/InnerTitle';
 
 const ListPreview = (props) => {
-  const { title, items } = props.listData;
+  const { avatar, username, listData } = props;
+  const { title, items } = listData;
+  console.log(listData);
+  const date = new Date(listData.date_modified);
+  const dateString = date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 
   const spliced = items && [...items].splice(0, 5);
   const fill = [];
@@ -14,20 +23,33 @@ const ListPreview = (props) => {
 
   const styles = { ...props };
   delete styles.listData;
+  delete styles.username;
+  delete styles.avatar;
+
   return (
-    <ShadowBox minH="40" {...styles}>
-      <VStack p="2" bg="#FFF" flex="1" borderRadius="8">
+    <ShadowBox minH="44" {...styles}>
+      <VStack px="4" py="2" bg="#FFF" flex="1" borderRadius="8">
         <Pressable onPress={props.onPress}>
-          <Text isTruncated fontSize="xl">
-            {title}
-          </Text>
-          {spliced &&
-            spliced.map((e, i) => (
-              <Text key={i} isTruncated>
-                {e.name}
+          {avatar && (
+            <HStack alignItems="center" space="2" mb="2">
+              <Avatar size="xs" bg="#FAA" source={{ uri: avatar }} />
+              <Text fontSize="xs">
+                {username} updated &#8226; {dateString}
               </Text>
-            ))}
-          {fill && fill.map((e, i) => <Text key={i}> </Text>)}
+            </HStack>
+          )}
+          <InnerTitle fontSize="2xl" isTruncated>
+            {title}
+          </InnerTitle>
+          <VStack pl="2">
+            {spliced &&
+              spliced.map((e, i) => (
+                <Text key={i} isTruncated>
+                  &#8226;&nbsp;&nbsp;{e.name}
+                </Text>
+              ))}
+            {fill && fill.map((e, i) => <Text key={i}> </Text>)}
+          </VStack>
         </Pressable>
       </VStack>
     </ShadowBox>
