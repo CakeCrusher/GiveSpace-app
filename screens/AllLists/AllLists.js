@@ -218,10 +218,10 @@ const AllLists = ({
                     <ListPreview
                       listData={list}
                       check={{
+                        onPress: () => handleSelectDelete(list.id),
                         top: '4',
                         right: '6',
                       }}
-                      onPress={() => handleSelectDelete(list.id)}
                     />
                   ) : (
                     <ListPreview

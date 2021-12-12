@@ -2,12 +2,11 @@ import React from 'react';
 import { Flex, Box, Pressable, Checkbox, ZStack } from 'native-base';
 
 const ShadowBox = (props) => {
-  const { check, onPress } = props;
+  const { check } = props;
   console.log(check);
   const styles = { ...props };
   delete styles.children;
   delete styles.check;
-  delete styles.onPress;
 
   return (
     <ZStack {...styles}>
@@ -32,8 +31,12 @@ const ShadowBox = (props) => {
         {props.children}
       </Box>
       {check && (
-        <Pressable position="absolute" {...check} onPress={onPress}>
-          <Checkbox colorScheme="danger" />
+        <Pressable position="absolute" {...check}>
+          <Checkbox
+            onPress={check.onPress}
+            colorScheme="danger"
+            accessibilityLabel="Test"
+          />
         </Pressable>
       )}
     </ZStack>

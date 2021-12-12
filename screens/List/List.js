@@ -18,12 +18,12 @@ import {
   ScrollView,
 } from 'native-base';
 
-import { populateListUser } from '../../redux/actions/user';
+import { populateListUser, removeItems } from '../../redux/actions/user';
 import { populateListFriends } from '../../redux/actions/friends';
 import ItemCard from '../../components/Item/ItemCard';
 import ItemInput from '../../components/Item/ItemInput';
 import { fetchGraphQL } from '../../utils/helperFunctions';
-import { GET_LIST } from '../../utils/schemas';
+import { GET_LIST, DELETE_ITEM } from '../../utils/schemas';
 import SelectItemModal from './SelectItemModal';
 import { LoadingScreen, PopoverIcon, Fab } from '../../components';
 
@@ -34,6 +34,7 @@ const ListWrapper = ({
   friendsState,
   populateListFriends,
   populateListUser,
+  removeItems,
 }) => {
   const { listData } = route.params;
   const isUser = userState.id === listData.user_id;
@@ -105,10 +106,38 @@ const ListWrapper = ({
     };
 
     checkState();
-  }, [listData]);
+  }, [userState, friendsState, listData]);
 
-  const handleConfirmDelete = (itemIds) => {
+  const handleConfirmDelete = (itemIds, cb) => {
     console.log(itemIds);
+    setIsLoading(true);
+    Promise.all(
+      itemIds.map((item_id) =>
+        fetchGraphQL(DELETE_ITEM, {
+          item_id,
+        }),
+      ),
+    )
+      .then((res) => {
+        for (let result of res) {
+          if (result.errors) {
+            throw new Error(result.errors);
+          }
+        }
+
+        const confirmedIds = res
+          .filter((e) => e.data && e.data.delete_item.returning[0].id)
+          .map((e) => e.data.delete_item.returning[0].id);
+        removeItems({
+          deletedIds: confirmedIds,
+          listId: displayList.id,
+        });
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        cb();
+      });
   };
 
   if (hasError) {
@@ -265,10 +294,10 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
                   <ItemCard
                     item={item}
                     check={{
+                      onPress: () => handleSelectDelete(item.id),
                       top: '4',
                       right: '4',
                     }}
-                    onPress={() => handleSelectDelete(item.id)}
                   />
                 ) : (
                   <ItemCard
@@ -332,6 +361,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   populateListFriends: (list) => dispatch(populateListFriends(list)),
   populateListUser: (list) => dispatch(populateListUser(list)),
+  removeItems: (data) => dispatch(removeItems(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListWrapper);
