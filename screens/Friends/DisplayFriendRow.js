@@ -6,7 +6,6 @@ const DisplayFriendRow = ({ user, navigation }) => {
   //  navigation.navigate('FriendsLists', { userId, screenName: 'FriendList' });
   //};
 
-  console.log(user);
   const handleLoadAccount = () => {
     navigation.navigate('FriendAccount', {
       userId: user.id,

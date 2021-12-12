@@ -17,13 +17,36 @@ const initState = {
     //     }
     //   ],
     // }
+  ],
+  pendingMe: [
+    // same
+  ],
+  pendingThem: [
+    // same
   ]
 };
+
+const friendFilter = (statFriends, payloadFriends) => {
+  const stateFriendsIds = statFriends.map(friend => friend.id);  
+  const newList = []
+  payloadFriends.forEach(friend => {
+    if (stateFriendsIds.includes(friend.id)) {
+      const friendInState = statFriends.find(stateFriend => stateFriend.id === friend.id);
+      newList.push({...friendInState})
+    } else {
+      newList.push({...friend})
+    }
+  })
+
+  return [...newList]
+}
+
 const friends = (state = initState, action) => {
   switch (action.type) {
     case 'SET_FRIENDS':
+      console.log('SET_FRIENDS', action.payload)
       return {
-        list: action.payload,
+        ...action.payload,
       };
     case 'SET_FRIEND_LIST': {
       const userWithList = {...state.list.find(
@@ -44,20 +67,15 @@ const friends = (state = initState, action) => {
       };
     }
     case 'RELOAD_FRIENDS':
-      const stateFriendsIds = state.list.map(friend => friend.id);  
-      const newList = []
-      action.payload.forEach(friend => {
-        if (stateFriendsIds.includes(friend.id)) {
-          const friendInState = state.list.find(stateFriend => stateFriend.id === friend.id);
-          newList.push({...friendInState})
-        } else {
-          newList.push({...friend})
-        }
-      })
-      
-      console.log('!newList', newList)
+      const newState = {
+        list: friendFilter(state.list, action.payload.list),
+        pendingMe: friendFilter(state.pendingMe, action.payload.pendingMe),
+        pendingThem: friendFilter(state.pendingThem, action.payload.pendingThem),
+      }
+
+      console.log('!newState', newState)
       return {
-        list: newList,
+        ...newState
       };
     default:
       return state;

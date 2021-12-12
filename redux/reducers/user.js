@@ -41,7 +41,6 @@ const user = (state = initState, action) => {
       };
     }
     case 'ADD_USER_LIST': {
-      console.log(action.payload);
       return {
         ...state,
         lists: [...state.lists, action.payload],
