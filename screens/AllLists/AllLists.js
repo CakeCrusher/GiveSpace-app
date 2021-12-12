@@ -8,6 +8,7 @@ import {
   Modal,
   Box,
   Flex,
+  Center,
   HStack,
   VStack,
   ScrollView,
@@ -18,11 +19,11 @@ import { Feather } from '@expo/vector-icons';
 
 import { ListPreview, LoadingScreen, Fab, PopoverIcon } from '../../components';
 
-import { addList } from '../../redux/actions/user';
+import { addList, removeLists } from '../../redux/actions/user';
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { CREATE_LIST, DELETE_LIST } from '../../utils/schemas';
 
-const AllLists = ({
+const AllListsWrapper = ({
   route,
   navigation,
   userState,
@@ -31,23 +32,22 @@ const AllLists = ({
   removeLists,
 }) => {
   const { userId, tabName } = route.params;
+  const isUser = userId === userState.id;
+  console.log(isUser);
 
   const [userData, setUserData] = useState(null);
-  const [enableDelete, setEnableDelete] = useState(false);
-  const [selectDelete, setSelectDelete] = useState(new Set());
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (userId === userState.id) {
+    if (isUser) {
       setUserData(userState);
     } else {
       // TODO: Make a Fetch
       const friend = friendsState.list.find((e) => e.id === userId);
-      console.log(friend);
       setUserData(friend);
     }
-  }, [userState.lists]);
+    setIsLoading(false);
+  }, [userState, friendsState]);
 
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
@@ -57,21 +57,93 @@ const AllLists = ({
   };
 
   const handleCreateList = () => {
-    setLoadingCreate(true);
+    setIsLoading(true);
+    let listData;
     fetchGraphQL(CREATE_LIST, { user_id: userState.id })
       .then((res) => {
-        console.log(res);
-        const listData = res.data.insert_list.returning[0];
+        if (res.errors) {
+          throw new Error(res.errors);
+        }
 
-        setLoadingCreate(false);
+        console.log('NEW ID:', res.data.insert_list.returning[0].id);
+        listData = res.data.insert_list.returning[0];
+
+        addList(listData);
+        console.log(listData);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
         navigation.navigate(tabName, {
           screen: 'List',
           params: { listData, userId: userState.id },
         });
-        addList(listData);
-      })
-      .catch((err) => console.log(err));
+      });
   };
+
+  const handleConfirmDelete = (listIds, cb) => {
+    setIsLoading(true);
+    Promise.all(
+      listIds.map((list_id) =>
+        fetchGraphQL(DELETE_LIST, {
+          list_id,
+        }),
+      ),
+    )
+      .then((res) => {
+        if (res[0].errors) {
+          throw new Error(res[0].errors);
+        }
+        const confirmedIds = res
+          .filter((e) => e.data && e.data.delete_list.returning[0].id)
+          .map((e) => e.data.delete_list.returning[0].id);
+
+        removeLists(confirmedIds);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        cb();
+        setIsLoading(false);
+      });
+  };
+
+  if (isLoading) {
+    return <LoadingScreen isLoading={true} />;
+  }
+  if (userData) {
+    return (
+      <AllLists
+        userData={userData}
+        isUser={isUser}
+        handleCreateList={handleCreateList}
+        handleConfirmDelete={handleConfirmDelete}
+        handleLoadList={handleLoadList}
+      />
+    );
+  }
+
+  return (
+    <VStack safeArea>
+      <Center mt="4">
+        <Text fontSize="xl">
+          Uh oh. It seems we couldn't find the lists for this User.
+        </Text>
+      </Center>
+    </VStack>
+  );
+};
+
+const AllLists = ({
+  userData,
+  isUser,
+  handleCreateList,
+  handleConfirmDelete,
+  handleLoadList,
+}) => {
+  console.log(userData.lists);
+  const [enableDelete, setEnableDelete] = useState(false);
+  const [selectDelete, setSelectDelete] = useState(new Set());
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const handleSelectDelete = (listId) => {
     setSelectDelete((prev) => {
@@ -79,10 +151,10 @@ const AllLists = ({
         prev.delete(listId);
       } else {
         prev.add(listId);
+        console.log(prev);
       }
       return prev;
     });
-    console.log(selectDelete);
   };
 
   const handleEnableDelete = () => {
@@ -99,33 +171,22 @@ const AllLists = ({
     setDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    Promise.all(
-      [...selectDelete].map((list_id) =>
-        fetchGraphQL(DELETE_LIST, {
-          list_id,
-        }),
-      ),
-    )
-      .then((values) => {
-        removeLists([...selectDelete]);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => handleCancelDelete());
-  };
-
   return (
     <VStack space="4" p="4" flex="1" safeArea>
       <HStack flex="1" alignItems="center">
-        <Avatar bg="#FAA" source={{ uri: '' }}>
+        <Avatar
+          bg="#FAA"
+          source={{
+            uri: 'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+          }}
+        >
           EX
         </Avatar>
         <Heading ml="4">
-          {userData &&
-            (userId === userState.id ? 'Your ' : `${userData.username}'s `)}
+          {isUser ? 'Your ' : `${userData.username}'s `}
           Lists
         </Heading>
-        {userData && userId === userState.id && (
+        {isUser && (
           <Flex ml="auto">
             <PopoverIcon iconName="more-vertical" menuTitle="List Options">
               {enableDelete ? (
@@ -147,10 +208,11 @@ const AllLists = ({
       </HStack>
       <VStack flex="15">
         <ScrollView>
-          {userData &&
-            (userData.lists.length > 0 ? (
-              userData.lists.map((list) => (
-                <Box key={list.id} mb="4">
+          {userData.lists.length > 0 ? (
+            userData.lists.map((list, i) => {
+              console.log(list);
+              return (
+                <Box key={i} mb="4">
                   {enableDelete ? (
                     <ListPreview
                       listData={list}
@@ -163,19 +225,20 @@ const AllLists = ({
                     />
                   )}
                 </Box>
-              ))
-            ) : (
-              <Text>{userData.username} doesn't have any lists.</Text>
-            ))}
+              );
+            })
+          ) : (
+            <Text>{userData.username} doesn't have any lists.</Text>
+          )}
         </ScrollView>
       </VStack>
-      {userId === userState.id &&
+      {isUser &&
         (enableDelete ? (
           <Fab onPress={openDeleteModal} iconName="trash" />
         ) : (
           <Fab onPress={handleCreateList} iconName="plus" />
         ))}
-      <LoadingScreen isLoading={loadingCreate} />
+
       <Modal isOpen={deleteModal} onClose={() => setDeleteModal(false)}>
         <Modal.Content>
           <Modal.Header>
@@ -192,7 +255,9 @@ const AllLists = ({
                   No
                 </Button>
                 <Button
-                  onPress={handleConfirmDelete}
+                  onPress={() =>
+                    handleConfirmDelete([...selectDelete], handleCancelDelete)
+                  }
                   flex="1"
                   colorScheme="danger"
                 >
@@ -213,8 +278,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addList: (lsitData) => dispatch(addList(listData)),
+  addList: (listData) => dispatch(addList(listData)),
   removeLists: (listIds) => dispatch(removeLists(listIds)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllLists);
+export default connect(mapStateToProps, mapDispatchToProps)(AllListsWrapper);

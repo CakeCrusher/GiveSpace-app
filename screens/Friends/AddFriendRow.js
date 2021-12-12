@@ -1,5 +1,5 @@
-import React from 'react';
-import { Avatar, HStack, Text, Flex, Button } from 'native-base';
+import React from "react";
+import { Avatar, HStack, Text, Flex, Button } from "native-base";
 
 const AddFriendRow = ({ user, addFriend }) => {
   // TODO: Add Friend functionality
@@ -8,7 +8,13 @@ const AddFriendRow = ({ user, addFriend }) => {
     <HStack justifyContent="space-between">
       {/* Avatar */}
       <Flex flex="1" justifyContent="center">
-        <Avatar bg="#FAA" source={{ uri: '' }} size="sm">
+        <Avatar
+          bg="#FAA"
+          source={{
+            uri: "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+          }}
+          size="sm"
+        >
           EX
         </Avatar>
       </Flex>

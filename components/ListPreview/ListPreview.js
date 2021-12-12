@@ -15,16 +15,18 @@ const ListPreview = (props) => {
     year: 'numeric',
   });
 
-  const spliced = items && [...items].splice(0, 5);
+  const spliced = items ? [...items].splice(0, 5) : [];
   const fill = [];
   for (let i = 0; i < 5 - spliced.length; i++) {
     fill.push('');
   }
-
   const styles = { ...props };
   delete styles.listData;
   delete styles.username;
   delete styles.avatar;
+
+  if (onCheck !== undefined) {
+  }
 
   return (
     <ShadowBox minH="42" {...styles}>
@@ -43,11 +45,9 @@ const ListPreview = (props) => {
               {title}
             </InnerTitle>
             {onCheck !== undefined && (
-              <Checkbox
-                onPress={onCheck}
-                colorScheme="danger"
-                aria-label="select for deletion"
-              />
+              <Pressable onPress={onCheck}>
+                <Checkbox onPress={onCheck} colorScheme="danger" />
+              </Pressable>
             )}
           </HStack>
           <VStack pl="2">

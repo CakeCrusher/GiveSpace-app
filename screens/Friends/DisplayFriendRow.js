@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pressable, Avatar, HStack, Text, Flex, Button } from 'native-base';
+import React from "react";
+import { Pressable, Avatar, HStack, Text, Flex, Button } from "native-base";
 
 const DisplayFriendRow = ({ user, navigation }) => {
   //const handleLoadLists = () => {
@@ -7,14 +7,14 @@ const DisplayFriendRow = ({ user, navigation }) => {
   //};
 
   const handleLoadAccount = () => {
-    navigation.navigate('FriendAccount', {
+    navigation.navigate("FriendAccount", {
       userId: user.id,
     });
   };
 
   const handleLoadLists = () => {
-    navigation.navigate('FriendsLists', {
-      tabName: 'Friends',
+    navigation.navigate("FriendsLists", {
+      tabName: "Friends",
       userId: user.id,
     });
   };
@@ -24,7 +24,12 @@ const DisplayFriendRow = ({ user, navigation }) => {
       {/* Avatar */}
       <Flex flex="1" justifyContent="center">
         <Pressable onPress={handleLoadAccount}>
-          <Avatar bg="#FAA" source={{ uri: '' }}>
+          <Avatar
+            bg="#FAA"
+            source={{
+              uri: "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+            }}
+          >
             EX
           </Avatar>
         </Pressable>

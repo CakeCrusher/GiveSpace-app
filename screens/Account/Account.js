@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
@@ -16,14 +16,14 @@ import {
   Icon,
   Popover,
   Modal,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
 
-import { ListPreview, LoadingScreen, PopoverIcon } from '../../components';
+import { ListPreview, LoadingScreen, PopoverIcon } from "../../components";
 
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
-import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
-import { logout } from '../../redux/actions/user';
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+import { SIGN_IN_USER_BY_ID } from "../../utils/schemas";
+import { logout } from "../../redux/actions/user";
 
 const AccountWrapper = ({
   route,
@@ -141,7 +141,7 @@ const Account = ({
   deleteAccount,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const password = useField('password', '');
+  const password = useField("password", "");
 
   const handleLogout = () => {
     logout();
@@ -179,7 +179,13 @@ const Account = ({
 
         <HStack alignItems="center" space="4">
           <Box flex="2">
-            <Avatar bg="#FAA" size="xl" source={{ uri: '' }}>
+            <Avatar
+              bg="#FAA"
+              size="xl"
+              source={{
+                uri: "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+              }}
+            >
               EX
             </Avatar>
           </Box>
@@ -209,7 +215,7 @@ const Account = ({
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">
-            {isUser ? 'My' : user.username + "'s"} Lists
+            {isUser ? "My" : user.username + "'s"} Lists
           </Text>
           {lists ? (
             <>
@@ -223,7 +229,7 @@ const Account = ({
               <Box h="2" />
               <Button
                 variant="outline"
-                onPress={() => navigation.navigate('My Lists')}
+                onPress={() => navigation.navigate("My Lists")}
               >
                 All Lists
               </Button>
@@ -288,7 +294,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
-  deleteAccount: () => console.log('Implement account deletion'),
+  deleteAccount: () => console.log("Implement account deletion"),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountWrapper);
