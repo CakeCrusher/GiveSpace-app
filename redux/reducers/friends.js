@@ -77,6 +77,11 @@ const friends = (state = initState, action) => {
       return {
         ...newState
       };
+    case 'ADD_PENDING_THEM':
+      return {
+        ...state,
+        pendingThem: [...state.pendingThem, action.payload]
+      }
     default:
       return state;
   }

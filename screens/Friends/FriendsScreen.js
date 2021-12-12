@@ -87,6 +87,16 @@ const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) =
             navigation={navigation}
           />
         ))}
+        <Flex flex="5">
+          <Text fontSize="3xl">Pending me</Text>
+        </Flex>
+        {friendsState.pendingMe.map((friend) => (
+          <DisplayFriendRow
+            key={friend.id}
+            user={friend}
+            navigation={navigation}
+          />
+        ))}
       </VStack>
       <Fab iconName="plus" onPress={() => setIsAdding(true)} />
       <AddFriendModal isOpen={isAdding} onClose={() => setIsAdding(false)} />

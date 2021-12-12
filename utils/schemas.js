@@ -314,3 +314,17 @@ mutation MyMutation($user_id: uuid = "") {
 // {
 //   "user_id": "535d6804-b9a6-43cb-b9fa-76192292193c"
 // }
+
+export const DELETE_FRIEND_REL = `
+mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
+  delete_friend_rel(where: {user: {id: {_eq: $user_first_id}}, userByUserSecondId: {id: {_eq: $user_second_id}}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "user_first_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693",
+//   "user_second_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b"
+// }
