@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator();
 const View = ({ signinDispatch, userState, reloadFriends }) => {
   useEffect(() => {
     const retrieveUserId = async () => {
-      await AsyncStorage.setItem('user_id', '7c55600d-e5f1-48f3-83d6-3c16ec918693');
+      await AsyncStorage.setItem('user_id', '6539bd82-b610-4049-a03b-6898a5cd1d8b');
       // await AsyncStorage.removeItem('user_id')
       const userId = await AsyncStorage.getItem('user_id');
       if (!userState.id && userId) {

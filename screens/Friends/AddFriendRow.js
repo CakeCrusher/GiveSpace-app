@@ -1,9 +1,9 @@
 import React from "react";
 import { Avatar, HStack, Text, Flex, Button } from "native-base";
 
-const AddFriendRow = ({ user, addFriend }) => {
+const AddFriendRow = ({ user, addFriend, friendState }) => {
   // TODO: Add Friend functionality
-
+  console.log('!friendState', friendState)
   return (
     <HStack justifyContent="space-between">
       {/* Avatar */}
@@ -22,7 +22,7 @@ const AddFriendRow = ({ user, addFriend }) => {
         <Text fontSize="md">{user.username}</Text>
       </Flex>
       <Flex flex="1" my="2" justifyContent="flex-end">
-        <Button onPress={() => addFriend(user.id)} size="sm">
+        <Button disabled={friendState} onPress={() => addFriend()} size="sm">
           Add
         </Button>
       </Flex>

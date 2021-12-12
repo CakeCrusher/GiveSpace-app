@@ -8,11 +8,11 @@ import AddFriendRow from './AddFriendRow';
 import { debounce } from '../../utils/helperFunctions';
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { SEARCH_FOR_USERS, CREATE_FRIEND_REL } from '../../utils/schemas';
+import { addPendingThem } from '../../redux/actions/friends';
 
-const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
+const AddingModal = ({ isOpen, onClose, friendsState, userState, addPendingThem }) => {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
   const handleInput = debounce((value) => {
     setIsLoading(true);
 
@@ -42,20 +42,28 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
     }
   }, 200);
 
-  const handleAddFriend = (recieverId) => {
+  const handleAddFriend = (friend) => {
+    console.log('!adding')
     fetchGraphQL(CREATE_FRIEND_REL, {
       "friend_rels": [
-        {"user_first_id": userState.id, "user_second_id": recieverId, "type": "pending_second"},
-        {"user_first_id": recieverId, "user_second_id": userState.id, "type": "pending_first"}
+        {"user_first_id": userState.id, "user_second_id": friend.id, "type": "pending_second"},
+        {"user_first_id": friend.id, "user_second_id": userState.id, "type": "pending_first"}
       ]
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-      console.log('!vars', {      "friend_rels": [
-        {"user_first_id": userState.id, "user_second_id": recieverId, "type": "pending_second"},
-        {"user_first_id": recieverId, "user_second_id": userState.id, "type": "pending_first"}
-      ]})
+    console.log('!friend', friend);
+    addPendingThem(friend)
+      
+    
   };
+
+  const friendState = (id) => {
+    if (friendsState.list.find(f => f.id === id)) return 'friend'
+    if (friendsState.pendingThem.find(f => f.id === id)) return 'pendingThem'
+    if (friendsState.pendingMe.find(f => f.id === id)) return 'pendingMe'
+    return false
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -77,7 +85,8 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState }) => {
               <AddFriendRow
                 key={friend.id}
                 user={friend}
-                addFriend={handleAddFriend}
+                friendState={friendState(friend.id)}
+                addFriend={() => handleAddFriend(friend)}
               />
             ))
           )}
@@ -92,6 +101,8 @@ const mapStateToProps = (state) => ({
   friendsState: state.friends,
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  addPendingThem: (friend) => dispatch(addPendingThem(friend)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddingModal);

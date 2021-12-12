@@ -59,3 +59,8 @@ export const reloadFriends = (friends) => (dispatch) => {
   dispatch({ type: 'RELOAD_FRIENDS', payload: onlyFriend});
   return;
 }
+
+export const addPendingThem = (friend) => (dispatch) => {
+  dispatch({ type: 'ADD_PENDING_THEM', payload: friend });
+  return;
+}
