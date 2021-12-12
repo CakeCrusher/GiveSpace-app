@@ -275,3 +275,42 @@ query MyQuery($search: String = "") {
 // {
 //   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
+
+export const DELETE_ITEM = `
+mutation MyMutation($item_id: uuid = "") {
+  delete_item(where: {id: {_eq: $item_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "item_id": "d6b2f6c2-0b2e-43a7-9fc3-df7879ff336e"
+// }
+
+export const DELETE_LIST = `
+mutation MyMutation($list_id: uuid = "", $_eq: uuid = "") {
+  delete_list(where: {id: {_eq: $list_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "list_id": "ec8e03f0-754c-4b2e-b367-236ef1916b13"
+// }
+
+export const DELETE_USER = `
+mutation MyMutation($user_id: uuid = "") {
+  delete_user(where: {id: {_eq: $user_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "user_id": "535d6804-b9a6-43cb-b9fa-76192292193c"
+// }
