@@ -78,7 +78,7 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
                   username={friend.username}
                   listData={friend.lists[0]}
                   avatar={
-                    'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
+                    friend.profile_pic_url || 'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
                   }
                   onPress={() => handleLoadList(friend.lists[0])}
                   flex="1"

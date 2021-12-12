@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
@@ -16,14 +16,14 @@ import {
   Icon,
   Popover,
   Modal,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
 
-import { ListPreview, LoadingScreen } from '../../components';
+import { ListPreview, LoadingScreen, PopoverIcon } from "../../components";
 
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
-import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
-import { logout } from '../../redux/actions/user';
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+import { SIGN_IN_USER_BY_ID } from "../../utils/schemas";
+import { logout } from "../../redux/actions/user";
 
 const AccountWrapper = ({
   route,
@@ -114,38 +114,18 @@ const UserOptions = ({ handleLogout, handleStartDelete }) => {
         </Pressable>
       </Box>
       <Box p="2">
-        <Popover
-          placement={'left top'}
-          trigger={(triggerProps) => {
-            return (
-              <Pressable {...triggerProps}>
-                <Icon as={<Feather name="more-vertical" />} size="sm" />
-              </Pressable>
-            );
-          }}
-        >
-          <Popover.Content>
-            <Popover.Body>
-              <Box>
-                <Text fontWeight="bold" fontSize="md">
-                  User Options
-                </Text>
-              </Box>
-              <VStack>
-                <Pressable onPress={handleLogout}>
-                  <Box p="2">
-                    <Text>Logout</Text>
-                  </Box>
-                </Pressable>
-                <Pressable onPress={handleStartDelete}>
-                  <Box p="2" pt="4">
-                    <Text>Delete Account</Text>
-                  </Box>
-                </Pressable>
-              </VStack>
-            </Popover.Body>
-          </Popover.Content>
-        </Popover>
+        <PopoverIcon iconName="more-vertical" menuTitle="User Options">
+          <Pressable onPress={handleLogout}>
+            <Box p="2">
+              <Text>Logout</Text>
+            </Box>
+          </Pressable>
+          <Pressable onPress={handleStartDelete}>
+            <Box p="2" pt="4">
+              <Text color="red.500">Delete Account</Text>
+            </Box>
+          </Pressable>
+        </PopoverIcon>
       </Box>
     </HStack>
   );
@@ -161,7 +141,7 @@ const Account = ({
   deleteAccount,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const password = useField('password', '');
+  const password = useField("password", "");
 
   const handleLogout = () => {
     logout();
@@ -199,7 +179,13 @@ const Account = ({
 
         <HStack alignItems="center" space="4">
           <Box flex="2">
-            <Avatar bg="#FAA" size="xl" source={{ uri: '' }}>
+            <Avatar
+              bg="#FAA"
+              size="xl"
+              source={{
+                uri: user.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+              }}
+            >
               EX
             </Avatar>
           </Box>
@@ -229,7 +215,7 @@ const Account = ({
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">
-            {isUser ? 'My' : user.username + "'s"} Lists
+            {isUser ? "My" : user.username + "'s"} Lists
           </Text>
           {lists ? (
             <>
@@ -243,7 +229,7 @@ const Account = ({
               <Box h="2" />
               <Button
                 variant="outline"
-                onPress={() => navigation.navigate('My Lists')}
+                onPress={() => navigation.navigate("My Lists")}
               >
                 All Lists
               </Button>
@@ -261,14 +247,20 @@ const Account = ({
           <Text fontSize="3xl">Friends</Text>
           {/* Add Friends */}
           <HStack flexWrap="wrap">
-            {friends.map((e) => (
+            {friends.map((f) => (
               <Box
-                key={e.id}
+                key={f.id}
                 flexBasis="25%"
                 alignItems="center"
                 justifyContent="center"
               >
-                <Avatar size="md" bg="#FAF" />
+                <Avatar
+                  size="md"
+                  bg="#FAF" 
+                  source={{
+                    uri: f.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                  }}
+                />
               </Box>
             ))}
           </HStack>
@@ -308,7 +300,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
-  deleteAccount: () => console.log('Implement account deletion'),
+  deleteAccount: () => console.log("Implement account deletion"),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountWrapper);

@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
@@ -10,9 +10,9 @@ import {
   HStack,
   View,
   Avatar,
-} from 'native-base';
+} from "native-base";
 
-import { ListPreview } from '../../components';
+import { ListPreview } from "../../components";
 
 const FriendAccountPage = ({ navigation, userState, friendsState }) => {
   return (
@@ -20,7 +20,13 @@ const FriendAccountPage = ({ navigation, userState, friendsState }) => {
       <ScrollView>
         <HStack alignItems="center" space="4">
           <Box flex="2">
-            <Avatar bg="#FAA" size="xl" source={{ uri: '' }}>
+            <Avatar
+              bg="#FAA"
+              size="xl"
+              source={{
+                uri: userState.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+              }}
+            >
               EX
             </Avatar>
           </Box>
@@ -71,7 +77,7 @@ const FriendAccountPage = ({ navigation, userState, friendsState }) => {
               <View h="2" />
               <Button
                 variant="outline"
-                onPress={() => navigation.navigate('My Lists')}
+                onPress={() => navigation.navigate("My Lists")}
               >
                 All Lists
               </Button>

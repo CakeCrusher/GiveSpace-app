@@ -41,21 +41,46 @@ const user = (state = initState, action) => {
       };
     }
     case 'ADD_USER_LIST': {
+      const newLists = [action.payload, ...state.lists];
       return {
         ...state,
-        lists: [...state.lists, action.payload],
+        lists: newLists,
       };
     }
     case 'ADD_LIST_ITEM': {
-      const listToAddItem = {...state.lists.find(list => list.id === action.payload.listId)}
+      const listToAddItem = {
+        ...state.lists.find((list) => list.id === action.payload.listId),
+      };
       listToAddItem.items.push(action.payload.item);
       const newLists = state.lists.map((list) =>
-        list.id === action.payload.listId ? listToAddItem : list
-      )
+        list.id === action.payload.listId ? listToAddItem : list,
+      );
       return {
         ...state,
-        lists: [...newLists]
+        lists: [...newLists],
+      };
+    }
+
+    case 'REMOVE_LISTS': {
+      const deletedIds = action.payload;
+      if (deletedIds.length > 0) {
+        console.log('DELETE IDS');
+        console.log(deletedIds);
+        const newLists = [...state.lists].filter(
+          (list) => !deletedIds.includes(list.id),
+        );
+        console.log('DELETE IDS');
+        console.log(newLists);
+        return {
+          ...state,
+          lists: newLists,
+        };
       }
+
+      return {
+        ...state,
+        lists: [...state.lists],
+      };
     }
 
     default: {

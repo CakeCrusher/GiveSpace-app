@@ -12,6 +12,7 @@ const DisplayFriendRow = ({ friend, navigation, friendsState, userState, acceptF
   //};
 
   const handleLoadAccount = () => {
+    console.log('handleLoadAccount');
     navigation.navigate('FriendAccount', {
       userId: friend.id,
     });
@@ -40,14 +41,19 @@ const DisplayFriendRow = ({ friend, navigation, friendsState, userState, acceptF
     setIsLoading(false)
   }
 
-  console.log(friendState(friend.id, friendsState))
+  console.log(friend.profile_pic_url)
   
   return (
     <HStack pb="5" justifyContent="space-between">
       {/* Avatar */}
       <Flex flex="1" justifyContent="center">
         <Pressable onPress={handleLoadAccount}>
-          <Avatar bg="#FAA" source={{ uri: '' }}>
+          <Avatar
+            bg="#FAA"
+            source={{
+              uri: friend.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+            }}
+          >
             EX
           </Avatar>
         </Pressable>
