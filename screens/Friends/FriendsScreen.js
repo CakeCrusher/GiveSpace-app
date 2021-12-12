@@ -10,6 +10,7 @@ import {
   Flex,
   Pressable,
   Button,
+  ScrollView,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
@@ -34,7 +35,10 @@ const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) =
   const handleSettingsToggle = () => {};
 
   return (
-    <VStack space="4" p="4" flex="1" safeArea>
+    <VStack space="4" p="4" flex="15" safeArea>
+            <Fab iconName="user-plus" onPress={() => setIsAdding(true)} />
+      <AddFriendModal isOpen={isAdding} onClose={() => setIsAdding(false)} />
+      <ScrollView>
       <HStack flex="1" justifyContent="space-between">
         <Flex flex="5">
           <Text fontSize="3xl">Friends</Text>
@@ -65,7 +69,7 @@ const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) =
         {friendsState.list.map((friend) => (
           <DisplayFriendRow
             key={friend.id}
-            user={friend}
+            friend={friend}
             navigation={navigation}
           />
         ))}
@@ -78,28 +82,28 @@ const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) =
         />
       ))*/}
         <Flex flex="5">
-          <Text fontSize="3xl">Pending them</Text>
-        </Flex>
-        {friendsState.pendingThem.map((friend) => (
-          <DisplayFriendRow
-            key={friend.id}
-            user={friend}
-            navigation={navigation}
-          />
-        ))}
-        <Flex flex="5">
           <Text fontSize="3xl">Pending me</Text>
         </Flex>
         {friendsState.pendingMe.map((friend) => (
           <DisplayFriendRow
             key={friend.id}
-            user={friend}
+            friend={friend}
+            navigation={navigation}
+          />
+        ))}
+        <Flex flex="5">
+          <Text fontSize="3xl">Pending them</Text>
+        </Flex>
+        {friendsState.pendingThem.map((friend) => (
+          <DisplayFriendRow
+            key={friend.id}
+            friend={friend}
             navigation={navigation}
           />
         ))}
       </VStack>
-      <Fab iconName="plus" onPress={() => setIsAdding(true)} />
-      <AddFriendModal isOpen={isAdding} onClose={() => setIsAdding(false)} />
+
+      </ScrollView>
     </VStack>
   );
 };

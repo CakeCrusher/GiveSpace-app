@@ -49,7 +49,6 @@ export const populateListFriends = (list) => (dispatch) => {
 };
 
 export const reloadFriends = (friends) => (dispatch) => {
-  console.log('!friends', friends);
   const separatedFriends = separateFriendRels(friends)
   const onlyFriend = {
     list: separatedFriends.list.map(f => f.userByUserSecondId),
@@ -64,3 +63,25 @@ export const addPendingThem = (friend) => (dispatch) => {
   dispatch({ type: 'ADD_PENDING_THEM', payload: friend });
   return;
 }
+
+export const acceptFriend = (friend) => (dispatch) => {
+  dispatch({ type: 'ACCEPT_FRIEND', payload: friend });
+  return;
+}
+
+export const removeFriend = (friendId, type) => (dispatch) => {
+  console.log('!type', type);
+  if (type === 'pendingMe') {
+    dispatch({ type: 'REMOVE_PENDINGME', payload: friendId });
+  } 
+  if (type === 'pendingThem') {
+    console.log('!dispatch')
+    dispatch({ type: 'REMOVE_PENDINGTHEM', payload: friendId });
+  }
+  if (type === 'friends') {
+    dispatch({ type: 'REMOVE_FRIEND', payload: friendId });
+  }
+  return;
+}
+
+// export const removeFriend = (friend, type)

@@ -3,6 +3,7 @@ const initState = {
     // {
     //   id: null,
     //   username: null,
+    //   profile_pic_url: null,
     //   lists: [
     //     {
     //       id: null,
@@ -19,10 +20,20 @@ const initState = {
     // }
   ],
   pendingMe: [
-    // same
+    // MINIMUM OF:
+    // {
+    //   id: null,
+    //   username: null,
+    //   profile_pic_url: null,
+    // }
   ],
   pendingThem: [
-    // same
+    // MINIMUM OF:
+    // {
+    //   id: null,
+    //   username: null,
+    //   profile_pic_url: null,
+    // }
   ]
 };
 
@@ -73,7 +84,6 @@ const friends = (state = initState, action) => {
         pendingThem: friendFilter(state.pendingThem, action.payload.pendingThem),
       }
 
-      console.log('!newState', newState)
       return {
         ...newState
       };
@@ -81,6 +91,42 @@ const friends = (state = initState, action) => {
       return {
         ...state,
         pendingThem: [...state.pendingThem, action.payload]
+      }
+    case 'ACCEPT_FRIEND':
+      console.log('!newState', {
+        ...state,
+        pendingMe: [...state.pendingMe.filter(
+          friend => friend.id !== action.payload.id
+        )],
+        list: [...state.list, action.payload]
+      })
+      return {
+        ...state,
+        pendingMe: [...state.pendingMe.filter(
+          friend => friend.id !== action.payload.id
+        )],
+        list: [...state.list, action.payload]
+      }
+    case 'REMOVE_PENDINGME':
+      return {
+        ...state,
+        pendingMe: [...state.pendingMe.filter(
+          friend => friend.id !== action.payload
+        )]
+      }
+    case 'REMOVE_FRIEND':
+      return {
+        ...state,
+        list: [...state.list.filter(
+          friend => friend.id !== action.payload
+        )]
+      }
+    case 'REMOVE_PENDINGTHEM':
+      return {
+        ...state,
+        pendingThem: [...state.pendingThem.filter(
+          friend => friend.id !== action.payload
+        )]
       }
     default:
       return state;

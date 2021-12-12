@@ -328,3 +328,32 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
 //   "user_first_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693",
 //   "user_second_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b"
 // }
+
+export const ACCEPT_FRIEND_REL = `
+mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
+  update_friend_rel(where: {user_first_id: {_eq: $user_first_id}, user_second_id: {_eq: $user_second_id}}, _set: {type: "friends"}) {
+    returning {
+      user {
+        id
+        username
+        profile_pic_url
+        lists(order_by: {date_modified: desc}) {
+          id
+          user_id
+          title
+          date_modified
+          items {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
+
+`
+// {
+//   "user_first_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b",
+//   "user_second_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
+// }

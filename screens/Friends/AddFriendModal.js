@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 import AddFriendRow from './AddFriendRow';
 
-import { debounce } from '../../utils/helperFunctions';
+import { debounce, friendState } from '../../utils/helperFunctions';
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { SEARCH_FOR_USERS, CREATE_FRIEND_REL } from '../../utils/schemas';
 import { addPendingThem } from '../../redux/actions/friends';
@@ -58,12 +58,7 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState, addPendingThem 
     
   };
 
-  const friendState = (id) => {
-    if (friendsState.list.find(f => f.id === id)) return 'friend'
-    if (friendsState.pendingThem.find(f => f.id === id)) return 'pendingThem'
-    if (friendsState.pendingMe.find(f => f.id === id)) return 'pendingMe'
-    return false
-  }
+  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -85,7 +80,7 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState, addPendingThem 
               <AddFriendRow
                 key={friend.id}
                 user={friend}
-                friendState={friendState(friend.id)}
+                friendState={friendState(friend.id, friendsState)}
                 addFriend={() => handleAddFriend(friend)}
               />
             ))
