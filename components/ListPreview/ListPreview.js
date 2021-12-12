@@ -27,7 +27,7 @@ const ListPreview = (props) => {
   delete styles.avatar;
 
   return (
-    <ShadowBox minH="44" {...styles}>
+    <ShadowBox minH="42" {...styles}>
       <VStack px="4" py="2" bg="#FFF" flex="1" borderRadius="8">
         <Pressable onPress={props.onPress}>
           {avatar && (

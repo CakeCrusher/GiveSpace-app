@@ -72,7 +72,7 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
         <VStack flex="1" space="2" flexWrap="wrap">
           {friendsWithLists.length > 0 &&
             friendsWithLists.map((friend, index) => (
-              <Box h="52" key={friend.id}>
+              <Box h="50" w="full" key={friend.id}>
                 <ListPreview
                   key={index}
                   username={friend.username}

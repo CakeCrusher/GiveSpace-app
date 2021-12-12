@@ -7,6 +7,7 @@ import {
   Link,
   Input,
   Center,
+  Flex,
   HStack,
   VStack,
 } from 'native-base';
@@ -41,8 +42,8 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
   });
 
   return (
-    <VStack space={8}>
-      <VStack>
+    <Center flex="1" safeArea>
+      <VStack flex="2" justifyContent="flex-end">
         <Heading mb={4} size="3xl" textAlign="center">
           GiftSpace
         </Heading>
@@ -64,9 +65,13 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
         )}
       </VStack>
 
-      <VStack space={4}>
-        <Input {...username} placeholder="username" />
-        <Input {...password} placeholder="password" />
+      <VStack w="48" flex="3" space={4} justifyContent="flex-start">
+        <Flex h="8">
+          <Input {...username} placeholder="username" />
+        </Flex>
+        <Flex h="8">
+          <Input {...password} placeholder="password" />
+        </Flex>
         <Button isLoading={isLoading} onPress={handleSubmit}>
           Sign In
         </Button>
@@ -74,7 +79,7 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
           <Link>Forgot Your Password?</Link>
         </VStack>
       </VStack>
-    </VStack>
+    </Center>
   );
 };
 

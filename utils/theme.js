@@ -27,7 +27,10 @@ const theme = extendTheme({
     },
   },
   sizes: {
-    52: 208,
+    42: 168,
+    44: 176,
+    50: 202,
+    52: 214,
   },
   components: {
     Button: {
@@ -47,6 +50,7 @@ const theme = extendTheme({
       baseStyle: {
         bg: '#FFFFFF',
         flex: 1,
+        maxH: 16,
       },
     },
   },
