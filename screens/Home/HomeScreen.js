@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as Contacts from 'expo-contacts';
-import { Text, Button, HStack, VStack, Box, ScrollView } from 'native-base';
+import {
+  Avatar,
+  Text,
+  Button,
+  HStack,
+  VStack,
+  Box,
+  ScrollView,
+} from 'native-base';
 
-import { ListPreview } from '../../components';
+import { ListPreview, InnerTitle } from '../../components';
 
 import { setUser, logout } from '../../redux/actions/user';
 import MockApi from '../../utils/MockApi';
@@ -39,7 +47,7 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
       </HStack>
 
       <VStack flex="5" space="2">
-        <Text fontSize="2xl">Recent</Text>
+        <InnerTitle>Recent</InnerTitle>
         {userState.lists[0] && (
           <>
             <ListPreview
@@ -60,15 +68,18 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
       </VStack>
 
       <VStack flex="7" space="2" overflow="scroll">
-        <Text fontSize="2xl">Friends</Text>
+        <InnerTitle>Friends Activity</InnerTitle>
         <VStack flex="1" space="2" flexWrap="wrap">
           {friendsWithLists.length > 0 &&
             friendsWithLists.map((friend, index) => (
-              <Box h="40" key={friend.id}>
+              <Box h="52" key={friend.id}>
                 <ListPreview
                   key={index}
                   username={friend.username}
                   listData={friend.lists[0]}
+                  avatar={
+                    'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
+                  }
                   onPress={() => handleLoadList(friend.lists[0])}
                   flex="1"
                 />
