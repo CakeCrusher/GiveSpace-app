@@ -45,16 +45,14 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
   return (
     <Center flex="1" safeArea>
       <VStack flex="5" justifyContent="flex-end">
-        <Heading mb={4} size="3xl" textAlign="center">
-          GiftSpace
-        </Heading>
+        <Text fontSize="3xl" textAlign="center">
+          Welcome Back
+        </Text>
         <Flex maxH="64" maxW="64">
           <PresentsSvg />
         </Flex>
-        <Text fontSize="xl" textAlign="center">
-          Sign In
-        </Text>
-        <Center mb={4}>
+        <Center mb={4} mt="4">
+          <Text>Log In</Text>
           <HStack>
             <Text>or </Text>
             <Link onPress={toSignUp}>create an account</Link>
@@ -69,7 +67,7 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
         )}
       </VStack>
 
-      <VStack w="48" flex="4" space={4} justifyContent="flex-start">
+      <VStack w="48" flex="5" space={4} justifyContent="flex-start">
         <Flex h="8">
           <Input {...username} placeholder="username" />
         </Flex>

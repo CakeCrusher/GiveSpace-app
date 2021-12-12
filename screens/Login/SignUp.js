@@ -18,6 +18,7 @@ import * as Contacts from 'expo-contacts';
 import parsePhoneNumber from 'libphonenumber-js';
 import PhoneInput from 'react-native-phone-number-input';
 import { REGISTER_USER } from '../../utils/schemas';
+import { PresentsSvg } from '../../resources';
 
 // TODO: Need to do a 2nd pass and implement validation
 const Signup = ({ signinDispatch, toSignIn }) => {
@@ -42,7 +43,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     }
   };
   const stepOneStack = (
-    <VStack w="48" flex="3" space={4} justifyContent="flex-start">
+    <VStack w="48" flex="5" space={4} justifyContent="flex-start">
       <Flex h="8">
         <Input {...username} placeholder="username" />
       </Flex>
@@ -114,7 +115,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     return;
   };
   const stepTwoStack = (
-    <VStack w="48" flex="3" space={4} justifyContent="flex-start">
+    <VStack w="48" flex="5" space={4} justifyContent="flex-start">
       <Flex h="8">
         <PhoneInput
           ref={phoneInput}
@@ -137,17 +138,21 @@ const Signup = ({ signinDispatch, toSignIn }) => {
 
   return (
     <Center flex="1" safeArea>
-      <VStack flex="2" justifyContent="flex-end">
-        <Heading mb={4} size="3xl" textAlign="center">
-          GiftSpace
-        </Heading>
-        <Text fontSize="xl" textAlign="center">
-          Create an account
+      <VStack flex="5" justifyContent="flex-end">
+        <Text fontSize="3xl" textAlign="center">
+          Welcome To
         </Text>
-        <Center>
+        <Text fontSize="3xl" textAlign="center">
+          GiftSpace
+        </Text>
+        <Flex maxH="64" maxW="64">
+          <PresentsSvg />
+        </Flex>
+        <Center mt="4">
+          <Text>Create an account</Text>
           <HStack mb={4}>
             <Text>or </Text>
-            <Link onPress={toSignIn}>sign in</Link>
+            <Link onPress={toSignIn}>log in</Link>
           </HStack>
         </Center>
         {error && (
