@@ -19,7 +19,7 @@ import {
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 
-import { ListPreview, LoadingScreen } from '../../components';
+import { ListPreview, LoadingScreen, PopoverIcon } from '../../components';
 
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
@@ -114,38 +114,18 @@ const UserOptions = ({ handleLogout, handleStartDelete }) => {
         </Pressable>
       </Box>
       <Box p="2">
-        <Popover
-          placement={'left top'}
-          trigger={(triggerProps) => {
-            return (
-              <Pressable {...triggerProps}>
-                <Icon as={<Feather name="more-vertical" />} size="sm" />
-              </Pressable>
-            );
-          }}
-        >
-          <Popover.Content>
-            <Popover.Body>
-              <Box>
-                <Text fontWeight="bold" fontSize="md">
-                  User Options
-                </Text>
-              </Box>
-              <VStack>
-                <Pressable onPress={handleLogout}>
-                  <Box p="2">
-                    <Text>Logout</Text>
-                  </Box>
-                </Pressable>
-                <Pressable onPress={handleStartDelete}>
-                  <Box p="2" pt="4">
-                    <Text>Delete Account</Text>
-                  </Box>
-                </Pressable>
-              </VStack>
-            </Popover.Body>
-          </Popover.Content>
-        </Popover>
+        <PopoverIcon iconName="more-vertical" menuTitle="User Options">
+          <Pressable onPress={handleLogout}>
+            <Box p="2">
+              <Text>Logout</Text>
+            </Box>
+          </Pressable>
+          <Pressable onPress={handleStartDelete}>
+            <Box p="2" pt="4">
+              <Text color="red.500">Delete Account</Text>
+            </Box>
+          </Pressable>
+        </PopoverIcon>
       </Box>
     </HStack>
   );

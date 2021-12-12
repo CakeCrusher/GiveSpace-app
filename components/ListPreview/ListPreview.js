@@ -1,13 +1,13 @@
 import React from 'react';
-import { Avatar, Text, HStack, VStack, Pressable } from 'native-base';
+import { Avatar, Text, HStack, VStack, Pressable, Checkbox } from 'native-base';
 
 import ShadowBox from '../ShadowBox/ShadowBox';
 import InnerTitle from '../InnerTitle/InnerTitle';
 
 const ListPreview = (props) => {
-  const { avatar, username, listData } = props;
+  const { avatar, username, listData, onCheck } = props;
   const { title, items } = listData;
-  console.log(listData);
+
   const date = new Date(listData.date_modified);
   const dateString = date.toLocaleString('en-US', {
     month: 'short',
@@ -38,9 +38,18 @@ const ListPreview = (props) => {
               </Text>
             </HStack>
           )}
-          <InnerTitle fontSize="2xl" isTruncated>
-            {title}
-          </InnerTitle>
+          <HStack justifyContent="space-between" alignItems="center">
+            <InnerTitle fontSize="2xl" isTruncated>
+              {title}
+            </InnerTitle>
+            {onCheck !== undefined && (
+              <Checkbox
+                onPress={onCheck}
+                colorScheme="danger"
+                aria-label="select for deletion"
+              />
+            )}
+          </HStack>
           <VStack pl="2">
             {spliced &&
               spliced.map((e, i) => (

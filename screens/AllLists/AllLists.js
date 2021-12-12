@@ -3,8 +3,11 @@ import {
   Text,
   Heading,
   Button,
+  Pressable,
   Avatar,
+  Modal,
   Box,
+  Flex,
   HStack,
   VStack,
   ScrollView,
@@ -13,16 +16,26 @@ import {
 import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 
-import { ListPreview, LoadingScreen, Fab } from '../../components';
+import { ListPreview, LoadingScreen, Fab, PopoverIcon } from '../../components';
 
 import { addList } from '../../redux/actions/user';
 import { fetchGraphQL } from '../../utils/helperFunctions';
-import { CREATE_LIST } from '../../utils/schemas';
+import { CREATE_LIST, DELETE_LIST } from '../../utils/schemas';
 
-const AllLists = ({ route, navigation, userState, friendsState, addList }) => {
+const AllLists = ({
+  route,
+  navigation,
+  userState,
+  friendsState,
+  addList,
+  removeLists,
+}) => {
   const { userId, tabName } = route.params;
 
   const [userData, setUserData] = useState(null);
+  const [enableDelete, setEnableDelete] = useState(false);
+  const [selectDelete, setSelectDelete] = useState(new Set());
+  const [deleteModal, setDeleteModal] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
 
   useEffect(() => {
@@ -60,6 +73,47 @@ const AllLists = ({ route, navigation, userState, friendsState, addList }) => {
       .catch((err) => console.log(err));
   };
 
+  const handleSelectDelete = (listId) => {
+    setSelectDelete((prev) => {
+      if (prev.has(listId)) {
+        prev.delete(listId);
+      } else {
+        prev.add(listId);
+      }
+      return prev;
+    });
+    console.log(selectDelete);
+  };
+
+  const handleEnableDelete = () => {
+    setEnableDelete(true);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModal(false);
+    setEnableDelete(false);
+    setSelectDelete(new Set());
+  };
+
+  const openDeleteModal = () => {
+    setDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    Promise.all(
+      [...selectDelete].map((list_id) =>
+        fetchGraphQL(DELETE_LIST, {
+          list_id,
+        }),
+      ),
+    )
+      .then((values) => {
+        removeLists([...selectDelete]);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => handleCancelDelete());
+  };
+
   return (
     <VStack space="4" p="4" flex="1" safeArea>
       <HStack flex="1" alignItems="center">
@@ -71,6 +125,25 @@ const AllLists = ({ route, navigation, userState, friendsState, addList }) => {
             (userId === userState.id ? 'Your ' : `${userData.username}'s `)}
           Lists
         </Heading>
+        {userData && userId === userState.id && (
+          <Flex ml="auto">
+            <PopoverIcon iconName="more-vertical" menuTitle="List Options">
+              {enableDelete ? (
+                <Pressable onPress={handleCancelDelete}>
+                  <Box p="2">
+                    <Text color="blue.500">Cancel Delete</Text>
+                  </Box>
+                </Pressable>
+              ) : (
+                <Pressable onPress={handleEnableDelete}>
+                  <Box p="2">
+                    <Text color="red.500">Delete</Text>
+                  </Box>
+                </Pressable>
+              )}
+            </PopoverIcon>
+          </Flex>
+        )}
       </HStack>
       <VStack flex="15">
         <ScrollView>
@@ -78,10 +151,17 @@ const AllLists = ({ route, navigation, userState, friendsState, addList }) => {
             (userData.lists.length > 0 ? (
               userData.lists.map((list) => (
                 <Box key={list.id} mb="4">
-                  <ListPreview
-                    listData={list}
-                    onPress={() => handleLoadList(list)}
-                  />
+                  {enableDelete ? (
+                    <ListPreview
+                      listData={list}
+                      onCheck={() => handleSelectDelete(list.id)}
+                    />
+                  ) : (
+                    <ListPreview
+                      listData={list}
+                      onPress={() => handleLoadList(list)}
+                    />
+                  )}
                 </Box>
               ))
             ) : (
@@ -89,12 +169,40 @@ const AllLists = ({ route, navigation, userState, friendsState, addList }) => {
             ))}
         </ScrollView>
       </VStack>
-      {userId === userState.id && (
-        <>
+      {userId === userState.id &&
+        (enableDelete ? (
+          <Fab onPress={openDeleteModal} iconName="trash" />
+        ) : (
           <Fab onPress={handleCreateList} iconName="plus" />
-          <LoadingScreen isLoading={loadingCreate} />
-        </>
-      )}
+        ))}
+      <LoadingScreen isLoading={loadingCreate} />
+      <Modal isOpen={deleteModal} onClose={() => setDeleteModal(false)}>
+        <Modal.Content>
+          <Modal.Header>
+            Are you sure you want to delete these lists?
+          </Modal.Header>
+          <Modal.Body>
+            <VStack space="4">
+              <HStack space="4">
+                <Button
+                  onPress={handleCancelDelete}
+                  flex="1"
+                  colorScheme="info"
+                >
+                  No
+                </Button>
+                <Button
+                  onPress={handleConfirmDelete}
+                  flex="1"
+                  colorScheme="danger"
+                >
+                  Yes
+                </Button>
+              </HStack>
+            </VStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </VStack>
   );
 };
@@ -106,6 +214,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   addList: (lsitData) => dispatch(addList(listData)),
+  removeLists: (listIds) => dispatch(removeLists(listIds)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllLists);
