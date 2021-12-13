@@ -86,7 +86,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
           failedContacts.push(contact);
         }
       });
-      return numbers.concat(['+14235557297']);
+      return numbers;
     }
     return [];
   };
@@ -103,7 +103,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
       username: username.value,
       password: password.value,
       phone_number: '+' + phoneInput.current.state.code + phoneNumber.value,
-      contacts_phone_numbers: [...contactsPhoneNumbers, '+17865557297'],
+      contacts_phone_numbers: [...contactsPhoneNumbers, '0'],
     });
     console.log('userRes', userRes);
     if (userRes.errors || !userRes.data.register.userIdToUser) {
