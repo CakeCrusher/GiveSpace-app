@@ -95,6 +95,12 @@ const user = (state = initState, action) => {
         )]
       }
     }
+    case 'EDIT_USER_ADDRESS': {
+      return {
+        ...state,
+        address: action.payload
+      }
+    }
     case 'REMOVE_ITEMS': {
       const { listId, deletedIds } = action.payload;
       if (deletedIds.length > 0) {

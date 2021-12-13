@@ -116,6 +116,21 @@ mutation MyMutation($list_id: uuid = "", $title: String = "") {
 //   "title": "wishlist"
 // }
 
+export const UPDATE_USER_ADDRESS = `
+mutation MyMutation($user_id: uuid = "", $address: String = "") {
+  update_user(where: {id: {_eq: $user_id}}, _set: {address: $address}) {
+    returning {
+      id
+      address
+    }
+  }
+}
+`
+// {
+//   "user_id": "676b788a-8350-488b-8e49-08c6c40b5c78",
+//   "address": "wishlist"
+// }
+
 export const INSPECT_TEXT = `
 mutation MyMutation($text: String = "") {
   inspect_text(text: $text) {

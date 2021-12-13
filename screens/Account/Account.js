@@ -25,8 +25,8 @@ import { ListPreview, LoadingScreen, PopoverIcon } from "../../components";
 import { BirthdaySvg, LocationSvg } from '../../resources';
 
 import { fetchGraphQL, useField } from "../../utils/helperFunctions";
-import { SIGN_IN_USER_BY_ID } from "../../utils/schemas";
-import { logout } from "../../redux/actions/user";
+import { SIGN_IN_USER_BY_ID, UPDATE_USER_ADDRESS } from "../../utils/schemas";
+import { editAddress, logout } from "../../redux/actions/user";
 import Flare from '../../components/Flare';
 
 const AccountWrapper = ({
@@ -146,7 +146,7 @@ const Account = ({
   deleteAccount,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const password = useField("password", "");
+  const address = useField("text");
 
   const handleLogout = () => {
     logout();
@@ -163,6 +163,19 @@ const Account = ({
   const handleBack = () => {
     navigation.goBack();
   };
+
+  const handleAddressSet = () => {
+    fetchGraphQL(UPDATE_USER_ADDRESS, {
+      "user_id": user.id,
+      "address": address.value
+    })
+      .then((res) => {
+        console.log(res);
+        const resData = res.data.update_user.returning[0]
+        editAddress(resData.address)
+      })
+      .catch((err) => console.log(err))
+  }
 
   return (
     <VStack flex="1" p="4" safeArea>
@@ -208,14 +221,23 @@ const Account = ({
         </HStack>
 
         <HStack space="4" mt="4">
-          {/*TODO: Change these*/}
-          <HStack space="2">
-            <BirthdaySvg />
-            <Text>birthday</Text>
-          </HStack>
-          <HStack space="2">
+          <HStack space="1" alignItems="center">
             <LocationSvg />
-            <Text>address</Text>
+            {isUser ? (
+              <Flex h="9">
+                <Input
+                  backgroundColor="#ffffff00"
+                  borderColor="#ffffff00"
+                  placeholder="delivery address"
+                  fontSize="sm"
+                  onEndEditing={handleAddressSet}
+                  h="10"
+                  {...address}
+                />
+              </Flex>
+            ) : (
+              <Text fontSize="sm">{user.address || "(no address)"}</Text>
+            )}
           </HStack>
         </HStack>
 
@@ -284,6 +306,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
   deleteAccount: () => console.log("Implement account deletion"),
+  editAddress: (address) => dispatch(editAddress(address)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountWrapper);

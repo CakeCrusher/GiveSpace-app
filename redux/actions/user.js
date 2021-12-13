@@ -116,6 +116,11 @@ export const editListTitle = (listId, title) => (dispatch) => {
   return;
 }
 
+export const editAddress = (address) => (dispatch) => {
+  dispatch({ type: 'EDIT_USER_ADDRESS', payload: address });
+  return;
+}
+
 export const addList = (listData) => ({
   type: 'ADD_USER_LIST',
   payload: listData,
