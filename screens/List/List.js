@@ -253,7 +253,7 @@ const List = ({
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
       <Flare />
       {/* Nav, ListTitle, Username*/}
-      <HStack flex="1" alignItems="center" mx="-2">
+      <HStack mt={8} flex="1" alignItems="center" mx="-2">
         <Box flex="1">
           <Pressable onPress={() => navigation.goBack()}>
             <Icon as={<Feather name="chevron-left" />} size="xl" />

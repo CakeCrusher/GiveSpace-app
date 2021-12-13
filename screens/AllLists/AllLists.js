@@ -176,7 +176,7 @@ const AllLists = ({
   return (
     <VStack space="4" p="4" flex="1" safeArea>
       <Flare />
-      <HStack flex="1" alignItems="center">
+      <HStack mt={8} flex="1" alignItems="center">
         <Avatar
           bg="#FAA"
           source={{
