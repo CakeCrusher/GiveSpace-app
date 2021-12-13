@@ -178,7 +178,7 @@ const ListWrapper = ({
   );
 };
 
-const List = ({ navigation, list, isUser, userData, handleConfirmDelete, editListTitle }) => {
+const List = ({ navigation, list, isUser, handleConfirmDelete, userData, editListTitle }) => {
   const [selectItem, setSelectItem] = useState(null);
   const [showNewModal, setShowNewModal] = useState(false);
 
