@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 import {
   Text,
   Heading,
@@ -18,7 +18,11 @@ import {
   ScrollView,
 } from 'native-base';
 
-import { editListTitle, populateListUser, removeItems } from '../../redux/actions/user';
+import {
+  editListTitle,
+  populateListUser,
+  removeItems,
+} from '../../redux/actions/user';
 import { populateListFriends } from '../../redux/actions/friends';
 import ItemCard from '../../components/Item/ItemCard';
 import ItemInput from '../../components/Item/ItemInput';
@@ -36,7 +40,7 @@ const ListWrapper = ({
   populateListFriends,
   populateListUser,
   removeItems,
-  editListTitle
+  editListTitle,
 }) => {
   const { listData, userData } = route.params;
   const isUser = userState.id === listData.user_id;
@@ -48,21 +52,21 @@ const ListWrapper = ({
   useEffect(() => {
     const addListToState = async () => {
       try {
-        console.log("FETCHING");
+        console.log('FETCHING');
         const listRes = await fetchGraphQL(GET_LIST, {
           list_id: listData.id,
         });
-        console.log("addListToState!", listRes);
+        console.log('addListToState!', listRes);
 
         if (listRes.errors || !listRes.data.list[0]) {
           throw new Error(listRes.errors);
         } else {
           if (isUser) {
-            console.log("isUser!");
+            console.log('isUser!');
             setDisplayList(listRes.data.list[0]);
             populateListUser(listRes.data.list[0]);
           } else {
-            console.log("isFriend!");
+            console.log('isFriend!');
             setDisplayList(listRes.data.list[0]);
             populateListFriends(listRes.data.list[0]);
           }
@@ -75,7 +79,7 @@ const ListWrapper = ({
     };
 
     const checkState = () => {
-      console.log("CHECKING CACHE");
+      console.log('CHECKING CACHE');
       let list;
       let needsUpdate = true;
 
@@ -83,7 +87,7 @@ const ListWrapper = ({
         list = userState.lists.find((list) => list.id === listData.id);
       } else {
         const friend = friendsState.list.find(
-          (user) => user.id === listData.user_id
+          (user) => user.id === listData.user_id,
         );
         if (friend) {
           list = friend.lists.find((list) => list.id === listData.id);
@@ -91,17 +95,17 @@ const ListWrapper = ({
       }
 
       if (list) {
-        console.log("check for update");
+        console.log('check for update');
         needsUpdate =
           list.items.find((e) => Object.keys(e).length === 2) !== undefined;
       }
 
       if (needsUpdate) {
         console.log(list);
-        console.log("needs update");
+        console.log('needs update');
         addListToState();
       } else {
-        console.log("no update");
+        console.log('no update');
         setDisplayList(list);
         setIsLoading(false);
       }
@@ -117,8 +121,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        })
-      )
+        }),
+      ),
     )
       .then((res) => {
         for (let result of res) {
@@ -178,7 +182,14 @@ const ListWrapper = ({
   );
 };
 
-const List = ({ navigation, list, isUser, handleConfirmDelete, userData, editListTitle }) => {
+const List = ({
+  navigation,
+  list,
+  isUser,
+  handleConfirmDelete,
+  userData,
+  editListTitle,
+}) => {
   const [selectItem, setSelectItem] = useState(null);
   const [showNewModal, setShowNewModal] = useState(false);
 
@@ -186,7 +197,6 @@ const List = ({ navigation, list, isUser, handleConfirmDelete, userData, editLis
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
   const title = useField('text', list.title);
-
 
   const handleSelectDelete = (itemId) => {
     console.log(itemId);
@@ -226,16 +236,16 @@ const List = ({ navigation, list, isUser, handleConfirmDelete, userData, editLis
 
   const handleTitleSet = () => {
     fetchGraphQL(UPDATE_LIST_TITLE, {
-      "list_id": list.id,
-      "title": title.value
+      list_id: list.id,
+      title: title.value,
     })
       .then((res) => {
-        console.log(res)
+        console.log(res);
         const resData = res.data.update_list.returning[0];
         editListTitle(resData.id, resData.title);
       })
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  };
 
   const handleSettingsToggle = () => {};
 
@@ -252,12 +262,14 @@ const List = ({ navigation, list, isUser, handleConfirmDelete, userData, editLis
         <Box flex="1">
           <Avatar
             source={{
-              uri: userData.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+              uri:
+                userData.profile_pic_url ||
+                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
             }}
           />
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
+          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
           {isUser ? (
             <Flex h="12">
               <Input
@@ -333,8 +345,8 @@ const List = ({ navigation, list, isUser, handleConfirmDelete, userData, editLis
                     item={item}
                     check={{
                       onPress: () => handleSelectDelete(item.id),
-                      top: "4",
-                      right: "4",
+                      top: '4',
+                      right: '4',
                     }}
                   />
                 ) : (
