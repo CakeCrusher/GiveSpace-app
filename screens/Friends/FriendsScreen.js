@@ -46,6 +46,7 @@ const FriendsScreen = ({
         console.log(res);
         reloadFriends(res.data.friend_rel);
       })
+      .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
   };
 

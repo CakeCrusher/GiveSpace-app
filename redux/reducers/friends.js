@@ -82,13 +82,20 @@ const friends = (state = initState, action) => {
       };
     }
     case 'RELOAD_FRIENDS':
+      const newList = action.payload.filter(
+        (friend) => friend.status !== 'friend',
+      );
+      const newPendingMe = action.payload.filter(
+        (friend) => (friend.status = 'pending_first'),
+      );
+      const newPendingThem = action.payload.filter(
+        (friend) => (friend.status = 'pending_second'),
+      );
+
       const newState = {
-        list: friendFilter(state.list, action.payload.list),
-        pendingMe: friendFilter(state.pendingMe, action.payload.pendingMe),
-        pendingThem: friendFilter(
-          state.pendingThem,
-          action.payload.pendingThem,
-        ),
+        list: newList,
+        pendingMe: newPendingMe,
+        pendingThem: newPendingThem,
       };
 
       return {
