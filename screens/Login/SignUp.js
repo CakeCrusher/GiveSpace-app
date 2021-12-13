@@ -86,9 +86,9 @@ const Signup = ({ signinDispatch, toSignIn }) => {
           failedContacts.push(contact);
         }
       });
-      return numbers;
+      return ["0"].concat(numbers);
     }
-    return [];
+    return ["0"].concat([]);
   };
   const handleSubmit = async () => {
     if (!phoneInput.current.isValidNumber(phoneNumber.value)) {
@@ -103,9 +103,9 @@ const Signup = ({ signinDispatch, toSignIn }) => {
       username: username.value,
       password: password.value,
       phone_number: '+' + phoneInput.current.state.code + phoneNumber.value,
-      contacts_phone_numbers: [...contactsPhoneNumbers, '0'],
+      contacts_phone_numbers: ["0", ...contactsPhoneNumbers],
     });
-    console.log('userRes', userRes);
+    console.log('!userRes', userRes);
     if (userRes.errors || !userRes.data.register.userIdToUser) {
       setError('Username or phone number already exist');
     } else {

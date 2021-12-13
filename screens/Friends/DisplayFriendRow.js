@@ -78,13 +78,14 @@ const DisplayFriendRow = ({
       {friendState(friend.id, friendsState) === 'friends' && (
         <HStack space="4" alignItems="center">
           <Button
+            isDisabled={friend.username === "GiveSpace"}
             isLoading={isLoading}
             onPress={() => handleRemoveFriend('friends')}
-            h="8"
+            h="10"
           >
             <Feather name="user-minus" size={16} color="white" />
           </Button>
-          <Button isLoading={isLoading} onPress={handleLoadLists} h="8">
+          <Button isLoading={isLoading} onPress={handleLoadLists} h="10">
             Lists
           </Button>
         </HStack>
@@ -94,11 +95,11 @@ const DisplayFriendRow = ({
           <Button
             isLoading={isLoading}
             onPress={() => handleRemoveFriend('pendingMe')}
-            h="8"
+            h="10"
           >
             <Feather name="user-x" size={16} color="white" />
           </Button>
-          <Button isLoading={isLoading} onPress={handleAcceptFriend} h="8">
+          <Button isLoading={isLoading} onPress={handleAcceptFriend} h="10">
             <Feather name="user-check" size={16} color="white" />
           </Button>
         </HStack>
