@@ -24,9 +24,13 @@ import { Feather } from '@expo/vector-icons';
 import { ListPreview, LoadingScreen, PopoverIcon } from '../../components';
 import { BirthdaySvg, LocationSvg } from '../../resources';
 
-import { fetchGraphQL, useField } from "../../utils/helperFunctions";
-import { DELETE_USER, SIGN_IN_USER_BY_ID, UPDATE_USER_ADDRESS } from "../../utils/schemas";
-import { editAddress, logout } from "../../redux/actions/user";
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+import {
+  DELETE_USER,
+  SIGN_IN_USER_BY_ID,
+  UPDATE_USER_ADDRESS,
+} from '../../utils/schemas';
+import { editAddress, logout } from '../../redux/actions/user';
 import Flare from '../../components/Flare';
 
 const AccountWrapper = ({
@@ -146,7 +150,17 @@ const Account = ({
   editAddress,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const address = useField("text", user.address);
+  const address = useField('text', user.address);
+
+  const handleLoadList = (listData, userData) => {
+    navigation.navigate('Home', {
+      screen: 'List',
+      params: {
+        listData,
+        userData,
+      },
+    });
+  };
 
   const handleLogout = () => {
     logout();
@@ -159,14 +173,14 @@ const Account = ({
   const handleConfirmDelete = () => {
     logout();
     fetchGraphQL(DELETE_USER, {
-      "user_id": user.id 
+      user_id: user.id,
     })
       .then((res) => {
         console.log(res);
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
   };
 
   const handleBack = () => {
@@ -175,17 +189,17 @@ const Account = ({
 
   const handleAddressSet = () => {
     fetchGraphQL(UPDATE_USER_ADDRESS, {
-      "user_id": user.id,
-      "address": address.value
+      user_id: user.id,
+      address: address.value,
     })
       .then((res) => {
         console.log(res);
-        const resData = res.data.update_user.returning[0]
-        editAddress(resData.address)
+        const resData = res.data.update_user.returning[0];
+        editAddress(resData.address);
       })
-      .catch((err) => console.log(err))
-  }
-  
+      .catch((err) => console.log(err));
+  };
+
   const handleNavigation = () => {
     if (isUser) {
       navigation.navigate('My Lists');
@@ -258,7 +272,7 @@ const Account = ({
                 />
               </Flex>
             ) : (
-              <Text fontSize="sm">{user.address || "(no address)"}</Text>
+              <Text fontSize="sm">{user.address || '(no address)'}</Text>
             )}
           </HStack>
         </HStack>
@@ -271,8 +285,13 @@ const Account = ({
             <>
               <ScrollView>
                 <Box maxH="80">
-                  {lists.map((e) => (
-                    <ListPreview key={e.id} listData={e} mb="2" />
+                  {lists.map((list) => (
+                    <ListPreview
+                      key={list.id}
+                      listData={list}
+                      mb="2"
+                      onPress={() => handleLoadList(list, user)}
+                    />
                   ))}
                 </Box>
               </ScrollView>
@@ -301,7 +320,11 @@ const Account = ({
                 <Button flex="1" colorScheme="info">
                   No
                 </Button>
-                <Button onPress={handleConfirmDelete} flex="1" colorScheme="danger">
+                <Button
+                  onPress={handleConfirmDelete}
+                  flex="1"
+                  colorScheme="danger"
+                >
                   Yes
                 </Button>
               </HStack>
