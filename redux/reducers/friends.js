@@ -34,44 +34,48 @@ const initState = {
     //   username: null,
     //   profile_pic_url: null,
     // }
-  ]
+  ],
 };
 
-const friendFilter = (statFriends, payloadFriends) => {
-  const stateFriendsIds = statFriends.map(friend => friend.id);  
-  const newList = []
-  payloadFriends.forEach(friend => {
+const friendFilter = (stateFriends, payloadFriends) => {
+  const stateFriendsIds = stateFriends.map((friend) => friend.id);
+  const newList = [];
+  payloadFriends.forEach((friend) => {
     if (stateFriendsIds.includes(friend.id)) {
-      const friendInState = statFriends.find(stateFriend => stateFriend.id === friend.id);
-      newList.push({...friendInState})
+      const friendInState = stateFriends.find(
+        (stateFriend) => stateFriend.id === friend.id,
+      );
+      newList.push({ ...friendInState });
     } else {
-      newList.push({...friend})
+      newList.push({ ...friend });
     }
-  })
+  });
 
-  return [...newList]
-}
+  return [...newList];
+};
 
 const friends = (state = initState, action) => {
   switch (action.type) {
     case 'SET_FRIENDS':
-      console.log('SET_FRIENDS', action.payload)
+      console.log('SET_FRIENDS', action.payload);
       return {
         ...action.payload,
       };
     case 'SET_FRIEND_LIST': {
-      const userWithList = {...state.list.find(
-        user => user.lists.find(
-          list => list.id === action.payload.id
-        )
-      )}
-      userWithList.lists = userWithList.lists.map(
-        list => list.id === action.payload.id ? action.payload : list
-      )
+      const userWithList = {
+        ...state.list.find((user) =>
+          user.lists.find((list) => list.id === action.payload.id),
+        ),
+      };
+      userWithList.lists = userWithList.lists.map((list) =>
+        list.id === action.payload.id ? action.payload : list,
+      );
 
-      const newFriendsList = [...state.list.map(
-        friend => friend.id === userWithList.id ? userWithList : friend
-      )]
+      const newFriendsList = [
+        ...state.list.map((friend) =>
+          friend.id === userWithList.id ? userWithList : friend,
+        ),
+      ];
 
       return {
         list: newFriendsList,
@@ -81,53 +85,58 @@ const friends = (state = initState, action) => {
       const newState = {
         list: friendFilter(state.list, action.payload.list),
         pendingMe: friendFilter(state.pendingMe, action.payload.pendingMe),
-        pendingThem: friendFilter(state.pendingThem, action.payload.pendingThem),
-      }
+        pendingThem: friendFilter(
+          state.pendingThem,
+          action.payload.pendingThem,
+        ),
+      };
 
       return {
-        ...newState
+        ...newState,
       };
     case 'ADD_PENDING_THEM':
       return {
         ...state,
-        pendingThem: [...state.pendingThem, action.payload]
-      }
+        pendingThem: [...state.pendingThem, action.payload],
+      };
     case 'ACCEPT_FRIEND':
       console.log('!newState', {
         ...state,
-        pendingMe: [...state.pendingMe.filter(
-          friend => friend.id !== action.payload.id
-        )],
-        list: [...state.list, action.payload]
-      })
+        pendingMe: [
+          ...state.pendingMe.filter(
+            (friend) => friend.id !== action.payload.id,
+          ),
+        ],
+        list: [...state.list, action.payload],
+      });
       return {
         ...state,
-        pendingMe: [...state.pendingMe.filter(
-          friend => friend.id !== action.payload.id
-        )],
-        list: [...state.list, action.payload]
-      }
+        pendingMe: [
+          ...state.pendingMe.filter(
+            (friend) => friend.id !== action.payload.id,
+          ),
+        ],
+        list: [...state.list, action.payload],
+      };
     case 'REMOVE_PENDINGME':
       return {
         ...state,
-        pendingMe: [...state.pendingMe.filter(
-          friend => friend.id !== action.payload
-        )]
-      }
+        pendingMe: [
+          ...state.pendingMe.filter((friend) => friend.id !== action.payload),
+        ],
+      };
     case 'REMOVE_FRIEND':
       return {
         ...state,
-        list: [...state.list.filter(
-          friend => friend.id !== action.payload
-        )]
-      }
+        list: [...state.list.filter((friend) => friend.id !== action.payload)],
+      };
     case 'REMOVE_PENDINGTHEM':
       return {
         ...state,
-        pendingThem: [...state.pendingThem.filter(
-          friend => friend.id !== action.payload
-        )]
-      }
+        pendingThem: [
+          ...state.pendingThem.filter((friend) => friend.id !== action.payload),
+        ],
+      };
     default:
       return state;
   }

@@ -21,11 +21,11 @@ import {
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 
-import { ListPreview, LoadingScreen, PopoverIcon } from "../../components";
+import { ListPreview, LoadingScreen, PopoverIcon } from '../../components';
 import { BirthdaySvg, LocationSvg } from '../../resources';
 
 import { fetchGraphQL, useField } from "../../utils/helperFunctions";
-import { SIGN_IN_USER_BY_ID, UPDATE_USER_ADDRESS } from "../../utils/schemas";
+import { DELETE_USER, SIGN_IN_USER_BY_ID, UPDATE_USER_ADDRESS } from "../../utils/schemas";
 import { editAddress, logout } from "../../redux/actions/user";
 import Flare from '../../components/Flare';
 
@@ -35,7 +35,7 @@ const AccountWrapper = ({
   userState,
   friendsState,
   logout,
-  deleteAccount,
+  editAddress,
 }) => {
   /** DATA_STATE = {
    *   user:
@@ -95,7 +95,7 @@ const AccountWrapper = ({
         navigation={navigation}
         isUser={isUser}
         logout={logout}
-        deleteAccount={deleteAccount}
+        editAddress={editAddress}
         {...data}
       />
     );
@@ -143,10 +143,10 @@ const Account = ({
   friends,
   lists,
   logout,
-  deleteAccount,
+  editAddress,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const address = useField("text");
+  const address = useField("text", user.address);
 
   const handleLogout = () => {
     logout();
@@ -156,8 +156,17 @@ const Account = ({
     setShowDelete(true);
   };
 
-  const handleConfirmDelte = () => {
-    deleteAccount();
+  const handleConfirmDelete = () => {
+    logout();
+    fetchGraphQL(DELETE_USER, {
+      "user_id": user.id 
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   };
 
   const handleBack = () => {
@@ -176,10 +185,21 @@ const Account = ({
       })
       .catch((err) => console.log(err))
   }
+  
+  const handleNavigation = () => {
+    if (isUser) {
+      navigation.navigate('My Lists');
+    } else {
+      navigation.navigate('Friends', {
+        screen: 'FriendsLists',
+        params: { userId: user.id },
+      });
+    }
+  };
 
   return (
     <VStack flex="1" p="4" safeArea>
-      <Flare/>
+      <Flare />
       <ScrollView>
         <HStack mb="2" alignItems="center" justifyContent="space-between">
           {/* TODO: Update these pressables */}
@@ -202,7 +222,9 @@ const Account = ({
               bg="#FAA"
               size="xl"
               source={{
-                uri: user.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                uri:
+                  user.profile_pic_url ||
+                  'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
               }}
             >
               EX
@@ -243,7 +265,7 @@ const Account = ({
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">
-            {isUser ? "My" : user.username + "'s"} Lists
+            {isUser ? 'My' : user.username + "'s"} Lists
           </Text>
           {lists ? (
             <>
@@ -255,10 +277,7 @@ const Account = ({
                 </Box>
               </ScrollView>
               <Box h="2" />
-              <Button
-                variant="outline"
-                onPress={() => navigation.navigate("My Lists")}
-              >
+              <Button variant="outline" onPress={handleNavigation}>
                 All Lists
               </Button>
             </>
@@ -278,15 +297,11 @@ const Account = ({
           </Modal.Header>
           <Modal.Body>
             <VStack space="4">
-              <Center>
-                <Text>Please enter your password:</Text>
-                <Input />
-              </Center>
               <HStack space="4">
                 <Button flex="1" colorScheme="info">
                   No
                 </Button>
-                <Button flex="1" colorScheme="danger">
+                <Button onPress={handleConfirmDelete} flex="1" colorScheme="danger">
                   Yes
                 </Button>
               </HStack>
@@ -305,7 +320,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
-  deleteAccount: () => console.log("Implement account deletion"),
   editAddress: (address) => dispatch(editAddress(address)),
 });
 
