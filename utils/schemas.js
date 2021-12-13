@@ -30,10 +30,11 @@ lists(order_by: {date_modified: desc}) {
     name
   }
 }
-friend_rels(where: {type: {_eq: "friends"}}) {
+friend_rels {
   user {
     id
     username
+    profile_pic_url
     lists(order_by: {date_modified: desc}) {
       id
       user_id
@@ -48,6 +49,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
   userByUserSecondId {
     id
     username
+    profile_pic_url
     lists(order_by: {date_modified: desc}) {
       id
       user_id
@@ -59,6 +61,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
       }
     }
   }
+  type
 }
 `;
 
@@ -73,16 +76,59 @@ query MyQuery($user_id: uuid = "") {
 //   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
 
-export const SIGN_IN_USER = `
-query MyQuery($username: String = "", $password: String = "") {
-  user(where: {username: {_eq: $username}, password: {_eq: $password}}) {
+export const SIGN_IN_USER_BY_USERNAME = `
+query MyQuery($username: String = "") {
+  user(where: {username: {_eq: $username}}) {
     ${USER_DATA}
   }
 }
 `;
 // {
-//   "username": "Krabs",
+//   "username": "Sebas"
+// }
+
+export const SIGN_IN_USER = `
+mutation MyMutation($password: String = "", $username: String = "") {
+  login(password: $password, username: $username) {
+    loginUserIdToUser {
+      ${USER_DATA}
+    }
+  }
+}
+`;
+// {
+//   "username": "DELETE",
 //   "password": "secret"
+// }
+
+export const UPDATE_LIST_TITLE = `
+mutation MyMutation($list_id: uuid = "", $title: String = "") {
+  update_list(where: {id: {_eq: $list_id}}, _set: {title: $title}) {
+    returning {
+      title
+      id
+    }
+  }
+}
+`
+// {
+//   "list_id": "b6450dfd-d0f0-4799-9449-13c3f8b74a9e",
+//   "title": "wishlist"
+// }
+
+export const UPDATE_USER_ADDRESS = `
+mutation MyMutation($user_id: uuid = "", $address: String = "") {
+  update_user(where: {id: {_eq: $user_id}}, _set: {address: $address}) {
+    returning {
+      id
+      address
+    }
+  }
+}
+`
+// {
+//   "user_id": "676b788a-8350-488b-8e49-08c6c40b5c78",
+//   "address": "wishlist"
 // }
 
 export const INSPECT_TEXT = `
@@ -109,9 +155,35 @@ mutation MyMutation($text: String = "") {
 // //   "contacts_phone_numbers": ["+19545557297"]
 // // }
 
+export const GET_FRIEND_RELS = `
+query MyQuery($user_id: uuid = "") {
+  friend_rel(where: {user: {id: {_eq: $user_id}}}) {
+    userByUserSecondId {
+      id
+      username
+      profile_pic_url
+      lists(order_by: {date_modified: desc}) {
+        id
+        user_id
+        title
+        date_modified
+        items {
+          id
+          name
+        }
+      }
+    }
+    type
+  }
+}
+`
+// {
+//   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
+// }
+
 export const CREATE_FRIEND_REL = `
-mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "", $type: String = "") {
-  insert_friend_rel(objects: {type: $type, user_first_id: $user_first_id, user_second_id: $user_second_id}) {
+mutation MyMutation($friend_rels: [friend_rel_insert_input!] = []) {
+  insert_friend_rel(objects: $friend_rels) {
     returning {
       id
     }
@@ -119,9 +191,10 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "", $type
 }
 `;
 // {
-//   "user_first_id": "8549a167-e221-49c6-a87e-272a042d54ee",
-//   "user_second_id": "9f42db74-b38e-47f7-afa6-638773ae0c23",
-//   "type": "friends"
+//   "friend_rels": [
+//     {"user_first_id": "8549a167-e221-49c6-a87e-272a042d54ee", "user_second_id": "9f42db74-b38e-47f7-afa6-638773ae0c23", "type": "friends"},
+//     {"user_first_id": "9f42db74-b38e-47f7-afa6-638773ae0c23", "user_second_id": "c43952b9-d92c-459a-b3b5-86d9f864abfc", "type": "friends"}
+//   ]
 // }
 
 export const REGISTER_USER = `
@@ -132,13 +205,12 @@ mutation MyMutation($contacts_phone_numbers: [String!] = "", $password: String =
     }
   }
 }
-
 `;
 // {
 //   "password": "secret",
-//   "username": "Squid",
+//   "username": "DELETE",
 //   "phone_number": "+14325557297",
-//   "contacts_phone_numbers": ["+17865557297","+13335557297","+12345557297"]
+//   "contacts_phone_numbers": ["+17865557297","+13335557297","+12345557297", "donkey number"]
 // }
 
 export const CREATE_LIST = `
@@ -191,16 +263,46 @@ export const SCRAPE_ITEM = `
 mutation MyMutation($item_name: String = "", $list_id: String = "") {
   scrape_item(item_name: $item_name, list_id: $list_id) {
     itemIdToItem {
-      id
+      image_url
+      item_url
+      name
       price
+      date_created
+      id
     }
   }
 }
 `;
 // {
-//   "list_id": "656e08e4-2b80-4ff4-9175-15b340ccabd9",
+//   "list_id": "3cfb100a-c924-4286-b6e2-87d598c1d7df",
 //   "item_name": "television toshiba"
 // }
+
+export const PROFILE_PAGE_FOR_ID = `
+query MyQuery($user_id: uuid = "") {
+  user(where: {id: {_eq: $user_id}}) {
+    address
+    birthday
+    date_last_accessed
+    phone_number
+    profile_pic_url
+    username
+    friend_rels {
+      user {
+        id
+        username
+        profile_pic_url
+      }
+      userByUserSecondId {
+        id
+        username
+        profile_pic_url
+      }
+    }
+  }
+}
+`
+
 
 export const SEARCH_FOR_USERS = `
 query MyQuery($search: String = "") {
@@ -211,7 +313,88 @@ query MyQuery($search: String = "") {
   }
 }
 `;
-
 // {
-//   "search": "%Kr%"
+//   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
+// }
+
+export const DELETE_ITEM = `
+mutation MyMutation($item_id: uuid = "") {
+  delete_item(where: {id: {_eq: $item_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "item_id": "d6b2f6c2-0b2e-43a7-9fc3-df7879ff336e"
+// }
+
+export const DELETE_LIST = `
+mutation MyMutation($list_id: uuid = "", $_eq: uuid = "") {
+  delete_list(where: {id: {_eq: $list_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "list_id": "ec8e03f0-754c-4b2e-b367-236ef1916b13"
+// }
+
+export const DELETE_USER = `
+mutation MyMutation($user_id: uuid = "") {
+  delete_user(where: {id: {_eq: $user_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "user_id": "535d6804-b9a6-43cb-b9fa-76192292193c"
+// }
+
+export const DELETE_FRIEND_REL = `
+mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
+  delete_friend_rel(where: {user: {id: {_eq: $user_first_id}}, userByUserSecondId: {id: {_eq: $user_second_id}}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "user_first_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693",
+//   "user_second_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b"
+// }
+
+export const ACCEPT_FRIEND_REL = `
+mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
+  update_friend_rel(where: {user_first_id: {_eq: $user_first_id}, user_second_id: {_eq: $user_second_id}}, _set: {type: "friends"}) {
+    returning {
+      user {
+        id
+        username
+        profile_pic_url
+        lists(order_by: {date_modified: desc}) {
+          id
+          user_id
+          title
+          date_modified
+          items {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
+
+`
+// {
+//   "user_first_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b",
+//   "user_second_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }

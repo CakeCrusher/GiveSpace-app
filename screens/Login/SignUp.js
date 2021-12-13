@@ -6,6 +6,7 @@ import {
   Button,
   Input,
   HStack,
+  Flex,
   VStack,
   Center,
 } from 'native-base';
@@ -14,136 +15,144 @@ import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import { signinUser } from '../../redux/actions/user';
 import { signinFriends } from '../../redux/actions/friends';
 import * as Contacts from 'expo-contacts';
-import parsePhoneNumber from 'libphonenumber-js'
+import parsePhoneNumber from 'libphonenumber-js';
 import PhoneInput from 'react-native-phone-number-input';
 import { REGISTER_USER } from '../../utils/schemas';
+import { PresentsSvg } from '../../resources';
 
 // TODO: Need to do a 2nd pass and implement validation
 const Signup = ({ signinDispatch, toSignIn }) => {
-  const username = useField('text', 'DELETE')
-  const password = useField('password', 'secret')
-  const passwordConfirm = useField('password', 'secret')
-  const phoneNumber = useField('text')
-  const phoneInput = useRef(null)
+  const username = useField('text');
+  const password = useField('password');
+  const passwordConfirm = useField('password');
+  const phoneNumber = useField('text');
+  const phoneInput = useRef(null);
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const [signUpStep, setSignUpStep] = useState(0)
-
+  const [signUpStep, setSignUpStep] = useState(0);
 
   const handleForewardStep = () => {
     if (password.value !== passwordConfirm.value) {
-      setError('Passwords do not match')
+      setError('Passwords do not match');
     } else {
-      setError(null)
-      
-      setSignUpStep(signUpStep + 1)
+      setError(null);
+
+      setSignUpStep(signUpStep + 1);
     }
-  }
+  };
   const stepOneStack = (
-    <VStack space={4}>
-      <Input
-        {...username}
-        placeholder="username"
-      />
-      <Input
-        {...password}
-        placeholder="password"
-      />
-      <Input
-        {...passwordConfirm}
-        placeholder="confirm password"
-      />
+    <VStack w="48" flex="5" space={4} justifyContent="flex-start">
+      <Flex h="8">
+        <Input {...username} placeholder="username" />
+      </Flex>
+      <Flex h="8">
+        <Input {...password} placeholder="password" />
+      </Flex>
+      <Flex h="8">
+        <Input {...passwordConfirm} placeholder="confirm password" />
+      </Flex>
       <VStack space={4}>
         <Button onPress={handleForewardStep}>Next</Button>
       </VStack>
     </VStack>
-  )
-  const handleBackStep = () => setSignUpStep(signUpStep - 1)
+  );
+  const handleBackStep = () => setSignUpStep(signUpStep - 1);
   const getContacts = async () => {
     const { status } = await Contacts.requestPermissionsAsync();
     if (status === 'granted') {
-      const {data} = await Contacts.getContactsAsync({
+      const { data } = await Contacts.getContactsAsync({
         fields: [
           Contacts.Fields.FirstName,
           Contacts.Fields.LastName,
           Contacts.Fields.PhoneNumbers,
-        ]
+        ],
       });
       // data.list[0].phoneNumbers[0].number
-      const numbers = []
-      const failedContacts = []
-      data.forEach(contact => {
+      const numbers = [];
+      const failedContacts = [];
+      data.forEach((contact) => {
         try {
-          const parsedNumber = parsePhoneNumber(contact.phoneNumbers[0].number).number
+          const parsedNumber = parsePhoneNumber(
+            contact.phoneNumbers[0].number,
+          ).number;
           if (parsedNumber) {
-            numbers.push(parsedNumber)
+            numbers.push(parsedNumber);
           } else {
-            failedContacts.push(contact)
+            failedContacts.push(contact);
           }
         } catch (e) {
-          failedContacts.push(contact)
+          failedContacts.push(contact);
         }
-      })
-      return numbers.concat(["+14235557297"])
-      
-    } 
-    return []
-  }
+      });
+      return ["0"].concat(numbers);
+    }
+    return ["0"].concat([]);
+  };
   const handleSubmit = async () => {
     if (!phoneInput.current.isValidNumber(phoneNumber.value)) {
-      setError('Invalid Phone Number')
-      return
+      setError('Invalid Phone Number');
+      return;
     }
 
-    setError(null)
-    setIsLoading(true)
-    const contactsPhoneNumbers = await getContacts()
+    setError(null);
+    setIsLoading(true);
+    const contactsPhoneNumbers = await getContacts();
     const userRes = await fetchGraphQL(REGISTER_USER, {
       username: username.value,
       password: password.value,
-      phone_number: phoneNumber.value,
-      contacts_phone_numbers: [...contactsPhoneNumbers, '+17865557297']
+      phone_number: '+' + phoneInput.current.state.code + phoneNumber.value,
+      contacts_phone_numbers: ["0", ...contactsPhoneNumbers],
     });
-    console.log('userRes',userRes)
+    console.log('!userRes', userRes);
     if (userRes.errors || !userRes.data.register.userIdToUser) {
-      setError('Username or phone number already exist')
+      setError('Username or phone number already exist');
     } else {
-      signinDispatch(userRes.data.register.userIdToUser)
+      signinDispatch(userRes.data.register.userIdToUser);
     }
     setIsLoading(false);
-    return
-  }
-  const stepTwoStack =  (
-    <VStack space={4}>
-      <PhoneInput
-        ref={phoneInput}
-        defaultValue={phoneNumber.value}
-        defaultCode="US"
-        layout="second"
-        onChangeFormattedText={phoneNumber.onChangeText}
-      />
+    return;
+  };
+  const stepTwoStack = (
+    <VStack w="48" flex="3" space={4} justifyContent="flex-start">
+      <Center>  
+        <PhoneInput
+          ref={phoneInput}
+          defaultValue={phoneNumber.value}
+          defaultCode="US"
+          layout="second"
+          onChangeText={phoneNumber.onChangeText}
+        />
+      </Center>
       <HStack space={4}>
-        <Button variant="subtle" onPress={handleBackStep}>Back</Button>
-        <Button isLoading={isLoading} onPress={handleSubmit}>Sign Up</Button>
+        <Button variant="subtle" onPress={handleBackStep}>
+          Back
+        </Button>
+        <Button isLoading={isLoading} onPress={handleSubmit}>
+          Sign Up
+        </Button>
       </HStack>
     </VStack>
-  )
+  );
 
   return (
-    <VStack space={8}>
-      <VStack>
-        <Heading mb={4} size="3xl" textAlign="center">
-          GiftSpace
-        </Heading>
-        <Text fontSize="xl" textAlign="center">
-          Create an account
+    <Center flex="1" safeArea>
+      <VStack flex="5" justifyContent="flex-end">
+        <Text fontSize="3xl" textAlign="center">
+          Welcome To
         </Text>
-        <Center>
+        <Text fontSize="3xl" textAlign="center">
+          GiftSpace
+        </Text>
+        <Flex maxH="64" maxW="64">
+          <PresentsSvg />
+        </Flex>
+        <Center mt="4">
+          <Text>Create an account</Text>
           <HStack mb={4}>
             <Text>or </Text>
-            <Link onPress={toSignIn}>sign in</Link>
+            <Link onPress={toSignIn}>log in</Link>
           </HStack>
         </Center>
         {error && (
@@ -154,23 +163,17 @@ const Signup = ({ signinDispatch, toSignIn }) => {
           </Center>
         )}
       </VStack>
-      
-      {signUpStep === 0 ? 
-        stepOneStack
-      : 
-        stepTwoStack
-      }
-      
-      
-    </VStack>
+
+      {signUpStep === 0 ? stepOneStack : stepTwoStack}
+    </Center>
   );
 };
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
   signinDispatch: (userRes) => {
-    dispatch(signinUser(userRes))
-    dispatch(signinFriends(userRes))
+    dispatch(signinUser(userRes));
+    dispatch(signinFriends(userRes));
   },
 });
 

@@ -7,6 +7,7 @@ import {
   Link,
   Input,
   Center,
+  Flex,
   HStack,
   VStack,
 } from 'native-base';
@@ -15,10 +16,11 @@ import { signinFriends } from '../../redux/actions/friends';
 import { signinUser } from '../../redux/actions/user';
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import { SIGN_IN_USER } from '../../utils/schemas';
+import { PresentsSvg } from '../../resources';
 
 const SignIn = ({ toSignUp, signinDispatch }) => {
-  const username = useField('text', 'Krabs');
-  const password = useField('password', 'secret');
+  const username = useField('text');
+  const password = useField('password');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -31,25 +33,26 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
       password: password.value,
     });
     console.log('userRes', userRes);
-    if (userRes.errors || !userRes.data.user[0]) {
+    if (userRes.errors || !userRes.data.login.loginUserIdToUser) {
       setError('Invalid username or password');
     } else {
-      signinDispatch(userRes.data.user[0]);
+      signinDispatch(userRes.data.login.loginUserIdToUser);
     }
     setIsLoading(false);
     return;
   });
 
   return (
-    <VStack space={8}>
-      <VStack>
-        <Heading mb={4} size="3xl" textAlign="center">
-          GiftSpace
-        </Heading>
-        <Text fontSize="xl" textAlign="center">
-          Sign In
+    <Center flex="1" safeArea>
+      <VStack flex="5" justifyContent="flex-end">
+        <Text fontSize="3xl" textAlign="center">
+          Welcome Back
         </Text>
-        <Center mb={4}>
+        <Flex maxH="64" maxW="64">
+          <PresentsSvg />
+        </Flex>
+        <Center mb={4} mt="4">
+          <Text>Log In</Text>
           <HStack>
             <Text>or </Text>
             <Link onPress={toSignUp}>create an account</Link>
@@ -64,9 +67,13 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
         )}
       </VStack>
 
-      <VStack space={4}>
-        <Input {...username} placeholder="username" />
-        <Input {...password} placeholder="password" />
+      <VStack w="48" flex="5" space={4} justifyContent="flex-start">
+        <Flex h="8">
+          <Input {...username} placeholder="username" />
+        </Flex>
+        <Flex h="8">
+          <Input {...password} placeholder="password" />
+        </Flex>
         <Button isLoading={isLoading} onPress={handleSubmit}>
           Sign In
         </Button>
@@ -74,7 +81,7 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
           <Link>Forgot Your Password?</Link>
         </VStack>
       </VStack>
-    </VStack>
+    </Center>
   );
 };
 

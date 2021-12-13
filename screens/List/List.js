@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 import {
   Text,
   Heading,
@@ -9,126 +9,396 @@ import {
   Button,
   Pressable,
   Input,
+  Modal,
+  Box,
   Flex,
   HStack,
   VStack,
+  Center,
   ScrollView,
-} from "native-base";
+} from 'native-base';
 
-import { populateListUser } from "../../redux/actions/user";
-import { populateListFriends } from "../../redux/actions/friends";
-import { ItemCard } from "../../components";
-import { fetchGraphQL } from "../../utils/helperFunctions";
-import { GET_LIST } from "../../utils/schemas";
+import {
+  editListTitle,
+  populateListUser,
+  removeItems,
+} from '../../redux/actions/user';
+import { populateListFriends } from '../../redux/actions/friends';
+import ItemCard from '../../components/Item/ItemCard';
+import ItemInput from '../../components/Item/ItemInput';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+import { GET_LIST, DELETE_ITEM, UPDATE_LIST_TITLE } from '../../utils/schemas';
+import SelectItemModal from './SelectItemModal';
+import { LoadingScreen, PopoverIcon, Fab } from '../../components';
+import Flare from '../../components/Flare';
 
-const dummyItem = {
-  img_url: "",
-  name: "dummyItem",
-};
-
-const List = ({
+const ListWrapper = ({
   route,
   navigation,
   userState,
   friendsState,
   populateListFriends,
   populateListUser,
+  removeItems,
+  editListTitle,
 }) => {
-  // TODO: change all instances "user" to "userState"
-  const user = userState;
-  const { listData } = route.params;
-  console.log(listData);
-  const [isUser, setIsUser] = useState(user.id === listData.user_id);
+  const { listData, userData } = route.params;
+  const isUser = userState.id === listData.user_id;
 
-  // ROUTES TO LIST IN STATE vvvv-list-vvvv
-  const list = isUser
-    ? userState.lists.find((list) => list.id === listData.id)
-    : friendsState.list
-        .find((user) => user.lists.find((list) => list.id === listData.id))
-        .lists.find((list) => list.id === listData.id);
-  console.log(list);
-
-  console.log("CURRENT LIST: ", list);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(null);
+  const [displayList, setDisplayList] = useState(null);
 
   useEffect(() => {
     const addListToState = async () => {
-      const listRes = await fetchGraphQL(GET_LIST, {
-        list_id: listData.id,
-      });
-      console.log("addListToState!", listRes);
+      try {
+        console.log('FETCHING');
+        const listRes = await fetchGraphQL(GET_LIST, {
+          list_id: listData.id,
+        });
+        console.log('addListToState!', listRes);
 
-      if (listRes.errors || !listRes.data.list[0]) {
-        console.log("ERROR!", listRes.errors);
-        return;
-      } else {
-        if (userState.lists.find((list) => list.id === listData.id)) {
-          console.log("isUser!");
-          populateListUser(listRes.data.list[0]);
+        if (listRes.errors || !listRes.data.list[0]) {
+          throw new Error(listRes.errors);
         } else {
-          console.log("isFriend!");
-          setIsUser(false);
-          populateListFriends(listRes.data.list[0]);
+          if (isUser) {
+            console.log('isUser!');
+            setDisplayList(listRes.data.list[0]);
+            populateListUser(listRes.data.list[0]);
+          } else {
+            console.log('isFriend!');
+            setDisplayList(listRes.data.list[0]);
+            populateListFriends(listRes.data.list[0]);
+          }
         }
-        return;
+      } catch (err) {
+        console.warn(err);
+      } finally {
+        setIsLoading(false);
       }
     };
-    addListToState();
-  }, []);
 
-  const handleCardPress = () => {
-    console.log("card press");
+    const checkState = () => {
+      console.log('CHECKING CACHE');
+      let list;
+      let needsUpdate = true;
+
+      if (isUser) {
+        list = userState.lists.find((list) => list.id === listData.id);
+      } else {
+        const friend = friendsState.list.find(
+          (user) => user.id === listData.user_id,
+        );
+        if (friend) {
+          list = friend.lists.find((list) => list.id === listData.id);
+        }
+      }
+
+      if (list) {
+        console.log('check for update');
+        needsUpdate =
+          list.items.find((e) => Object.keys(e).length === 2) !== undefined;
+      }
+
+      if (needsUpdate) {
+        console.log(list);
+        console.log('needs update');
+        addListToState();
+      } else {
+        console.log('no update');
+        setDisplayList(list);
+        setIsLoading(false);
+      }
+    };
+
+    checkState();
+  }, [userState, friendsState, listData]);
+
+  const handleConfirmDelete = (itemIds, cb) => {
+    console.log(itemIds);
+    setIsLoading(true);
+    Promise.all(
+      itemIds.map((item_id) =>
+        fetchGraphQL(DELETE_ITEM, {
+          item_id,
+        }),
+      ),
+    )
+      .then((res) => {
+        for (let result of res) {
+          if (result.errors) {
+            throw new Error(result.errors);
+          }
+        }
+
+        const confirmedIds = res
+          .filter((e) => e.data && e.data.delete_item.returning[0].id)
+          .map((e) => e.data.delete_item.returning[0].id);
+        removeItems({
+          deletedIds: confirmedIds,
+          listId: displayList.id,
+        });
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        cb();
+      });
   };
 
-  const handleSearchToggle = () => {
-    setShowSearch((e) => !e);
+  if (hasError) {
+    return (
+      <VStack safeArea>
+        <Center mt="4">
+          <Text fontSize="xl">Uh oh. Something went wrong.</Text>
+        </Center>
+      </VStack>
+    );
+  }
+
+  if (isLoading) {
+    return <LoadingScreen isLoading={true} />;
+  }
+
+  if (displayList) {
+    return (
+      <List
+        navigation={navigation}
+        isUser={isUser}
+        userData={userData}
+        list={displayList}
+        handleConfirmDelete={handleConfirmDelete}
+        editListTitle={editListTitle}
+      />
+    );
+  }
+
+  return (
+    <VStack safeArea>
+      <Center mt="4">
+        <Text fontSize="xl">Uh oh. It seems we couldn't find the list</Text>
+      </Center>
+    </VStack>
+  );
+};
+
+const List = ({
+  navigation,
+  list,
+  isUser,
+  handleConfirmDelete,
+  userData,
+  editListTitle,
+}) => {
+  const [selectItem, setSelectItem] = useState(null);
+  const [showNewModal, setShowNewModal] = useState(false);
+
+  const [enableDelete, setEnableDelete] = useState(false);
+  const [selectDelete, setSelectDelete] = useState(new Set());
+  const [deleteModal, setDeleteModal] = useState(false);
+  const title = useField('text', list.title);
+
+  const handleSelectDelete = (itemId) => {
+    console.log(itemId);
+    setSelectDelete((prev) => {
+      if (prev.has(itemId)) {
+        prev.delete(itemId);
+      } else {
+        prev.add(itemId);
+        console.log(prev);
+      }
+      return prev;
+    });
+  };
+
+  const handleEnableDelete = () => {
+    setEnableDelete(true);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModal(false);
+    setEnableDelete(false);
+    setSelectDelete(new Set());
+  };
+
+  const openDeleteModal = () => {
+    setDeleteModal(true);
+  };
+
+  const handleCardPress = (item) => {
+    console.log(item);
+    setSelectItem(item);
+  };
+
+  const handleClearSelect = () => {
+    setSelectItem(null);
+  };
+
+  const handleTitleSet = () => {
+    fetchGraphQL(UPDATE_LIST_TITLE, {
+      list_id: list.id,
+      title: title.value,
+    })
+      .then((res) => {
+        console.log(res);
+        const resData = res.data.update_list.returning[0];
+        editListTitle(resData.id, resData.title);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleSettingsToggle = () => {};
 
-  // SOME STYLING ERROR HERE
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
-      <HStack flex="1" alignItems="center" space="4">
-        <Pressable onPress={() => navigation.goBack()}>
-          <Icon as={<Feather name="chevron-left" />} size="xl" />
-        </Pressable>
-        <Text fontSize="3xl">{listData.title}</Text>
+      <Flare />
+      {/* Nav, ListTitle, Username*/}
+      <HStack flex="1" alignItems="center" mx="-2">
+        <Box flex="1">
+          <Pressable onPress={() => navigation.goBack()}>
+            <Icon as={<Feather name="chevron-left" />} size="xl" />
+          </Pressable>
+        </Box>
+        <Box flex="1">
+          <Avatar
+            source={{
+              uri:
+                userData.profile_pic_url ||
+                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+            }}
+          />
+        </Box>
+        <VStack flex="5" justifyContent="center">
+          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
+          {isUser ? (
+            <Flex h="12">
+              <Input
+                backgroundColor="#ffffff00"
+                borderColor="#ffffff00"
+                placeholder="list title"
+                fontSize="2xl"
+                onEndEditing={handleTitleSet}
+                h="50"
+                {...title}
+              />
+            </Flex>
+          ) : (
+            <Text fontSize="2xl">{list.title}</Text>
+          )}
+        </VStack>
       </HStack>
-      <VStack>
+
+      {/* Share, Search, Options*/}
+      <VStack flex="1">
         <HStack
-          alignContent="center"
+          alignItems="center"
           justifyContent="space-between"
           flex="1"
           p="2"
         >
-          <Flex flex="5">
+          {/* <HStack flex="2" space="2">
+            <Icon as={<Feather name="share-2" />} size="sm" />
             <Text>Share</Text>
-          </Flex>
+          </HStack> */}
 
-          <HStack flex="1">
-            <Pressable onPress={handleSearchToggle} m="auto">
-              <Icon as={<Feather name="search" />} size="xs" />
-            </Pressable>
-            <Pressable onPress={handleSettingsToggle} m="auto">
-              <Icon as={<Feather name="more-vertical" />} size="xs" />
-            </Pressable>
+          <HStack flex="3">
+            <HStack ml="auto" space="4">
+              <Pressable onPress={() => {}}>
+                <Icon as={<Feather name="search" />} size="sm" />
+              </Pressable>
+              {isUser && (
+                <PopoverIcon iconName="more-vertical" menuTitle="List Options">
+                  {enableDelete ? (
+                    <Pressable onPress={handleCancelDelete}>
+                      <Box p="2">
+                        <Text color="blue.500">Cancel Delete</Text>
+                      </Box>
+                    </Pressable>
+                  ) : (
+                    <Pressable onPress={handleEnableDelete}>
+                      <Box p="2">
+                        <Text color="red.500">Delete Items</Text>
+                      </Box>
+                    </Pressable>
+                  )}
+                </PopoverIcon>
+              )}
+            </HStack>
           </HStack>
         </HStack>
-        {isUser && <Text>Inputs</Text>}
       </VStack>
 
-      <VStack flex="15" overflow="scroll">
-        <HStack flexWrap="wrap">
-          {list.items.map((item, index) => (
-            <Flex onPress={handleCardPress} key={index} flex="1" m="1">
-              <ItemCard item={item} handlePress={handleCardPress} />
-            </Flex>
-          ))}
-          {list.items.length % 2 !== 0 && (
-            <Flex onPress={handleCardPress} flex="1" m="1" />
-          )}
-        </HStack>
+      {/* Add Item, Item Modal, Display Items*/}
+      {isUser && (
+        <VStack flex="1">
+          <ItemInput listId={list.id} />
+        </VStack>
+      )}
+
+      <VStack flex="8">
+        <ScrollView>
+          <HStack flexWrap="wrap" justifyContent="space-between">
+            {list.items.map((item, index) => (
+              <Flex onPress={handleCardPress} key={index} w="48%">
+                {enableDelete ? (
+                  <ItemCard
+                    item={item}
+                    check={{
+                      onPress: () => handleSelectDelete(item.id),
+                      top: '4',
+                      right: '4',
+                    }}
+                  />
+                ) : (
+                  <ItemCard
+                    item={item}
+                    handlePress={() => handleCardPress(item)}
+                  />
+                )}
+              </Flex>
+            ))}
+          </HStack>
+        </ScrollView>
       </VStack>
+
+      {selectItem && (
+        <SelectItemModal
+          navigation={navigation}
+          isOpen={selectItem !== null}
+          onClose={handleClearSelect}
+          item={selectItem}
+        />
+      )}
+      {enableDelete && <Fab onPress={openDeleteModal} iconName="trash" />}
+      <Modal isOpen={deleteModal} onClose={() => setDeleteModal}>
+        <Modal.Content>
+          <Modal.Header>
+            Are you sure you want to delete these items?
+          </Modal.Header>
+          <Modal.Body>
+            <VStack space="4">
+              <HStack space="4">
+                <Button
+                  onPress={handleCancelDelete}
+                  flex="1"
+                  colorScheme="info"
+                >
+                  No
+                </Button>
+                <Button
+                  onPress={() =>
+                    handleConfirmDelete([...selectDelete], handleCancelDelete)
+                  }
+                  flex="1"
+                  colorScheme="danger"
+                >
+                  Yes
+                </Button>
+              </HStack>
+            </VStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </VStack>
   );
 };
@@ -141,6 +411,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   populateListFriends: (list) => dispatch(populateListFriends(list)),
   populateListUser: (list) => dispatch(populateListUser(list)),
+  removeItems: (data) => dispatch(removeItems(data)),
+  editListTitle: (id, title) => dispatch(editListTitle(id, title)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default connect(mapStateToProps, mapDispatchToProps)(ListWrapper);

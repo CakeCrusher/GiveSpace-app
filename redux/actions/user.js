@@ -23,7 +23,7 @@ const cleanUserData = (userData) => {
 };
 
 export const signinUser = (user) => (dispatch) => {
-  AsyncStorage.setItem('user_id', user.id);
+  AsyncStorage.setItem('username', user.username);
   const userCopy = { ...user };
   delete userCopy.friend_rels;
   dispatch({ type: 'SET_USER', payload: user });
@@ -32,6 +32,11 @@ export const signinUser = (user) => (dispatch) => {
 
 export const populateListUser = (list) => (dispatch) => {
   dispatch({ type: 'SET_USER_LIST', payload: list });
+  return;
+};
+
+export const addListItem = (listId, item) => (dispatch) => {
+  dispatch({ type: 'ADD_LIST_ITEM', payload: { listId, item } });
   return;
 };
 
@@ -45,7 +50,7 @@ export const signin =
       //await AsyncStorage.setItem('AuthToken', JSON.stringify({ id: user.id }));
       if (user.data.user.length) {
         const userObject = cleanUserData(user.data.user[0]);
-        await AsyncStorage.setItem('user_id', user.data.user[0].id);
+        await AsyncStorage.setItem('username', user.data.user[0].username);
 
         dispatch({ type: 'SET_USER', payload: user });
         return { status: 'success' };
@@ -57,6 +62,11 @@ export const signin =
       return { status: 'error', error: 'Invalid username or password' };
     }
   };
+
+export const setStateUsername = (username) => (dispatch) => {
+  dispatch({ type: 'SET_USERNAME', payload: username });
+  return;
+};
 
 export const signup =
   ({ username, password, phone_number, contacts_phone_numbers }) =>
@@ -72,8 +82,8 @@ export const signup =
       //await AsyncStorage.setItem('AuthToken', JSON.stringify({ id: user.id }));
       if (user.data) {
         await AsyncStorage.setItem(
-          'user_id',
-          user.data.register.userIdToUser.id,
+          'username',
+          user.data.register.userIdToUser.username,
         );
         dispatch(setUser(user.data.register.userIdToUser));
         return { status: 'success' };
@@ -93,21 +103,40 @@ export const signup =
   };
 
 export const logout = () => async (dispatch) => {
-  console.log('logging out');
   try {
-    console.log('removing user id');
-    await AsyncStorage.removeItem('user_id');
-    const newUserId = await AsyncStorage.getItem('user_id');
-    console.log('removed: ', newUserId);
+    await AsyncStorage.removeItem('username');
     dispatch(setUser(null));
   } catch (err) {
     console.log(err);
   }
 };
 
+export const editListTitle = (listId, title) => (dispatch) => {
+  dispatch({ type: 'EDIT_LIST_TITLE', payload: { listId, title } });
+  return;
+}
+
+export const editAddress = (address) => (dispatch) => {
+  dispatch({ type: 'EDIT_USER_ADDRESS', payload: address });
+  return;
+}
+
 export const addList = (listData) => ({
   type: 'ADD_USER_LIST',
   payload: listData,
+});
+
+export const removeLists = (listIds) => ({
+  type: 'REMOVE_LISTS',
+  payload: listIds,
+});
+
+export const removeItems = ({ deletedIds, listId }) => ({
+  type: 'REMOVE_ITEMS',
+  payload: {
+    deletedIds,
+    listId,
+  },
 });
 
 export const setUser = (user) => ({ type: 'SET_USER', payload: user });

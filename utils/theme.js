@@ -3,40 +3,54 @@ import { extendTheme } from 'native-base';
 const theme = extendTheme({
   colors: {
     primary: {
-      200: '#66071A',
-      300: '#c9042c',
-      400: '#FC839c',
-      500: '#D95F78',
+      500: '#C9042C',
+      600: '#7e001a',
+      700: '#7e001a',
     },
     secondary: {
-      200: '#1C1C1C',
-      300: '#484848',
-      400: '#9F9F9F',
-      500: '#F2F2F2',
-      600: '#FDFDFD',
+      50: '#ffffff',
+      100: '#f4bfcb',
+      200: '#e897a8',
+      300: '#dd6f85',
+      400: '#D95F78',
+      500: '#D95F78',
+      600: '#B82D49',
+      700: '#B82D49',
     },
-    buttonPrimary: {
-      50: '#ecfeff',
-      100: '#FFF',
-      200: '#66071A',
-      300: '#c9042c',
-      400: '#FC839c',
+    tertiary: {
+      500: '#D95F78',
+      500: '#D95F78',
+      500: '#D95F78',
+      500: '#D95F78',
+      500: '#D95F78',
       500: '#D95F78',
     },
+  },
+  sizes: {
+    42: 168,
+    44: 176,
+    50: 202,
+    52: 214,
   },
   components: {
     Button: {
       baseStyle: {
         rounded: 'full',
-        color: '#fff',
       },
-      variant: {
+      variants: {
         outline: {
           borderWidth: '2',
         },
       },
       defaultProps: {
-        colorScheme: 'primary',
+        colorScheme: 'secondary',
+      },
+    },
+    Input: {
+      baseStyle: {
+        bg: '#FFFFFF',
+        flex: 1,
+        maxH: 16,
       },
     },
   },

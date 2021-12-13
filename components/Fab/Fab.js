@@ -6,6 +6,7 @@ const Fab = ({ onPress, iconName }) => {
   return (
     <Button
       onPress={onPress}
+      colorScheme="primary"
       position="absolute"
       borderRadius="32"
       h="16"
