@@ -63,6 +63,11 @@ export const signin =
     }
   };
 
+export const setStateUsername = (username) => (dispatch) => {
+  dispatch({ type: 'SET_USERNAME', payload: username });
+  return;
+};
+
 export const signup =
   ({ username, password, phone_number, contacts_phone_numbers }) =>
   async (dispatch) => {

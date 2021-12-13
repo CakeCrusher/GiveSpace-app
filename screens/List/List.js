@@ -26,7 +26,7 @@ import { fetchGraphQL } from '../../utils/helperFunctions';
 import { GET_LIST, DELETE_ITEM } from '../../utils/schemas';
 import SelectItemModal from './SelectItemModal';
 import { LoadingScreen, PopoverIcon, Fab } from '../../components';
-
+import Flare from '../../components/Flare';
 const ListWrapper = ({
   route,
   navigation,
@@ -222,6 +222,7 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
 
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
+      <Flare/>
       {/* Nav, ListTitle, Username*/}
       <HStack flex="1" alignItems="center" mx="-2">
         <Box flex="1">

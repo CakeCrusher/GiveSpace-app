@@ -65,6 +65,17 @@ friend_rels {
 }
 `;
 
+export const SIGN_IN_USER_BY_ID = `
+query MyQuery($user_id: uuid = "") {
+  user(where: {id: {_eq: $user_id}}) {
+    ${USER_DATA}
+  }
+}
+`;
+// {
+//   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
+// }
+
 export const SIGN_IN_USER_BY_USERNAME = `
 query MyQuery($username: String = "") {
   user(where: {username: {_eq: $username}}) {

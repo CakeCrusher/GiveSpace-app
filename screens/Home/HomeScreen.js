@@ -15,6 +15,8 @@ import { ListPreview, InnerTitle } from '../../components';
 
 import { setUser, logout } from '../../redux/actions/user';
 import MockApi from '../../utils/MockApi';
+import Flare from '../../components/Flare';
+
 
 const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
   const handleLoadList = (listData) => {
@@ -40,7 +42,8 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
   console.log(splitFriends);
 
   return (
-    <VStack space="2" m="4" flex="1" justifyContent="space-between" safeArea>
+    <VStack space="2" p="4" flex="1" justifyContent="space-between" safeArea>
+      <Flare/>
       <HStack justifyContent="space-between">
         <Text fontSize="md">Hello, {userState.username}</Text>
         <Text fontSize="md">Nov, 28</Text>

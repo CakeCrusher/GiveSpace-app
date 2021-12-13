@@ -22,6 +22,7 @@ import { ListPreview, LoadingScreen, Fab, PopoverIcon } from '../../components';
 import { addList, removeLists } from '../../redux/actions/user';
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { CREATE_LIST, DELETE_LIST } from '../../utils/schemas';
+import Flare from '../../components/Flare';
 
 const AllListsWrapper = ({
   route,
@@ -174,6 +175,7 @@ const AllLists = ({
 
   return (
     <VStack space="4" p="4" flex="1" safeArea>
+      <Flare/>
       <HStack flex="1" alignItems="center">
         <Avatar
           bg="#FAA"

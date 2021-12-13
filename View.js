@@ -8,7 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import { Icon } from 'native-base';
 
 import { fetchGraphQL } from './utils/helperFunctions';
-import { signinUser } from './redux/actions/user';
+import { setStateUsername, signinUser } from './redux/actions/user';
 import { signinFriends, reloadFriends } from './redux/actions/friends';
 import { Home, Login, Friends, MyLists, Account } from './screens';
 import { GET_FRIEND_RELS, SIGN_IN_USER_BY_USERNAME } from './utils/schemas';
@@ -17,15 +17,18 @@ import Welcome from './screens/Login/Welcome';
 
 const Tab = createBottomTabNavigator();
 
-const View = ({ signinDispatch, userState, reloadFriends }) => {
-  const [username, setUsername] = useState(null);
+const View = ({ signinDispatch, userState, reloadFriends, setStateUsername }) => {
   useEffect( async () => {
     await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
     const retrieveUserId = async () => {
       await AsyncStorage.setItem('username', 'Sebas');
       // await AsyncStorage.removeItem('username')
       const _username = await AsyncStorage.getItem('username');
-      setUsername(_username);
+      if (_username) {
+        setStateUsername(_username);
+      } else {
+        setStateUsername(false);
+      }
       if (!userState.id && _username) {
         const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_USERNAME, {
           username: _username,
@@ -45,7 +48,6 @@ const View = ({ signinDispatch, userState, reloadFriends }) => {
     const friends = fetchRes.data.friend_rel;
     reloadFriends(friends);
   };
-  return <Welcome username={username} />
   if (userState.id) {
     return (
       <Tab.Navigator>
@@ -96,7 +98,11 @@ const View = ({ signinDispatch, userState, reloadFriends }) => {
       </Tab.Navigator>
     );
   }
+  if (userState.username) {
+    return <Welcome username={userState.username} />
+  }
   return <Login />;
+  
 };
 
 const mapStateToProps = (state) => ({
@@ -104,6 +110,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
   reloadFriends: (friends) => dispatch(reloadFriends(friends)),
+  setStateUsername: (username) => dispatch(setStateUsername(username)),
   signinDispatch: (userRes) => {
     dispatch(signinUser(userRes));
     dispatch(signinFriends(userRes));

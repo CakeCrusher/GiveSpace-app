@@ -79,7 +79,12 @@ const user = (state = initState, action) => {
         lists: [...state.lists],
       };
     }
-
+    case 'SET_USERNAME': {
+      return {
+        ...state,
+        username: action.payload,
+      }
+    }
     case 'REMOVE_ITEMS': {
       const { listId, deletedIds } = action.payload;
       if (deletedIds.length > 0) {

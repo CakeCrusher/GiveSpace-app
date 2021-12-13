@@ -22,6 +22,7 @@ import AddFriendModal from './AddFriendModal';
 import { GET_FRIENDS } from '../../utils/schemas';
 
 import { reloadFriends } from '../../redux/actions/friends';
+import Flare from '../../components/Flare';
 
 const FriendsScreen = ({
   navigation,
@@ -41,6 +42,7 @@ const FriendsScreen = ({
 
   return (
     <VStack space="4" p="4" flex="15" safeArea>
+      <Flare/>
       <ScrollView>
         <HStack flex="1" justifyContent="space-between">
           <Flex flex="5">

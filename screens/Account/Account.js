@@ -27,6 +27,7 @@ import { BirthdaySvg, LocationSvg } from '../../resources';
 import { fetchGraphQL, useField } from "../../utils/helperFunctions";
 import { SIGN_IN_USER_BY_ID } from "../../utils/schemas";
 import { logout } from "../../redux/actions/user";
+import Flare from '../../components/Flare';
 
 const AccountWrapper = ({
   route,
@@ -74,6 +75,7 @@ const AccountWrapper = ({
   }, [userId]);
 
   if (hasError) {
+    console.log(hasError);
     return (
       <VStack safeArea>
         <Center mt="4">
@@ -164,6 +166,7 @@ const Account = ({
 
   return (
     <VStack flex="1" p="4" safeArea>
+      <Flare/>
       <ScrollView>
         <HStack mb="2" alignItems="center" justifyContent="space-between">
           {/* TODO: Update these pressables */}
@@ -244,29 +247,6 @@ const Account = ({
                 : `${user.username} doesn't have any lists`}
             </Text>
           )}
-        </VStack>
-
-        <VStack>
-          <Text fontSize="3xl">Friends</Text>
-          {/* Add Friends */}
-          <HStack flexWrap="wrap">
-            {friends.map((f) => (
-              <Box
-                key={f.id}
-                flexBasis="25%"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Avatar
-                  size="md"
-                  bg="#FAF" 
-                  source={{
-                    uri: f.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
-                  }}
-                />
-              </Box>
-            ))}
-          </HStack>
         </VStack>
       </ScrollView>
       <Modal isOpen={showDelete} onClose={() => setShowDelete(false)}>

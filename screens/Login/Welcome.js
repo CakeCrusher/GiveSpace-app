@@ -10,11 +10,13 @@ import {
   HStack,
   VStack,
 } from 'native-base';
+import Flare from '../../components/Flare';
 
 const Welcome = ({ username }) => {
 
   return (
     <Center flex="1" safeArea>
+      <Flare/>
       <VStack>
         <Heading mb={4} size="3xl" color="#c9042c" textAlign="center">
           Welcome 
