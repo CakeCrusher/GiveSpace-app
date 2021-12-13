@@ -79,7 +79,7 @@ const FriendsScreen = ({
           navigation={navigation}
         />
       ))*/}
-          {friendsState.pendingme && friendsState.pendingMe.length > 0 && (
+          {friendsState.pendingMe && friendsState.pendingMe.length > 0 && (
             <VStack flex="5">
               <Text fontSize="xl">Recieved Requests</Text>
               {friendsState.pendingMe.map((friend) => (

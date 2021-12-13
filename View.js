@@ -28,7 +28,7 @@ const View = ({
       ScreenOrientation.OrientationLock.PORTRAIT,
     );
     const retrieveUserId = async () => {
-      await AsyncStorage.setItem('username', 'Sebas');
+      // await AsyncStorage.setItem('username', 'Sebas');
       // await AsyncStorage.removeItem('username')
       const _username = await AsyncStorage.getItem('username');
       if (_username) {
@@ -51,7 +51,7 @@ const View = ({
     const fetchRes = await fetchGraphQL(GET_FRIEND_RELS, {
       user_id: userState.id,
     });
-    console.log('!fetchRes', fetchRes);
+    console.log('!fetchRes', fetchRes.data.friend_rel.filter((f) => f.type === 'pending_first'));
     const friends = fetchRes.data.friend_rel;
     reloadFriends(friends);
   };

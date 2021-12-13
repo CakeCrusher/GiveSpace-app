@@ -117,11 +117,6 @@ const AccountWrapper = ({
 const UserOptions = ({ handleLogout, handleStartDelete }) => {
   return (
     <HStack flex="1" justifyContent="flex-end">
-      <Box>
-        <Pressable p="2">
-          <Icon as={<Feather name="plus" />} size="sm" />
-        </Pressable>
-      </Box>
       <Box p="2">
         <PopoverIcon iconName="more-vertical" menuTitle="User Options">
           <Pressable onPress={handleLogout}>
