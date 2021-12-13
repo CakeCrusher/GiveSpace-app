@@ -30,7 +30,7 @@ lists(order_by: {date_modified: desc}) {
     name
   }
 }
-friend_rels(where: {type: {_eq: "friends"}}) {
+friend_rels {
   user {
     id
     username
@@ -61,6 +61,7 @@ friend_rels(where: {type: {_eq: "friends"}}) {
       }
     }
   }
+  type
 }
 `;
 
@@ -113,9 +114,9 @@ mutation MyMutation($text: String = "") {
 // //   "contacts_phone_numbers": ["+19545557297"]
 // // }
 
-export const GET_FRIENDS = `
+export const GET_FRIEND_RELS = `
 query MyQuery($user_id: uuid = "") {
-  friend_rel(where: {user: {id: {_eq: $user_id}}, type: {_eq: "friends"}}) {
+  friend_rel(where: {user: {id: {_eq: $user_id}}}) {
     userByUserSecondId {
       id
       username
@@ -131,6 +132,7 @@ query MyQuery($user_id: uuid = "") {
         }
       }
     }
+    type
   }
 }
 `
@@ -272,4 +274,86 @@ query MyQuery($search: String = "") {
 `;
 // {
 //   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
+// }
+
+export const DELETE_ITEM = `
+mutation MyMutation($item_id: uuid = "") {
+  delete_item(where: {id: {_eq: $item_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "item_id": "d6b2f6c2-0b2e-43a7-9fc3-df7879ff336e"
+// }
+
+export const DELETE_LIST = `
+mutation MyMutation($list_id: uuid = "", $_eq: uuid = "") {
+  delete_list(where: {id: {_eq: $list_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "list_id": "ec8e03f0-754c-4b2e-b367-236ef1916b13"
+// }
+
+export const DELETE_USER = `
+mutation MyMutation($user_id: uuid = "") {
+  delete_user(where: {id: {_eq: $user_id}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "user_id": "535d6804-b9a6-43cb-b9fa-76192292193c"
+// }
+
+export const DELETE_FRIEND_REL = `
+mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
+  delete_friend_rel(where: {user: {id: {_eq: $user_first_id}}, userByUserSecondId: {id: {_eq: $user_second_id}}}) {
+    returning {
+      id
+    }
+  }
+}
+`
+// {
+//   "user_first_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693",
+//   "user_second_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b"
+// }
+
+export const ACCEPT_FRIEND_REL = `
+mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
+  update_friend_rel(where: {user_first_id: {_eq: $user_first_id}, user_second_id: {_eq: $user_second_id}}, _set: {type: "friends"}) {
+    returning {
+      user {
+        id
+        username
+        profile_pic_url
+        lists(order_by: {date_modified: desc}) {
+          id
+          user_id
+          title
+          date_modified
+          items {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
+
+`
+// {
+//   "user_first_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b",
+//   "user_second_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }

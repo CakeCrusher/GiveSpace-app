@@ -10,6 +10,7 @@ import {
   Flex,
   Pressable,
   Button,
+  ScrollView,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
@@ -22,7 +23,12 @@ import { GET_FRIENDS } from '../../utils/schemas';
 
 import { reloadFriends } from '../../redux/actions/friends';
 
-const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) => {
+const FriendsScreen = ({
+  navigation,
+  friendsState,
+  userState,
+  reloadFriends,
+}) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const search = useField('text', '');
@@ -34,42 +40,36 @@ const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) =
   const handleSettingsToggle = () => {};
 
   return (
-    <VStack space="4" p="4" flex="1" safeArea>
-      <HStack flex="1" justifyContent="space-between">
-        <Flex flex="5">
-          <Text fontSize="3xl">Friends</Text>
-        </Flex>
+    <VStack space="4" p="4" flex="15" safeArea>
+      <ScrollView>
+        <HStack flex="1" justifyContent="space-between">
+          <Flex flex="5">
+            <Text fontSize="3xl">Friends</Text>
+          </Flex>
 
-        <HStack
-          alignContent="center"
-          justifyContent="space-between"
-          flex="1"
-          p="2"
-        >
-          <Pressable onPress={handleSearchToggle} m="auto">
-            <Icon as={<Feather name="search" />} size="sm" />
-          </Pressable>
-          <Pressable onPress={handleSettingsToggle} m="auto">
-            <Icon as={<Feather name="more-vertical" />} size="sm" />
-          </Pressable>
+          <HStack
+            alignContent="center"
+            justifyContent="space-between"
+            flex="1"
+            p="2"
+          >
+            <Pressable onPress={handleSearchToggle} m="auto">
+              <Icon as={<Feather name="search" />} size="sm" />
+            </Pressable>
+            <Pressable onPress={handleSettingsToggle} m="auto">
+              <Icon as={<Feather name="more-vertical" />} size="sm" />
+            </Pressable>
+          </HStack>
         </HStack>
-      </HStack>
 
-      <SlideFade in={showSearch}>
-        <Box h={showSearch ? '8' : '0'} px={showSearch ? '4' : '0'}>
-          {showSearch && <Input {...search} placeholder="search" />}
-        </Box>
-      </SlideFade>
+        <SlideFade in={showSearch}>
+          <Box h={showSearch ? '8' : '0'} px={showSearch ? '4' : '0'}>
+            {showSearch && <Input {...search} placeholder="search" />}
+          </Box>
+        </SlideFade>
 
-      <VStack flex="15">
-        {friendsState.list.map((friend) => (
-          <DisplayFriendRow
-            key={friend.id}
-            user={friend}
-            navigation={navigation}
-          />
-        ))}
-        {/*user.friends.map((friend) => (
+        <VStack flex="15">
+          {/*user.friends.map((friend) => (
         <FriendRow
           key={friend.id}
           username={friend.username}
@@ -77,9 +77,45 @@ const FriendsScreen = ({ navigation, friendsState, userState, reloadFriends }) =
           navigation={navigation}
         />
       ))*/}
-      </VStack>
-      <Fab iconName="plus" onPress={() => setIsAdding(true)} />
+          {friendsState.pendingMe.length > 0 && (
+            <VStack flex="5">
+              <Text fontSize="xl">Recieved Requests</Text>
+              {friendsState.pendingMe.map((friend) => (
+                <DisplayFriendRow
+                  key={friend.id}
+                  friend={friend}
+                  navigation={navigation}
+                />
+              ))}
+            </VStack>
+          )}
+          {friendsState.pendingThem.length > 0 && (
+            <VStack flex="5">
+              <Text fontSize="xl">Sent Requests</Text>
+              {friendsState.pendingThem.map((friend) => (
+                <DisplayFriendRow
+                  key={friend.id}
+                  friend={friend}
+                  navigation={navigation}
+                />
+              ))}
+            </VStack>
+          )}
+
+          <VStack flex="5">
+            <Text fontSize="xl">You're Friends</Text>
+            {friendsState.list.map((friend) => (
+              <DisplayFriendRow
+                key={friend.id}
+                friend={friend}
+                navigation={navigation}
+              />
+            ))}
+          </VStack>
+        </VStack>
+      </ScrollView>
       <AddFriendModal isOpen={isAdding} onClose={() => setIsAdding(false)} />
+      <Fab iconName="user-plus" onPress={() => setIsAdding(true)} />
     </VStack>
   );
 };

@@ -36,10 +36,9 @@ export const populateListUser = (list) => (dispatch) => {
 };
 
 export const addListItem = (listId, item) => (dispatch) => {
-
-  dispatch({ type: 'ADD_LIST_ITEM', payload: {listId, item} });
+  dispatch({ type: 'ADD_LIST_ITEM', payload: { listId, item } });
   return;
-}
+};
 
 export const signin =
   ({ username, password }) =>
@@ -110,6 +109,19 @@ export const logout = () => async (dispatch) => {
 export const addList = (listData) => ({
   type: 'ADD_USER_LIST',
   payload: listData,
+});
+
+export const removeLists = (listIds) => ({
+  type: 'REMOVE_LISTS',
+  payload: listIds,
+});
+
+export const removeItems = ({ deletedIds, listId }) => ({
+  type: 'REMOVE_ITEMS',
+  payload: {
+    deletedIds,
+    listId,
+  },
 });
 
 export const setUser = (user) => ({ type: 'SET_USER', payload: user });

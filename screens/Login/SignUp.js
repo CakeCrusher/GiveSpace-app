@@ -115,8 +115,8 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     return;
   };
   const stepTwoStack = (
-    <VStack w="48" flex="5" space={4} justifyContent="flex-start">
-      <Flex h="8">
+    <VStack w="48" flex="3" space={4} justifyContent="flex-start">
+      <Center>  
         <PhoneInput
           ref={phoneInput}
           defaultValue={phoneNumber.value}
@@ -124,7 +124,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
           layout="second"
           onChangeText={phoneNumber.onChangeText}
         />
-      </Flex>
+      </Center>
       <HStack space={4}>
         <Button variant="subtle" onPress={handleBackStep}>
           Back

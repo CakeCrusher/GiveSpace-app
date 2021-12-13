@@ -11,7 +11,7 @@ import { fetchGraphQL } from './utils/helperFunctions';
 import { signinUser } from './redux/actions/user';
 import { signinFriends, reloadFriends } from './redux/actions/friends';
 import { Home, Login, Friends, MyLists, Account } from './screens';
-import { SIGN_IN_USER_BY_ID, GET_FRIENDS } from './utils/schemas';
+import { SIGN_IN_USER_BY_ID, GET_FRIEND_RELS } from './utils/schemas';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,13 +32,13 @@ const View = ({ signinDispatch, userState, reloadFriends }) => {
   }, []);
 
   const getFriends = async () => {
-    const fetchRes = await fetchGraphQL(GET_FRIENDS, {
-      user_id: userState.id
-    })
-    console.log('!fetchRes', fetchRes)
-    const friends = fetchRes.data.friend_rel.map(friend => friend.userByUserSecondId)
-    reloadFriends(friends)
-  }
+    const fetchRes = await fetchGraphQL(GET_FRIEND_RELS, {
+      user_id: userState.id,
+    });
+    console.log('!fetchRes', fetchRes);
+    const friends = fetchRes.data.friend_rel;
+    reloadFriends(friends);
+  };
 
   if (userState.id) {
     return (
@@ -57,7 +57,7 @@ const View = ({ signinDispatch, userState, reloadFriends }) => {
           name="Friends"
           component={Friends}
           listeners={{
-            tabPress: (e) => getFriends()
+            tabPress: (e) => getFriends(),
           }}
           options={{
             headerShown: false,
