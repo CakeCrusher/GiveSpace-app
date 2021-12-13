@@ -32,6 +32,7 @@ const FriendsScreen = ({
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const search = useField('text', '');
 
   const handleSearchToggle = () => {
@@ -39,9 +40,14 @@ const FriendsScreen = ({
   };
 
   const handleRefresh = () => {
-    fetchGraphQL(GET_FRIEND_RELS, { user_id: userState.id }).then((res) =>
-      reloadFriends(res.data.friend_rel),
-    );
+    setIsLoading(true);
+    fetchGraphQL(GET_FRIEND_RELS, { user_id: userState.id })
+      .then((res) => {
+        console.log(res);
+        reloadFriends(res.data.friend_rel);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   };
 
   const handleSettingsToggle = () => {};
@@ -61,9 +67,13 @@ const FriendsScreen = ({
             flex="1"
             p="2"
           >
-            <Pressable onPress={handleRefresh} m="auto">
-              <Icon as={<Feather name="refresh-ccw" />} size="sm" />
-            </Pressable>
+            <Button onPress={handleRefresh} m="auto" isLoading={isLoading}>
+              <Icon
+                as={<Feather name="refresh-ccw" />}
+                size="sm"
+                color="white"
+              />
+            </Button>
           </HStack>
         </HStack>
 
@@ -90,6 +100,7 @@ const FriendsScreen = ({
                   key={friend.id}
                   friend={friend}
                   navigation={navigation}
+                  isPending={true}
                 />
               ))}
             </VStack>
@@ -102,6 +113,7 @@ const FriendsScreen = ({
                   key={friend.id}
                   friend={friend}
                   navigation={navigation}
+                  isPending={true}
                 />
               ))}
             </VStack>
@@ -114,6 +126,7 @@ const FriendsScreen = ({
                 key={friend.id}
                 friend={friend}
                 navigation={navigation}
+                isPending={false}
               />
             ))}
           </VStack>
