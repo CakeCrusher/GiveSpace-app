@@ -116,7 +116,7 @@ const AccountWrapper = ({
 
 const UserOptions = ({ handleLogout, handleStartDelete }) => {
   return (
-    <HStack flex="1" justifyContent="flex-end">
+    <HStack flex="1" mt={5} justifyContent="flex-end">
       <Box p="2">
         <PopoverIcon iconName="more-vertical" menuTitle="User Options">
           <Pressable onPress={handleLogout}>
