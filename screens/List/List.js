@@ -18,15 +18,16 @@ import {
   ScrollView,
 } from 'native-base';
 
-import { populateListUser, removeItems } from '../../redux/actions/user';
+import { editListTitle, populateListUser, removeItems } from '../../redux/actions/user';
 import { populateListFriends } from '../../redux/actions/friends';
 import ItemCard from '../../components/Item/ItemCard';
 import ItemInput from '../../components/Item/ItemInput';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { GET_LIST, DELETE_ITEM } from '../../utils/schemas';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+import { GET_LIST, DELETE_ITEM, UPDATE_LIST_TITLE } from '../../utils/schemas';
 import SelectItemModal from './SelectItemModal';
 import { LoadingScreen, PopoverIcon, Fab } from '../../components';
 import Flare from '../../components/Flare';
+
 const ListWrapper = ({
   route,
   navigation,
@@ -35,6 +36,7 @@ const ListWrapper = ({
   populateListFriends,
   populateListUser,
   removeItems,
+  editListTitle
 }) => {
   const { listData } = route.params;
   const isUser = userState.id === listData.user_id;
@@ -161,6 +163,7 @@ const ListWrapper = ({
         isUser={isUser}
         list={displayList}
         handleConfirmDelete={handleConfirmDelete}
+        editListTitle={editListTitle}
       />
     );
   }
@@ -174,13 +177,15 @@ const ListWrapper = ({
   );
 };
 
-const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
+const List = ({ navigation, list, isUser, handleConfirmDelete, editListTitle }) => {
   const [selectItem, setSelectItem] = useState(null);
   const [showNewModal, setShowNewModal] = useState(false);
 
   const [enableDelete, setEnableDelete] = useState(false);
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
+  const title = useField('text', list.title);
+
 
   const handleSelectDelete = (itemId) => {
     console.log(itemId);
@@ -218,6 +223,19 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
     setSelectItem(null);
   };
 
+  const handleTitleSet = () => {
+    fetchGraphQL(UPDATE_LIST_TITLE, {
+      "list_id": list.id,
+      "title": title.value
+    })
+      .then((res) => {
+        console.log(res)
+        const resData = res.data.update_list.returning[0];
+        editListTitle(resData.id, resData.title);
+      })
+      .catch((err) => console.log(err))
+  }
+
   const handleSettingsToggle = () => {};
 
   return (
@@ -239,7 +257,21 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
         </Box>
         <VStack flex="5" justifyContent="center">
           <Text fontSize="xs">{isUser ? 'You' : user.username}</Text>
-          <Text fontSize="2xl">{list.title}</Text>
+          {isUser ? (
+            <Flex h="12">
+              <Input
+                backgroundColor="#ffffff00"
+                borderColor="#ffffff00"
+                placeholder="list title"
+                fontSize="2xl"
+                onEndEditing={handleTitleSet}
+                h="50"
+                {...title}
+              />
+            </Flex>
+          ) : (
+            <Text fontSize="2xl">{list.title}</Text>
+          )}
         </VStack>
       </HStack>
 
@@ -251,10 +283,10 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
           flex="1"
           p="2"
         >
-          <HStack flex="2" space="2">
+          {/* <HStack flex="2" space="2">
             <Icon as={<Feather name="share-2" />} size="sm" />
             <Text>Share</Text>
-          </HStack>
+          </HStack> */}
 
           <HStack flex="3">
             <HStack ml="auto" space="4">
@@ -363,6 +395,7 @@ const mapDispatchToProps = (dispatch) => ({
   populateListFriends: (list) => dispatch(populateListFriends(list)),
   populateListUser: (list) => dispatch(populateListUser(list)),
   removeItems: (data) => dispatch(removeItems(data)),
+  editListTitle: (id, title) => dispatch(editListTitle(id, title)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListWrapper);

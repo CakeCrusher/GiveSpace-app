@@ -85,6 +85,16 @@ const user = (state = initState, action) => {
         username: action.payload,
       }
     }
+    case 'EDIT_LIST_TITLE': {
+      const listToEdit = {...state.lists.find((list) => list.id === action.payload.listId)}
+      listToEdit.title = action.payload.title;
+      return {
+        ...state,
+        lists: [...state.lists.map((list) =>
+          list.id === action.payload.listId ? listToEdit : list
+        )]
+      }
+    }
     case 'REMOVE_ITEMS': {
       const { listId, deletedIds } = action.payload;
       if (deletedIds.length > 0) {
