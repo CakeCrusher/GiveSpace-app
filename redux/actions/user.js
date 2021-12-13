@@ -23,7 +23,7 @@ const cleanUserData = (userData) => {
 };
 
 export const signinUser = (user) => (dispatch) => {
-  AsyncStorage.setItem('user_id', user.id);
+  AsyncStorage.setItem('username', user.username);
   const userCopy = { ...user };
   delete userCopy.friend_rels;
   dispatch({ type: 'SET_USER', payload: user });
@@ -50,7 +50,7 @@ export const signin =
       //await AsyncStorage.setItem('AuthToken', JSON.stringify({ id: user.id }));
       if (user.data.user.length) {
         const userObject = cleanUserData(user.data.user[0]);
-        await AsyncStorage.setItem('user_id', user.data.user[0].id);
+        await AsyncStorage.setItem('username', user.data.user[0].username);
 
         dispatch({ type: 'SET_USER', payload: user });
         return { status: 'success' };
@@ -77,8 +77,8 @@ export const signup =
       //await AsyncStorage.setItem('AuthToken', JSON.stringify({ id: user.id }));
       if (user.data) {
         await AsyncStorage.setItem(
-          'user_id',
-          user.data.register.userIdToUser.id,
+          'username',
+          user.data.register.userIdToUser.username,
         );
         dispatch(setUser(user.data.register.userIdToUser));
         return { status: 'success' };
@@ -99,7 +99,7 @@ export const signup =
 
 export const logout = () => async (dispatch) => {
   try {
-    await AsyncStorage.removeItem('user_id');
+    await AsyncStorage.removeItem('username');
     dispatch(setUser(null));
   } catch (err) {
     console.log(err);

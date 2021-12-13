@@ -11,7 +11,8 @@
       "CONTACTS"
     ],
     "plugins": [
-      "expo-contacts"
+      "expo-contacts",
+      "expo-screen-orientation"
     ]
   },
   "name": "Project-Wishlist"

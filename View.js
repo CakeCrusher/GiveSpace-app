@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -11,24 +11,30 @@ import { fetchGraphQL } from './utils/helperFunctions';
 import { signinUser } from './redux/actions/user';
 import { signinFriends, reloadFriends } from './redux/actions/friends';
 import { Home, Login, Friends, MyLists, Account } from './screens';
-import { SIGN_IN_USER_BY_ID, GET_FRIEND_RELS } from './utils/schemas';
+import { GET_FRIEND_RELS, SIGN_IN_USER_BY_USERNAME } from './utils/schemas';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import Welcome from './screens/Login/Welcome';
 
 const Tab = createBottomTabNavigator();
 
 const View = ({ signinDispatch, userState, reloadFriends }) => {
-  useEffect(() => {
+  const [username, setUsername] = useState(null);
+  useEffect( async () => {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
     const retrieveUserId = async () => {
-      await AsyncStorage.setItem('user_id', '7c55600d-e5f1-48f3-83d6-3c16ec918693');
-      // await AsyncStorage.removeItem('user_id')
-      const userId = await AsyncStorage.getItem('user_id');
-      if (!userState.id && userId) {
-        const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_ID, {
-          user_id: userId,
+      await AsyncStorage.setItem('username', 'Sebas');
+      // await AsyncStorage.removeItem('username')
+      const _username = await AsyncStorage.getItem('username');
+      setUsername(_username);
+      if (!userState.id && _username) {
+        const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_USERNAME, {
+          username: _username,
         });
         signinDispatch(registerRes.data.user[0]);
       }
+      return;
     };
-    retrieveUserId();
+    await retrieveUserId();
   }, []);
 
   const getFriends = async () => {
@@ -39,7 +45,7 @@ const View = ({ signinDispatch, userState, reloadFriends }) => {
     const friends = fetchRes.data.friend_rel;
     reloadFriends(friends);
   };
-
+  return <Welcome username={username} />
   if (userState.id) {
     return (
       <Tab.Navigator>
