@@ -101,6 +101,21 @@ mutation MyMutation($password: String = "", $username: String = "") {
 //   "password": "secret"
 // }
 
+export const UPDATE_LIST_TITLE = `
+mutation MyMutation($list_id: uuid = "", $title: String = "") {
+  update_list(where: {id: {_eq: $list_id}}, _set: {title: $title}) {
+    returning {
+      title
+      id
+    }
+  }
+}
+`
+// {
+//   "list_id": "b6450dfd-d0f0-4799-9449-13c3f8b74a9e",
+//   "title": "wishlist"
+// }
+
 export const INSPECT_TEXT = `
 mutation MyMutation($text: String = "") {
   inspect_text(text: $text) {

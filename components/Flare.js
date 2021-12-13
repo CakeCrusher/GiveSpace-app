@@ -4,11 +4,9 @@ import { Feather } from '@expo/vector-icons';
 import { Flare1, Flare2 } from '../resources';
 
 const Flare = () => {
-  // procude a random number between 0 and 1
   const random = Math.random();
-  // if random number is less than 0.5, then flare is on
 
-  if (random < 0.9) {
+  if (true) {
     return (
       <View
         colorScheme="primary"

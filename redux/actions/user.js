@@ -111,6 +111,11 @@ export const logout = () => async (dispatch) => {
   }
 };
 
+export const editListTitle = (listId, title) => (dispatch) => {
+  dispatch({ type: 'EDIT_LIST_TITLE', payload: { listId, title } });
+  return;
+}
+
 export const addList = (listData) => ({
   type: 'ADD_USER_LIST',
   payload: listData,
