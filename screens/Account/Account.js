@@ -21,12 +21,12 @@ import {
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 
-import { ListPreview, LoadingScreen, PopoverIcon } from "../../components";
+import { ListPreview, LoadingScreen, PopoverIcon } from '../../components';
 import { BirthdaySvg, LocationSvg } from '../../resources';
 
-import { fetchGraphQL, useField } from "../../utils/helperFunctions";
-import { SIGN_IN_USER_BY_ID } from "../../utils/schemas";
-import { logout } from "../../redux/actions/user";
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+import { SIGN_IN_USER_BY_ID } from '../../utils/schemas';
+import { logout } from '../../redux/actions/user';
 import Flare from '../../components/Flare';
 
 const AccountWrapper = ({
@@ -146,7 +146,7 @@ const Account = ({
   deleteAccount,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const password = useField("password", "");
+  const password = useField('password', '');
 
   const handleLogout = () => {
     logout();
@@ -164,9 +164,20 @@ const Account = ({
     navigation.goBack();
   };
 
+  const handleNavigation = () => {
+    if (isUser) {
+      navigation.navigate('My Lists');
+    } else {
+      navigation.navigate('Friends', {
+        screen: 'FriendsLists',
+        params: { userId: user.id },
+      });
+    }
+  };
+
   return (
     <VStack flex="1" p="4" safeArea>
-      <Flare/>
+      <Flare />
       <ScrollView>
         <HStack mb="2" alignItems="center" justifyContent="space-between">
           {/* TODO: Update these pressables */}
@@ -189,7 +200,9 @@ const Account = ({
               bg="#FAA"
               size="xl"
               source={{
-                uri: user.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                uri:
+                  user.profile_pic_url ||
+                  'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
               }}
             >
               EX
@@ -221,7 +234,7 @@ const Account = ({
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">
-            {isUser ? "My" : user.username + "'s"} Lists
+            {isUser ? 'My' : user.username + "'s"} Lists
           </Text>
           {lists ? (
             <>
@@ -233,10 +246,7 @@ const Account = ({
                 </Box>
               </ScrollView>
               <Box h="2" />
-              <Button
-                variant="outline"
-                onPress={() => navigation.navigate("My Lists")}
-              >
+              <Button variant="outline" onPress={handleNavigation}>
                 All Lists
               </Button>
             </>
@@ -283,7 +293,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
-  deleteAccount: () => console.log("Implement account deletion"),
+  deleteAccount: () => console.log('Implement account deletion'),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountWrapper);
