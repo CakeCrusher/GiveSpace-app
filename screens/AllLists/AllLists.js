@@ -53,7 +53,7 @@ const AllListsWrapper = ({
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
       screen: 'List',
-      params: { listData, userId },
+      params: { listData, userData },
     });
   };
 
@@ -175,7 +175,7 @@ const AllLists = ({
 
   return (
     <VStack space="4" p="4" flex="1" safeArea>
-      <Flare/>
+      <Flare />
       <HStack flex="1" alignItems="center">
         <Avatar
           bg="#FAA"

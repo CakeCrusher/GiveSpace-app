@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
 import {
   Text,
   Heading,
@@ -16,17 +16,17 @@ import {
   VStack,
   Center,
   ScrollView,
-} from 'native-base';
+} from "native-base";
 
-import { populateListUser, removeItems } from '../../redux/actions/user';
-import { populateListFriends } from '../../redux/actions/friends';
-import ItemCard from '../../components/Item/ItemCard';
-import ItemInput from '../../components/Item/ItemInput';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { GET_LIST, DELETE_ITEM } from '../../utils/schemas';
-import SelectItemModal from './SelectItemModal';
-import { LoadingScreen, PopoverIcon, Fab } from '../../components';
-import Flare from '../../components/Flare';
+import { populateListUser, removeItems } from "../../redux/actions/user";
+import { populateListFriends } from "../../redux/actions/friends";
+import ItemCard from "../../components/Item/ItemCard";
+import ItemInput from "../../components/Item/ItemInput";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { GET_LIST, DELETE_ITEM } from "../../utils/schemas";
+import SelectItemModal from "./SelectItemModal";
+import { LoadingScreen, PopoverIcon, Fab } from "../../components";
+import Flare from "../../components/Flare";
 const ListWrapper = ({
   route,
   navigation,
@@ -36,7 +36,7 @@ const ListWrapper = ({
   populateListUser,
   removeItems,
 }) => {
-  const { listData } = route.params;
+  const { listData, userData } = route.params;
   const isUser = userState.id === listData.user_id;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -46,21 +46,21 @@ const ListWrapper = ({
   useEffect(() => {
     const addListToState = async () => {
       try {
-        console.log('FETCHING');
+        console.log("FETCHING");
         const listRes = await fetchGraphQL(GET_LIST, {
           list_id: listData.id,
         });
-        console.log('addListToState!', listRes);
+        console.log("addListToState!", listRes);
 
         if (listRes.errors || !listRes.data.list[0]) {
           throw new Error(listRes.errors);
         } else {
           if (isUser) {
-            console.log('isUser!');
+            console.log("isUser!");
             setDisplayList(listRes.data.list[0]);
             populateListUser(listRes.data.list[0]);
           } else {
-            console.log('isFriend!');
+            console.log("isFriend!");
             setDisplayList(listRes.data.list[0]);
             populateListFriends(listRes.data.list[0]);
           }
@@ -73,7 +73,7 @@ const ListWrapper = ({
     };
 
     const checkState = () => {
-      console.log('CHECKING CACHE');
+      console.log("CHECKING CACHE");
       let list;
       let needsUpdate = true;
 
@@ -81,7 +81,7 @@ const ListWrapper = ({
         list = userState.lists.find((list) => list.id === listData.id);
       } else {
         const friend = friendsState.list.find(
-          (user) => user.id === listData.user_id,
+          (user) => user.id === listData.user_id
         );
         if (friend) {
           list = friend.lists.find((list) => list.id === listData.id);
@@ -89,17 +89,17 @@ const ListWrapper = ({
       }
 
       if (list) {
-        console.log('check for update');
+        console.log("check for update");
         needsUpdate =
           list.items.find((e) => Object.keys(e).length === 2) !== undefined;
       }
 
       if (needsUpdate) {
         console.log(list);
-        console.log('needs update');
+        console.log("needs update");
         addListToState();
       } else {
-        console.log('no update');
+        console.log("no update");
         setDisplayList(list);
         setIsLoading(false);
       }
@@ -115,8 +115,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        }),
-      ),
+        })
+      )
     )
       .then((res) => {
         for (let result of res) {
@@ -159,6 +159,7 @@ const ListWrapper = ({
       <List
         navigation={navigation}
         isUser={isUser}
+        userData={userData}
         list={displayList}
         handleConfirmDelete={handleConfirmDelete}
       />
@@ -174,7 +175,7 @@ const ListWrapper = ({
   );
 };
 
-const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
+const List = ({ navigation, list, isUser, userData, handleConfirmDelete }) => {
   const [selectItem, setSelectItem] = useState(null);
   const [showNewModal, setShowNewModal] = useState(false);
 
@@ -222,7 +223,7 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
 
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
-      <Flare/>
+      <Flare />
       {/* Nav, ListTitle, Username*/}
       <HStack flex="1" alignItems="center" mx="-2">
         <Box flex="1">
@@ -233,12 +234,12 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
         <Box flex="1">
           <Avatar
             source={{
-              uri: 'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+              uri: "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
             }}
           />
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? 'You' : user.username}</Text>
+          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
           <Text fontSize="2xl">{list.title}</Text>
         </VStack>
       </HStack>
@@ -284,7 +285,11 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
       </VStack>
 
       {/* Add Item, Item Modal, Display Items*/}
-      <VStack flex="1">{isUser && <ItemInput listId={list.id} />}</VStack>
+      {isUser && (
+        <VStack flex="1">
+          <ItemInput listId={list.id} />
+        </VStack>
+      )}
 
       <VStack flex="8">
         <ScrollView>
@@ -296,8 +301,8 @@ const List = ({ navigation, list, isUser, handleConfirmDelete }) => {
                     item={item}
                     check={{
                       onPress: () => handleSelectDelete(item.id),
-                      top: '4',
-                      right: '4',
+                      top: "4",
+                      right: "4",
                     }}
                   />
                 ) : (
