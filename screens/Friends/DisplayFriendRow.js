@@ -16,6 +16,7 @@ const DisplayFriendRow = ({
   userState,
   acceptFriend,
   removeFriend,
+  isPending,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   //const handleLoadLists = () => {
@@ -58,7 +59,7 @@ const DisplayFriendRow = ({
     <HStack pb="5" justifyContent="space-between">
       {/* Avatar */}
       <Flex flex="1" justifyContent="center">
-        <Pressable onPress={handleLoadAccount}>
+        <Pressable onPress={isPending ? () => {} : handleLoadAccount}>
           <Avatar
             bg="#FAA"
             source={{
