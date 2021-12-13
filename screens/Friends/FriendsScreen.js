@@ -19,7 +19,7 @@ import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import { Fab } from '../../components';
 import DisplayFriendRow from './DisplayFriendRow';
 import AddFriendModal from './AddFriendModal';
-import { GET_FRIENDS } from '../../utils/schemas';
+import { GET_FRIENDS, GET_FRIEND_RELS } from '../../utils/schemas';
 
 import { reloadFriends } from '../../redux/actions/friends';
 import Flare from '../../components/Flare';
@@ -36,6 +36,12 @@ const FriendsScreen = ({
 
   const handleSearchToggle = () => {
     setShowSearch((e) => !e);
+  };
+
+  const handleRefresh = () => {
+    fetchGraphQL(GET_FRIEND_RELS, { user_id: userState.id }).then((res) =>
+      reloadFriends(res.data.friend_rel),
+    );
   };
 
   const handleSettingsToggle = () => {};
@@ -55,11 +61,8 @@ const FriendsScreen = ({
             flex="1"
             p="2"
           >
-            <Pressable onPress={() => {}} m="auto">
-              <Icon as={<Feather name="search" />} size="sm" />
-            </Pressable>
-            <Pressable onPress={handleSettingsToggle} m="auto">
-              <Icon as={<Feather name="more-vertical" />} size="sm" />
+            <Pressable onPress={handleRefresh} m="auto">
+              <Icon as={<Feather name="refresh-ccw" />} size="sm" />
             </Pressable>
           </HStack>
         </HStack>
