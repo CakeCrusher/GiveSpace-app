@@ -180,7 +180,7 @@ const AllLists = ({
         <Avatar
           bg="#FAA"
           source={{
-            uri: 'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+            uri: userData.profile_pic_url,
           }}
         >
           EX

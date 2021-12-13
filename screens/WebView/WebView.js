@@ -7,13 +7,12 @@ const MyWebView = ({ route, navigation }) => {
   console.log(route.params);
   return (
     <VStack flex="1" safeArea>
-      <HStack h="10%" alignItems="center" justifyContent="center" bg="#C9042C">
+      <HStack h="10%" alignItems="flex-end" justifyContent="space-between">
         <Box>
-          <Button>
-            <Icon as={<Feather name="chevron-left" />} />
+          <Button onPress={() => navigation.goBack()} rounded="0">
+            <Icon as={<Feather name="chevron-left" />} color="#FFF" />
           </Button>
         </Box>
-        <Text color="#FFF">We're in React bay-bee</Text>
       </HStack>
       <VStack h="90%">
         <WebView source={{ uri: route.params.uri }} />
