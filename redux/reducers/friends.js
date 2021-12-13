@@ -38,6 +38,9 @@ const initState = {
 };
 
 const friendFilter = (stateFriends, payloadFriends) => {
+  if (!stateFriends) {
+    stateFriends = []
+  }
   const stateFriendsIds = stateFriends.map((friend) => friend.id);
   const newList = [];
   payloadFriends.forEach((friend) => {

@@ -76,14 +76,14 @@ const AddingModal = ({ isOpen, onClose, friendsState, userState, addPendingThem 
           ) : results.length === 0 ? (
             <Text>No results</Text>
           ) : (
-            results.map((friend) => (
+            results.map((friend) => (friend.id !== userState.id) ?  (
               <AddFriendRow
                 key={friend.id}
                 user={friend}
                 friendState={friendState(friend.id, friendsState)}
                 addFriend={() => handleAddFriend(friend)}
               />
-            ))
+            ) : null)
           )}
         </Modal.Body>
       </Modal.Content>
