@@ -55,7 +55,7 @@ const FriendsScreen = ({
             flex="1"
             p="2"
           >
-            <Pressable onPress={handleSearchToggle} m="auto">
+            <Pressable onPress={() => {}} m="auto">
               <Icon as={<Feather name="search" />} size="sm" />
             </Pressable>
             <Pressable onPress={handleSettingsToggle} m="auto">

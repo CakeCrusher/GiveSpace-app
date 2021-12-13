@@ -36,7 +36,7 @@ const SelectItemModal = ({ navigation, isOpen, onClose, item }) => {
     onClose();
     const formatted = item.name.split(' ').join('+');
     navigation.navigate('WebView', {
-      uri: `https://www.target.com/s?searchTerm=${formatted}`,
+      uri: `https://www.walmart.com/search?q=${formatted}`,
     });
   };
   const handleTargetLink = () => {
