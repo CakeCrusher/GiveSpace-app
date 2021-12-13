@@ -40,13 +40,14 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
     }
   }
   console.log(splitFriends);
-
+  let timeNow = new Date().toLocaleDateString();
+  // transform time to readable format
   return (
     <VStack space="2" p="4" flex="1" justifyContent="space-between" safeArea>
       <Flare />
       <HStack justifyContent="space-between">
         <Text fontSize="md">Hello, {userState.username}</Text>
-        <Text fontSize="md">Nov, 28</Text>
+        <Text fontSize="md">{timeNow}</Text>
       </HStack>
 
       <VStack flex="5" space="2">
@@ -90,9 +91,6 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
               </Box>
             ))}
         </VStack>
-      </VStack>
-      <VStack>
-        <Button onPress={() => logout()}>logout</Button>
       </VStack>
     </VStack>
   );

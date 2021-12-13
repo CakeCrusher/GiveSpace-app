@@ -22,9 +22,9 @@ import { PresentsSvg } from '../../resources';
 
 // TODO: Need to do a 2nd pass and implement validation
 const Signup = ({ signinDispatch, toSignIn }) => {
-  const username = useField('text', 'DELETE');
-  const password = useField('password', 'secret');
-  const passwordConfirm = useField('password', 'secret');
+  const username = useField('text');
+  const password = useField('password');
+  const passwordConfirm = useField('password');
   const phoneNumber = useField('text');
   const phoneInput = useRef(null);
 

@@ -19,8 +19,8 @@ import { SIGN_IN_USER } from '../../utils/schemas';
 import { PresentsSvg } from '../../resources';
 
 const SignIn = ({ toSignUp, signinDispatch }) => {
-  const username = useField('text', 'Krabs');
-  const password = useField('password', 'secret');
+  const username = useField('text');
+  const password = useField('password');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
