@@ -55,7 +55,7 @@ const FriendsScreen = ({
             flex="1"
             p="2"
           >
-            <Pressable onPress={handleSearchToggle} m="auto">
+            <Pressable onPress={() => {}} m="auto">
               <Icon as={<Feather name="search" />} size="sm" />
             </Pressable>
             <Pressable onPress={handleSettingsToggle} m="auto">
@@ -79,7 +79,7 @@ const FriendsScreen = ({
           navigation={navigation}
         />
       ))*/}
-          {friendsState.pendingme && friendsState.pendingMe.length > 0 && (
+          {friendsState.pendingMe && friendsState.pendingMe.length > 0 && (
             <VStack flex="5">
               <Text fontSize="xl">Recieved Requests</Text>
               {friendsState.pendingMe.map((friend) => (

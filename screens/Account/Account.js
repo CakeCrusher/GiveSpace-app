@@ -76,7 +76,7 @@ const AccountWrapper = ({
         .catch((err) => setHasError(err))
         .finally(() => setIsLoading(false));
     }
-  }, [userId]);
+  }, [userState, friendsState]);
 
   if (hasError) {
     console.log(hasError);
