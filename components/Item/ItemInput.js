@@ -18,10 +18,16 @@ const ItemInput = ({ listId, addListItem }) => {
       "item_name": itemName.value,
     })
       .then((res) => {
-        addListItem(listId, res.data.scrape_item.itemIdToItem)
+        if (res.errors || !res.data.scrape_item.itemIdToItem) {
+          console.log(err);
+          setIsLoading(false)
+        } else {
+          addListItem(listId, res.data.scrape_item.itemIdToItem)
+        }
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false)
       })
     setTimeout(() => {
       setIsLoading(false);
