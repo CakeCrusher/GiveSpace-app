@@ -16,10 +16,9 @@ const Welcome = ({ username }) => {
   return (
     <Center flex="1" safeArea>
       <VStack>
-          <Heading mb={4} size="3xl" color="#c9042c" textAlign="center">
-            Welcome 
-          </Heading>
-
+        <Heading mb={4} size="3xl" color="#c9042c" textAlign="center">
+          Welcome 
+        </Heading>
         <Heading mb={4} size="3xl" textAlign="center">
             {username} 
           </Heading>
