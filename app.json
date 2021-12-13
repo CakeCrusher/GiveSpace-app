@@ -1,13 +1,12 @@
 {
   "expo": {
-    "name": "Project-Wishlist",
-    "slug": "Project-Wishlist",
+    "name": "GiveSpace",
+    "slug": "givespace",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
     "permissions": [
-      "LOCATION",
       "CONTACTS"
     ],
     "plugins": [
