@@ -77,7 +77,7 @@ const AllListsWrapper = ({
         setIsLoading(false);
         navigation.navigate(tabName, {
           screen: 'List',
-          params: { listData, userId: userState.id },
+          params: { listData, userData: userState },
         });
       });
   };

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import * as Contacts from "expo-contacts";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import * as Contacts from 'expo-contacts';
 import {
   Avatar,
   Text,
@@ -9,18 +9,18 @@ import {
   VStack,
   Box,
   ScrollView,
-} from "native-base";
+} from 'native-base';
 
-import { ListPreview, InnerTitle } from "../../components";
+import { ListPreview, InnerTitle } from '../../components';
 
-import { setUser, logout } from "../../redux/actions/user";
-import MockApi from "../../utils/MockApi";
-import Flare from "../../components/Flare";
+import { setUser, logout } from '../../redux/actions/user';
+import MockApi from '../../utils/MockApi';
+import Flare from '../../components/Flare';
 
 const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
   const handleLoadList = (listData, userData) => {
-    navigation.navigate("Home", {
-      screen: "List",
+    navigation.navigate('Home', {
+      screen: 'List',
       params: {
         listData,
         userData,
@@ -29,7 +29,7 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
   };
 
   const friendsWithLists = friendsState.list.filter(
-    (friend) => friend.lists.length > 0
+    (friend) => friend.lists.length > 0,
   );
   const splitFriends = [];
   for (let i = 0; i < friendsWithLists.length; i++) {
@@ -39,7 +39,7 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
       splitFriends[splitFriends.length - 1].push(friendsWithLists[i]);
     }
   }
-  console.log(splitFriends);
+  //console.log(splitFriends);
   let timeNow = new Date().toLocaleDateString();
   // transform time to readable format
   return (
@@ -63,7 +63,7 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
             <Button
               mt="2"
               variant="outline"
-              onPress={() => navigation.navigate("My Lists")}
+              onPress={() => navigation.navigate('My Lists')}
             >
               All Lists
             </Button>
@@ -83,7 +83,7 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
                   listData={friend.lists[0]}
                   avatar={
                     friend.profile_pic_url ||
-                    "https://via.placeholder.com/50/66071A/FFFFFF?text=GS"
+                    'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
                   }
                   onPress={() => handleLoadList(friend.lists[0], friend)}
                   flex="1"
