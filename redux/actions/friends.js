@@ -50,11 +50,13 @@ export const populateListFriends = (list) => (dispatch) => {
 
 export const reloadFriends = (friends) => (dispatch) => {
   const separatedFriends = separateFriendRels(friends)
+  console.log('!reloadFriends', separatedFriends);
   const onlyFriend = {
     list: separatedFriends.list.map(f => f.userByUserSecondId),
     pendingMe: separatedFriends.pendingMe.map(f => f.userByUserSecondId),
     pendingThem: separatedFriends.pendingThem.map(f => f.userByUserSecondId)
   }
+  console.log('!onlyFriend', onlyFriend);
   dispatch({ type: 'RELOAD_FRIENDS', payload: onlyFriend});
   return;
 }

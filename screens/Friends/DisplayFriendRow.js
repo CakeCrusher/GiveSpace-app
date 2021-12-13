@@ -105,12 +105,12 @@ const DisplayFriendRow = ({
       )}
       {friendState(friend.id, friendsState) === 'pendingThem' && (
         <HStack space="4" alignItems="center">
-          <Button
+          {/* <Button
             isLoading={isLoading}
             onPress={() => handleRemoveFriend('pendingThem')}
           >
             <Feather name="user-minus" size={16} color="white" h="8" />
-          </Button>
+          </Button> */}
         </HStack>
       )}
     </HStack>
