@@ -1,3 +1,24 @@
+import gql from 'graphql-tag';
+export const SUBSCRIBE_LIST = gql`
+  subscription getItems($list_id: uuid = "") {
+    list(where: { id: { _eq: $list_id } }) {
+      title
+      date_modified
+      id
+      user_id
+      items {
+        image_url
+        item_url
+        name
+        price
+        date_created
+        id
+        status
+      }
+    }
+  }
+`;
+
 export const CREATE_USER = `
 mutation MyMutation($password: String = "", $phone_number: String = "", $username: String = "") {
   insert_user(objects: {password: $password, username: $username, phone_number: $phone_number}) {
@@ -251,6 +272,7 @@ query MyQuery($list_id: uuid = "") {
       price
       date_created
       id
+      status
     }
   }
 }
@@ -398,16 +420,34 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
 //   "user_second_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
 
+
+export const MARK_ITEM_FOR_PURCHASE = `
+mutation MyMutation($item_id: uuid = "", $user_id: uuid = "", $list_id: uuid = "") {
+  update_item(where: {id: {_eq: $item_id}}, _set: {status: $user_id}) {
+    returning {
+      id
+    }
+  }
+  update_list(where: {id: {_eq: $list_id}}, _set: {date_modified: "now()"}) {
+    returning {
+      id
+    }
+  }
+}
+`;
+
 export const UPDATE_USER_IMAGE = `
 mutation MyMutation($image_base64: String = "", $image_type: String = "", $old_image_url: String = "", $user_id: String = "") {
   update_user_image(image_base64: $image_base64, image_type: $image_type, old_image_url: $old_image_url, user_id: $user_id) {
     updateUserImageUserIdToUser {
       id
       profile_pic_url
+
     }
   }
 }
 `;
+
 // {
 //   "image_type": "jpeg",
 //   "user_id": "cec88518-0a56-4c92-b7ab-97d3b01ad2d9",

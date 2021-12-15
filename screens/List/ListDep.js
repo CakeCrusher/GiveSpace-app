@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import {
   Text,
+  Heading,
   Avatar,
   Icon,
   Button,
@@ -15,8 +16,7 @@ import {
   VStack,
   Center,
   ScrollView,
-} from "native-base";
-import { Share } from "react-native";
+} from 'native-base';
 
 import {
   editListTitle,
@@ -28,32 +28,106 @@ import ItemCard from '../../components/Item/ItemCard';
 import ItemInput from '../../components/Item/ItemInput';
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import {
+  GET_LIST,
   DELETE_ITEM,
   UPDATE_LIST_TITLE,
+  SUBSCRIBE_LIST,
   MARK_ITEM_FOR_PURCHASE,
 } from '../../utils/schemas';
 import SelectItemModal from './SelectItemModal';
-import { PopoverIcon, Fab } from '../../components';
+import { LoadingScreen, PopoverIcon, Fab } from '../../components';
 import Flare from '../../components/Flare';
-import ShareButton from "../../components/ShareButton";
 
-import useListSubscription from './useListSubscription';
+import { useSubscription } from '@apollo/client';
 
 const ListWrapper = ({
   route,
   navigation,
   userState,
+  friendsState,
+  populateListFriends,
+  populateListUser,
   removeItems,
   editListTitle,
 }) => {
   const { listData, userData } = route.params;
   const isUser = userState.id === listData.user_id;
 
-  const { list, error } = useListSubscription(listData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(null);
+  const [displayList, setDisplayList] = useState(null);
+  const { data, loading, error } = useSubscription(SUBSCRIBE_LIST, {
+    variables: { list_id: listData.id },
+  });
 
   if (error) {
     throw new Error(error);
   }
+
+  //useEffect(() => {
+  //  const addListToState = async () => {
+  //    try {
+  //      console.log('FETCHING');
+  //      const listRes = await fetchGraphQL(GET_LIST, {
+  //        list_id: listData.id,
+  //      });
+  //      console.log('addListToState!', listRes);
+
+  //      if (listRes.errors || !listRes.data.list[0]) {
+  //        throw new Error(listRes.errors);
+  //      } else {
+  //        if (isUser) {
+  //          console.log('isUser!');
+  //          setDisplayList(listRes.data.list[0]);
+  //          populateListUser(listRes.data.list[0]);
+  //        } else {
+  //          console.log('isFriend!');
+  //          setDisplayList(listRes.data.list[0]);
+  //          populateListFriends(listRes.data.list[0]);
+  //        }
+  //      }
+  //    } catch (err) {
+  //      console.warn(err);
+  //    } finally {
+  //      setIsLoading(false);
+  //    }
+  //  };
+
+  //  const checkState = () => {
+  //    console.log('CHECKING CACHE');
+  //    let list;
+  //    let needsUpdate = true;
+
+  //    if (isUser) {
+  //      list = userState.lists.find((list) => list.id === listData.id);
+  //    } else {
+  //      const friend = friendsState.list.find(
+  //        (user) => user.id === listData.user_id,
+  //      );
+  //      if (friend) {
+  //        list = friend.lists.find((list) => list.id === listData.id);
+  //      }
+  //    }
+
+  //    if (list) {
+  //      console.log('check for update');
+  //      needsUpdate =
+  //        list.items.find((e) => Object.keys(e).length === 2) !== undefined;
+  //    }
+
+  //    if (needsUpdate) {
+  //      console.log(list);
+  //      console.log('needs update');
+  //      addListToState();
+  //    } else {
+  //      console.log('no update');
+  //      setDisplayList(list);
+  //      setIsLoading(false);
+  //    }
+  //  };
+
+  //  checkState();
+  //}, [userState, friendsState, listData]);
 
   const handleConfirmDelete = (itemIds, cb) => {
     console.log(itemIds);
@@ -62,8 +136,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        })
-      )
+        }),
+      ),
     )
       .then((res) => {
         for (let result of res) {
@@ -87,7 +161,7 @@ const ListWrapper = ({
       });
   };
 
-  if (error) {
+  if (hasError) {
     return (
       <VStack safeArea>
         <Center mt="4">
@@ -97,17 +171,21 @@ const ListWrapper = ({
     );
   }
 
-  if (list) {
+  if (data) {
     return (
       <List
         navigation={navigation}
         isUser={isUser}
         userData={userData}
-        list={list}
+        list={data.list[0]}
         handleConfirmDelete={handleConfirmDelete}
         editListTitle={editListTitle}
       />
     );
+  }
+
+  if (loading) {
+    return <LoadingScreen isLoading={true} />;
   }
 
   return (
@@ -128,11 +206,12 @@ const List = ({
   editListTitle,
 }) => {
   const [selectItem, setSelectItem] = useState(null);
+  const [showNewModal, setShowNewModal] = useState(false);
 
   const [enableDelete, setEnableDelete] = useState(false);
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
-  const title = useField("text", list.title);
+  const title = useField('text', list.title);
 
   const handleSelectDelete = (itemId) => {
     console.log(itemId);
@@ -141,6 +220,7 @@ const List = ({
         prev.delete(itemId);
       } else {
         prev.add(itemId);
+        console.log(prev);
       }
       return prev;
     });
@@ -160,7 +240,7 @@ const List = ({
         }
         cb();
       })
-      .catch((err) => console.warn(err));
+      .catch((err) => console.log(err));
   };
 
   /** LIST OWNER functions **/
@@ -215,16 +295,15 @@ const List = ({
         </Box>
         <Box flex="1">
           <Avatar
-            bg="#FAA"
             source={{
               uri:
                 userData.profile_pic_url ||
-                "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
             }}
           />
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
+          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
           {isUser ? (
             <Flex h="12">
               <Input
@@ -251,9 +330,10 @@ const List = ({
           flex="1"
           p="2"
         >
-          <ShareButton
-            message={`https://give-space-website.vercel.app/list/${list.id}`}
-          />
+          {/* <HStack flex="2" space="2">
+            <Icon as={<Feather name="share-2" />} size="sm" />
+            <Text>Share</Text>
+          </HStack> */}
 
           <HStack flex="3">
             <HStack ml="auto" space="4">
