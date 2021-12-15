@@ -421,8 +421,13 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
 // }
 
 export const MARK_ITEM_FOR_PURCHASE = `
-mutation MyMutation($item_id: uuid = "") {
+mutation MyMutation($item_id: uuid = "", $list_id: uuid = "") {
   update_item(where: {id: {_eq: $item_id}}, _set: {status: "BOUGHT"}) {
+    returning {
+      id
+    }
+  }
+  update_list(where: {id: {_eq: $list_id}}, _set: {date_modified: "now()"}) {
     returning {
       id
     }
