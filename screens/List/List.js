@@ -15,7 +15,8 @@ import {
   VStack,
   Center,
   ScrollView,
-} from 'native-base';
+} from "native-base";
+import { Share } from "react-native";
 
 import {
   editListTitle,
@@ -34,6 +35,7 @@ import {
 import SelectItemModal from './SelectItemModal';
 import { PopoverIcon, Fab } from '../../components';
 import Flare from '../../components/Flare';
+import ShareButton from "../../components/ShareButton";
 
 import useListSubscription from './useListSubscription';
 
@@ -60,8 +62,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        }),
-      ),
+        })
+      )
     )
       .then((res) => {
         for (let result of res) {
@@ -130,7 +132,7 @@ const List = ({
   const [enableDelete, setEnableDelete] = useState(false);
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
-  const title = useField('text', list.title);
+  const title = useField("text", list.title);
 
   const handleSelectDelete = (itemId) => {
     console.log(itemId);
@@ -213,15 +215,16 @@ const List = ({
         </Box>
         <Box flex="1">
           <Avatar
+            bg="#FAA"
             source={{
               uri:
                 userData.profile_pic_url ||
-                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+                "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
             }}
           />
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
+          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
           {isUser ? (
             <Flex h="12">
               <Input
@@ -248,10 +251,9 @@ const List = ({
           flex="1"
           p="2"
         >
-          {/* <HStack flex="2" space="2">
-            <Icon as={<Feather name="share-2" />} size="sm" />
-            <Text>Share</Text>
-          </HStack> */}
+          <ShareButton
+            message={`https://give-space-website.vercel.app/list/${list.id}`}
+          />
 
           <HStack flex="3">
             <HStack ml="auto" space="4">

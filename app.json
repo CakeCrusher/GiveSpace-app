@@ -11,7 +11,14 @@
     ],
     "plugins": [
       "expo-contacts",
-      "expo-screen-orientation"
+      "expo-screen-orientation",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let customize your profile."
+        }
+      ],
+      "expo-file-system"
     ],
     "packagerOpts": {
       "config": "metro.config.js",
