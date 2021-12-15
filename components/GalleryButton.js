@@ -3,7 +3,9 @@ import { connect } from "react-redux";
 
 import { logout, updateUserImage } from "../redux/actions/user";
 
-import { VStack, Button, Image, Avatar } from "native-base";
+import { TouchableOpacity } from "react-native";
+import { VStack, Button, Image, Avatar, Icon, Box } from "native-base";
+import { Feather } from "@expo/vector-icons";
 
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
@@ -11,8 +13,6 @@ import { fetchGraphQL } from "../utils/helperFunctions";
 import { UPDATE_USER_IMAGE } from "../utils/schemas";
 
 const GalleryButton = ({ userState, updateUserImage }) => {
-  const [imageUri, setImageUri] = useState(null);
-
   const handleOnButtonPress = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -29,7 +29,6 @@ const GalleryButton = ({ userState, updateUserImage }) => {
     console.log(result);
 
     if (!result.cancelled) {
-      setImageUri(result.uri);
       console.log("!result.uri", result.uri);
       const imageBase64 = await FileSystem.readAsStringAsync(result.uri, {
         encoding: FileSystem.EncodingType.Base64,
@@ -68,20 +67,28 @@ const GalleryButton = ({ userState, updateUserImage }) => {
   };
 
   return (
-    <Button bg="#00000000" onPress={handleOnButtonPress}>
+    <TouchableOpacity onPress={handleOnButtonPress}>
       <Avatar
+        key={userState.profile_pic_url}
         bg="#FAA"
         size="xl"
         source={{
-          uri: imageUri
-            ? imageUri
-            : userState.profile_pic_url ||
-              "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+          uri: userState.profile_pic_url,
         }}
       >
         EX
       </Avatar>
-    </Button>
+      <Box
+        position="absolute"
+        bottom="1"
+        right="1"
+        borderRadius={100}
+        bg="#FAA"
+        padding={2}
+      >
+        <Icon as={<Feather name={"edit"} />} size={5} color="black" />
+      </Box>
+    </TouchableOpacity>
   );
 };
 

@@ -235,10 +235,9 @@ const Account = ({
               <Avatar
                 bg="#FAA"
                 size="xl"
+                key={user.profile_pic_url}
                 source={{
-                  uri:
-                    user.profile_pic_url ||
-                    "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                  uri: user.profile_pic_url,
                 }}
               >
                 EX
@@ -273,7 +272,9 @@ const Account = ({
                 />
               </Flex>
             ) : (
-              <Text fontSize="sm">{user.address || "(no address)"}</Text>
+              <Text fontSize="sm">
+                {user.address || "(no delivery address)"}
+              </Text>
             )}
           </HStack>
         </HStack>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Heading,
@@ -13,16 +13,16 @@ import {
   VStack,
   ScrollView,
   Icon,
-} from 'native-base';
-import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { connect } from "react-redux";
+import { Feather } from "@expo/vector-icons";
 
-import { ListPreview, LoadingScreen, Fab, PopoverIcon } from '../../components';
+import { ListPreview, LoadingScreen, Fab, PopoverIcon } from "../../components";
 
-import { addList, removeLists } from '../../redux/actions/user';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { CREATE_LIST, DELETE_LIST } from '../../utils/schemas';
-import Flare from '../../components/Flare';
+import { addList, removeLists } from "../../redux/actions/user";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { CREATE_LIST, DELETE_LIST } from "../../utils/schemas";
+import Flare from "../../components/Flare";
 
 const AllListsWrapper = ({
   route,
@@ -52,7 +52,7 @@ const AllListsWrapper = ({
 
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
-      screen: 'List',
+      screen: "List",
       params: { listData, userData },
     });
   };
@@ -66,7 +66,7 @@ const AllListsWrapper = ({
           throw new Error(res.errors);
         }
 
-        console.log('NEW ID:', res.data.insert_list.returning[0].id);
+        console.log("NEW ID:", res.data.insert_list.returning[0].id);
         listData = res.data.insert_list.returning[0];
 
         addList(listData);
@@ -76,7 +76,7 @@ const AllListsWrapper = ({
       .finally(() => {
         setIsLoading(false);
         navigation.navigate(tabName, {
-          screen: 'List',
+          screen: "List",
           params: { listData, userData: userState },
         });
       });
@@ -88,8 +88,8 @@ const AllListsWrapper = ({
       listIds.map((list_id) =>
         fetchGraphQL(DELETE_LIST, {
           list_id,
-        }),
-      ),
+        })
+      )
     )
       .then((res) => {
         if (res[0].errors) {
@@ -178,6 +178,7 @@ const AllLists = ({
       <Flare />
       <HStack mt={8} flex="1" alignItems="center">
         <Avatar
+          key={userData.profile_pic_url}
           bg="#FAA"
           source={{
             uri: userData.profile_pic_url,
@@ -186,7 +187,7 @@ const AllLists = ({
           EX
         </Avatar>
         <Heading ml="4">
-          {isUser ? 'Your ' : `${userData.username}'s `}
+          {isUser ? "Your " : `${userData.username}'s `}
           Lists
         </Heading>
         {isUser && (
@@ -221,8 +222,8 @@ const AllLists = ({
                       listData={list}
                       check={{
                         onPress: () => handleSelectDelete(list.id),
-                        top: '4',
-                        right: '6',
+                        top: "4",
+                        right: "6",
                       }}
                     />
                   ) : (
