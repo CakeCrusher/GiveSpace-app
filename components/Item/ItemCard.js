@@ -12,16 +12,17 @@ import {
   ZStack,
   Pressable,
   Checkbox,
+  Spinner,
 } from 'native-base';
 
 const ItemCard = (props) => {
   const { item, handlePress, check } = props;
+
   const styles = { ...props };
   delete styles.item;
   delete styles.handlePress;
   delete styles.check;
-  // console.log('item', );
-  const imageToShow = item.image_url || 'https://via.placeholder.com/150';
+
   return (
     <ZStack minH="48" {...styles}>
       <Box
@@ -46,12 +47,20 @@ const ItemCard = (props) => {
         <Pressable onPress={handlePress}>
           <VStack p="2">
             <Flex alignItems="center" justifyContent="center">
-              <Image
-                opacity={item.status ? 0.4 : 1}
-                source={{ uri: imageToShow }}
-                alt="item"
-                size="xl"
-              />
+              {item.image_url ? (
+                <Image
+                  opacity={item.status ? 0.4 : 1}
+                  source={{
+                    uri: item.image_url,
+                  }}
+                  alt="item"
+                  size="xl"
+                />
+              ) : (
+                <Center h="32" w="100%" bg="#484848" opacity="60">
+                  <Spinner color="white" />
+                </Center>
+              )}
             </Flex>
             <VStack mt="2">
               <Text fontSize="md" fontWeight="bold" textAlign="center">
