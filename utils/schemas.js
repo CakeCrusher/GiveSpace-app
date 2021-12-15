@@ -1,3 +1,24 @@
+import gql from 'graphql-tag';
+export const SUBSCRIBE_LIST = gql`
+  subscription getItems($list_id: uuid = "") {
+    list(where: { id: { _eq: $list_id } }) {
+      title
+      date_modified
+      id
+      user_id
+      items {
+        image_url
+        item_url
+        name
+        price
+        date_created
+        id
+        status
+      }
+    }
+  }
+`;
+
 export const CREATE_USER = `
 mutation MyMutation($password: String = "", $phone_number: String = "", $username: String = "") {
   insert_user(objects: {password: $password, username: $username, phone_number: $phone_number}) {
@@ -110,7 +131,7 @@ mutation MyMutation($list_id: uuid = "", $title: String = "") {
     }
   }
 }
-`
+`;
 // {
 //   "list_id": "b6450dfd-d0f0-4799-9449-13c3f8b74a9e",
 //   "title": "wishlist"
@@ -125,7 +146,7 @@ mutation MyMutation($user_id: uuid = "", $address: String = "") {
     }
   }
 }
-`
+`;
 // {
 //   "user_id": "676b788a-8350-488b-8e49-08c6c40b5c78",
 //   "address": "wishlist"
@@ -176,7 +197,7 @@ query MyQuery($user_id: uuid = "") {
     type
   }
 }
-`
+`;
 // {
 //   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
@@ -251,6 +272,7 @@ query MyQuery($list_id: uuid = "") {
       price
       date_created
       id
+      status
     }
   }
 }
@@ -301,8 +323,7 @@ query MyQuery($user_id: uuid = "") {
     }
   }
 }
-`
-
+`;
 
 export const SEARCH_FOR_USERS = `
 query MyQuery($search: String = "") {
@@ -325,7 +346,7 @@ mutation MyMutation($item_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "item_id": "d6b2f6c2-0b2e-43a7-9fc3-df7879ff336e"
 // }
@@ -338,7 +359,7 @@ mutation MyMutation($list_id: uuid = "", $_eq: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "list_id": "ec8e03f0-754c-4b2e-b367-236ef1916b13"
 // }
@@ -351,7 +372,7 @@ mutation MyMutation($user_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "user_id": "535d6804-b9a6-43cb-b9fa-76192292193c"
 // }
@@ -364,7 +385,7 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "user_first_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693",
 //   "user_second_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b"
@@ -393,8 +414,18 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
   }
 }
 
-`
+`;
 // {
 //   "user_first_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b",
 //   "user_second_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
+
+export const MARK_ITEM_FOR_PURCHASE = `
+mutation MyMutation($item_id: uuid = "") {
+  update_item(where: {id: {_eq: $item_id}}, _set: {status: "BOUGHT"}) {
+    returning {
+      id
+    }
+  }
+}
+`;

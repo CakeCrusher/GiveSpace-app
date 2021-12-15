@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import { WebView } from 'react-native-webview';
@@ -13,9 +13,20 @@ import {
   Button,
 } from 'native-base';
 
-const SelectItemModal = ({ navigation, isOpen, onClose, item }) => {
-  // TODO: Handle Web View
-  console.log(item);
+const SelectItemModal = ({
+  navigation,
+  isOpen,
+  onClose,
+  handlePurchaseItem,
+  isUser,
+  item,
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handlePurchase = () => {
+    setIsLoading(true);
+    handlePurchaseItem(item.id, () => setIsLoading(false));
+  };
 
   const handleLinkPress = () => {
     onClose();
@@ -60,6 +71,17 @@ const SelectItemModal = ({ navigation, isOpen, onClose, item }) => {
               {item.name}
             </Text>
             <Text fontSize="md">{'$' + item.price}</Text>
+            {!isUser && (
+              <Button
+                onPress={handlePurchase}
+                mr="auto"
+                isLoading={isLoading}
+                colorScheme={item.status === 'BOUGHT' ? 'gray' : 'primary'}
+                disabled={item.status === 'BOUGHT'}
+              >
+                Mark for Purchase
+              </Button>
+            )}
           </Flex>
           <VStack mt="6" space="4">
             <Button onPress={handleAmazonLink}>Amazon Link</Button>

@@ -27,10 +27,18 @@ import { populateListFriends } from '../../redux/actions/friends';
 import ItemCard from '../../components/Item/ItemCard';
 import ItemInput from '../../components/Item/ItemInput';
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
-import { GET_LIST, DELETE_ITEM, UPDATE_LIST_TITLE } from '../../utils/schemas';
+import {
+  GET_LIST,
+  DELETE_ITEM,
+  UPDATE_LIST_TITLE,
+  SUBSCRIBE_LIST,
+  MARK_ITEM_FOR_PURCHASE,
+} from '../../utils/schemas';
 import SelectItemModal from './SelectItemModal';
 import { LoadingScreen, PopoverIcon, Fab } from '../../components';
 import Flare from '../../components/Flare';
+
+import { useSubscription } from '@apollo/client';
 
 const ListWrapper = ({
   route,
@@ -48,71 +56,78 @@ const ListWrapper = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(null);
   const [displayList, setDisplayList] = useState(null);
+  const { data, loading, error } = useSubscription(SUBSCRIBE_LIST, {
+    variables: { list_id: listData.id },
+  });
 
-  useEffect(() => {
-    const addListToState = async () => {
-      try {
-        console.log('FETCHING');
-        const listRes = await fetchGraphQL(GET_LIST, {
-          list_id: listData.id,
-        });
-        console.log('addListToState!', listRes);
+  if (error) {
+    throw new Error(error);
+  }
 
-        if (listRes.errors || !listRes.data.list[0]) {
-          throw new Error(listRes.errors);
-        } else {
-          if (isUser) {
-            console.log('isUser!');
-            setDisplayList(listRes.data.list[0]);
-            populateListUser(listRes.data.list[0]);
-          } else {
-            console.log('isFriend!');
-            setDisplayList(listRes.data.list[0]);
-            populateListFriends(listRes.data.list[0]);
-          }
-        }
-      } catch (err) {
-        console.warn(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //useEffect(() => {
+  //  const addListToState = async () => {
+  //    try {
+  //      console.log('FETCHING');
+  //      const listRes = await fetchGraphQL(GET_LIST, {
+  //        list_id: listData.id,
+  //      });
+  //      console.log('addListToState!', listRes);
 
-    const checkState = () => {
-      console.log('CHECKING CACHE');
-      let list;
-      let needsUpdate = true;
+  //      if (listRes.errors || !listRes.data.list[0]) {
+  //        throw new Error(listRes.errors);
+  //      } else {
+  //        if (isUser) {
+  //          console.log('isUser!');
+  //          setDisplayList(listRes.data.list[0]);
+  //          populateListUser(listRes.data.list[0]);
+  //        } else {
+  //          console.log('isFriend!');
+  //          setDisplayList(listRes.data.list[0]);
+  //          populateListFriends(listRes.data.list[0]);
+  //        }
+  //      }
+  //    } catch (err) {
+  //      console.warn(err);
+  //    } finally {
+  //      setIsLoading(false);
+  //    }
+  //  };
 
-      if (isUser) {
-        list = userState.lists.find((list) => list.id === listData.id);
-      } else {
-        const friend = friendsState.list.find(
-          (user) => user.id === listData.user_id,
-        );
-        if (friend) {
-          list = friend.lists.find((list) => list.id === listData.id);
-        }
-      }
+  //  const checkState = () => {
+  //    console.log('CHECKING CACHE');
+  //    let list;
+  //    let needsUpdate = true;
 
-      if (list) {
-        console.log('check for update');
-        needsUpdate =
-          list.items.find((e) => Object.keys(e).length === 2) !== undefined;
-      }
+  //    if (isUser) {
+  //      list = userState.lists.find((list) => list.id === listData.id);
+  //    } else {
+  //      const friend = friendsState.list.find(
+  //        (user) => user.id === listData.user_id,
+  //      );
+  //      if (friend) {
+  //        list = friend.lists.find((list) => list.id === listData.id);
+  //      }
+  //    }
 
-      if (needsUpdate) {
-        console.log(list);
-        console.log('needs update');
-        addListToState();
-      } else {
-        console.log('no update');
-        setDisplayList(list);
-        setIsLoading(false);
-      }
-    };
+  //    if (list) {
+  //      console.log('check for update');
+  //      needsUpdate =
+  //        list.items.find((e) => Object.keys(e).length === 2) !== undefined;
+  //    }
 
-    checkState();
-  }, [userState, friendsState, listData]);
+  //    if (needsUpdate) {
+  //      console.log(list);
+  //      console.log('needs update');
+  //      addListToState();
+  //    } else {
+  //      console.log('no update');
+  //      setDisplayList(list);
+  //      setIsLoading(false);
+  //    }
+  //  };
+
+  //  checkState();
+  //}, [userState, friendsState, listData]);
 
   const handleConfirmDelete = (itemIds, cb) => {
     console.log(itemIds);
@@ -156,17 +171,17 @@ const ListWrapper = ({
     );
   }
 
-  if (isLoading) {
+  if (loading) {
     return <LoadingScreen isLoading={true} />;
   }
 
-  if (displayList) {
+  if (data) {
     return (
       <List
         navigation={navigation}
         isUser={isUser}
         userData={userData}
-        list={displayList}
+        list={data.list[0]}
         handleConfirmDelete={handleConfirmDelete}
         editListTitle={editListTitle}
       />
@@ -211,6 +226,21 @@ const List = ({
     });
   };
 
+  /** OTHER USER functions **/
+  const handlePurchaseItem = (itemId, cb) => {
+    fetchGraphQL(MARK_ITEM_FOR_PURCHASE, {
+      item_id: itemId,
+    })
+      .then((res) => {
+        if (res.errors) {
+          console.warn(res.errors);
+        }
+        cb();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  /** LIST OWNER functions **/
   const handleEnableDelete = () => {
     setEnableDelete(true);
   };
@@ -226,8 +256,7 @@ const List = ({
   };
 
   const handleCardPress = (item) => {
-    console.log(item);
-    setSelectItem(item);
+    setSelectItem(item.id);
   };
 
   const handleClearSelect = () => {
@@ -240,7 +269,9 @@ const List = ({
       title: title.value,
     })
       .then((res) => {
-        console.log(res);
+        if (res.errors) {
+          console.warn(res.errors);
+        }
         const resData = res.data.update_list.returning[0];
         editListTitle(resData.id, resData.title);
       })
@@ -338,15 +369,14 @@ const List = ({
       <VStack flex="8">
         <ScrollView>
           <HStack flexWrap="wrap" justifyContent="space-between">
-            {list.items.map((item, index) => (
-              <Flex onPress={handleCardPress} key={index} w="48%">
+            {list.items.map((item) => (
+              <Flex onPress={handleCardPress} key={item.id} w="48%">
                 {enableDelete ? (
                   <ItemCard
                     item={item}
                     check={{
+                      isChecked: selectDelete.has(item.id),
                       onPress: () => handleSelectDelete(item.id),
-                      top: '4',
-                      right: '4',
                     }}
                   />
                 ) : (
@@ -366,7 +396,9 @@ const List = ({
           navigation={navigation}
           isOpen={selectItem !== null}
           onClose={handleClearSelect}
-          item={selectItem}
+          item={list.items.find((e) => e.id === selectItem)}
+          isUser={isUser}
+          handlePurchaseItem={handlePurchaseItem}
         />
       )}
       {enableDelete && <Fab onPress={openDeleteModal} iconName="trash" />}

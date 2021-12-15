@@ -10,6 +10,7 @@
     "test:all": "jest --watchAll"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.6",
     "@expo/vector-icons": "^12.0.5",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/bottom-tabs": "^6.0.9",
@@ -23,6 +24,7 @@
     "expo-splash-screen": "~0.13.5",
     "expo-status-bar": "~1.1.0",
     "expo-updates": "~0.10.13",
+    "graphql": "^16.1.0",
     "libphonenumber-js": "^1.9.44",
     "native-base": "^3.2.2",
     "react": "17.0.1",
@@ -40,7 +42,8 @@
     "react-native-webview": "11.13.0",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
-    "redux-thunk": "^2.4.0"
+    "redux-thunk": "^2.4.0",
+    "subscriptions-transport-ws": "^0.11.0"
   },
   "jest": {
     "preset": "jest-expo",
