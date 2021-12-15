@@ -171,10 +171,6 @@ const ListWrapper = ({
     );
   }
 
-  if (loading) {
-    return <LoadingScreen isLoading={true} />;
-  }
-
   if (data) {
     return (
       <List
@@ -186,6 +182,10 @@ const ListWrapper = ({
         editListTitle={editListTitle}
       />
     );
+  }
+
+  if (loading) {
+    return <LoadingScreen isLoading={true} />;
   }
 
   return (
@@ -231,6 +231,7 @@ const List = ({
     fetchGraphQL(MARK_ITEM_FOR_PURCHASE, {
       item_id: itemId,
       list_id: list.id,
+      user_id: userData.id,
     })
       .then((res) => {
         console.log(res);

@@ -76,8 +76,8 @@ const SelectItemModal = ({
                 onPress={handlePurchase}
                 mr="auto"
                 isLoading={isLoading}
-                colorScheme={item.status === 'BOUGHT' ? 'gray' : 'primary'}
-                disabled={item.status === 'BOUGHT'}
+                colorScheme={item.status ? 'gray' : 'primary'}
+                disabled={item.status}
               >
                 Mark for Purchase
               </Button>

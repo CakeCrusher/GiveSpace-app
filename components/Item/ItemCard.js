@@ -47,7 +47,7 @@ const ItemCard = (props) => {
           <VStack p="2">
             <Flex alignItems="center" justifyContent="center">
               <Image
-                opacity={item.status === 'BOUGHT' ? 0.4 : 1}
+                opacity={item.status ? 0.4 : 1}
                 source={{ uri: imageToShow }}
                 alt="item"
                 size="xl"
@@ -68,7 +68,7 @@ const ItemCard = (props) => {
         justifyContent="flex-end"
         alignItems="center"
       >
-        {item.status === 'BOUGHT' && (
+        {item.status && (
           <Center
             rounded="full"
             bg="primary.500"
