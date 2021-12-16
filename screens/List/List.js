@@ -62,7 +62,6 @@ const ListWrapper = ({
 
   const handleConfirmDelete = (itemIds, cb) => {
     console.log(itemIds);
-    setIsLoading(true);
     Promise.all(
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
@@ -84,7 +83,6 @@ const ListWrapper = ({
           deletedIds: confirmedIds,
           listId: displayList.id,
         });
-        setIsLoading(false);
       })
       .catch((err) => console.log(err))
       .finally(() => {
