@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
+import React, { useState } from 'react';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 import {
   Text,
   Avatar,
@@ -15,33 +15,32 @@ import {
   VStack,
   Center,
   ScrollView,
-} from "native-base";
+} from 'native-base';
 
 import {
   editListDateEvent,
   editListTitle,
   populateListUser,
   removeItems,
-} from "../../redux/actions/user";
-import { populateListFriends } from "../../redux/actions/friends";
-import ItemCard from "../../components/Item/ItemCard";
-import ItemInput from "../../components/Item/ItemInput";
-import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+} from '../../redux/actions/user';
+import { populateListFriends } from '../../redux/actions/friends';
+import ItemCard from '../../components/Item/ItemCard';
+import ItemInput from '../../components/Item/ItemInput';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import {
   DELETE_ITEM,
   UPDATE_LIST_TITLE,
   MARK_ITEM_FOR_PURCHASE,
+  CANCEL_ITEM_FOR_PURCHASE,
   UPDATE_LIST_DATE_EVENT,
-} from "../../utils/schemas";
-import SelectItemModal from "./SelectItemModal";
-import { PopoverIcon, Fab } from "../../components";
-import Flare from "../../components/Flare";
-import ShareButton from "../../components/ShareButton";
+} from '../../utils/schemas';
+import SelectItemModal from './SelectItemModal';
+import { PopoverIcon, Fab } from '../../components';
+import Flare from '../../components/Flare';
+import ShareButton from '../../components/ShareButton';
 
-import useListSubscription from "./useListSubscription";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import DateInput from "../../components/DateInput";
+import useListSubscription from './useListSubscription';
+import DateInput from '../../components/DateInput';
 
 const ListWrapper = ({
   route,
@@ -52,6 +51,7 @@ const ListWrapper = ({
   editListDateEvent,
 }) => {
   const { listData, userData } = route.params;
+  console.log('userData');
   const isUser = userState.id === listData.user_id;
 
   const { list, error } = useListSubscription(listData);
@@ -67,8 +67,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        })
-      )
+        }),
+      ),
     )
       .then((res) => {
         for (let result of res) {
@@ -108,6 +108,7 @@ const ListWrapper = ({
         navigation={navigation}
         isUser={isUser}
         userData={userData}
+        userState={userState}
         list={list}
         handleConfirmDelete={handleConfirmDelete}
         editListTitle={editListTitle}
@@ -131,70 +132,49 @@ const List = ({
   isUser,
   handleConfirmDelete,
   userData,
+  userState,
   editListTitle,
   editListDateEvent,
 }) => {
+  const title = useField('text', list.title);
+
   const [enableSearch, setEnableSearch] = useState(false);
-  const searchInput = useField("text");
+  const searchInput = useField('text');
 
   const [selectItem, setSelectItem] = useState(null);
 
   const [enableDelete, setEnableDelete] = useState(false);
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
+
   const [date, setDate] = useState(
-    list.date_event ? new Date(list.date_event) : null
+    list.date_event ? new Date(list.date_event) : null,
   );
-
-  const onDateChange = (selectedDate) => {
-    setDate(selectedDate);
-    editListDateEvent(list.id, selectedDate.toISOString());
-    fetchGraphQL(UPDATE_LIST_DATE_EVENT, {
-      list_id: list.id,
-      date_event: selectedDate.toISOString(),
-    })
-      .then((fetchRes) => {
-        if (fetchRes.errors || !fetchRes.data.update_list.returning[0]) {
-          console.log(fetchRes.errors);
-        } else {
-          editListDateEvent(
-            list.id,
-            fetchRes.data.update_list.returning[0].date_event
-          );
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const listFilter =
-    enableSearch && searchInput.value !== ""
-      ? list.items.filter((item) =>
-          item.name.toLowerCase().includes(searchInput.value.toLowerCase())
-        )
-      : list.items;
-
-  const title = useField("text", list.title);
-
-  const handleSelectDelete = (itemId) => {
-    console.log(itemId);
-    setSelectDelete((prev) => {
-      if (prev.has(itemId)) {
-        prev.delete(itemId);
-      } else {
-        prev.add(itemId);
-      }
-      return prev;
-    });
-  };
 
   /** OTHER USER functions **/
   const handlePurchaseItem = (itemId, cb) => {
     fetchGraphQL(MARK_ITEM_FOR_PURCHASE, {
       item_id: itemId,
       list_id: list.id,
-      user_id: userData.id,
+      user_id: userState.id,
     })
       .then((res) => {
+        console.log(res);
+        if (res.errors) {
+          console.warn(res.errors);
+        }
+        cb();
+      })
+      .catch((err) => console.warn(err));
+  };
+
+  const handleCancelPurchase = (itemId, cb) => {
+    fetchGraphQL(CANCEL_ITEM_FOR_PURCHASE, {
+      item_id: itemId,
+      list_id: list.id,
+    })
+      .then((res) => {
+        console.log('RES');
         console.log(res);
         if (res.errors) {
           console.warn(res.errors);
@@ -242,12 +222,51 @@ const List = ({
       .catch((err) => console.log(err));
   };
 
+  const onDateChange = (selectedDate) => {
+    setDate(selectedDate);
+    editListDateEvent(list.id, selectedDate.toISOString());
+    fetchGraphQL(UPDATE_LIST_DATE_EVENT, {
+      list_id: list.id,
+      date_event: selectedDate.toISOString(),
+    })
+      .then((fetchRes) => {
+        if (fetchRes.errors || !fetchRes.data.update_list.returning[0]) {
+          console.log(fetchRes.errors);
+        } else {
+          editListDateEvent(
+            list.id,
+            fetchRes.data.update_list.returning[0].date_event,
+          );
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const listFilter =
+    enableSearch && searchInput.value !== ''
+      ? list.items.filter((item) =>
+          item.name.toLowerCase().includes(searchInput.value.toLowerCase()),
+        )
+      : list.items;
+
+  const handleSelectDelete = (itemId) => {
+    console.log(itemId);
+    setSelectDelete((prev) => {
+      if (prev.has(itemId)) {
+        prev.delete(itemId);
+      } else {
+        prev.add(itemId);
+      }
+      return prev;
+    });
+  };
+
   const handleEnableSearch = () => {
     setEnableSearch((prev) => !prev);
   };
 
-  if (list.title.includes("Christmas")) {
-    console.log("!list", list);
+  if (list.title.includes('Christmas')) {
+    console.log('!list', list);
   }
 
   return (
@@ -266,12 +285,12 @@ const List = ({
             source={{
               uri:
                 userData.profile_pic_url ||
-                "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
             }}
           />
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
+          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
           {isUser ? (
             <Flex h="12">
               <Input
@@ -376,7 +395,9 @@ const List = ({
           onClose={handleClearSelect}
           item={list.items.find((e) => e.id === selectItem)}
           isUser={isUser}
+          userState={userState}
           handlePurchaseItem={handlePurchaseItem}
+          handleCancelPurchase={handleCancelPurchase}
         />
       )}
       {enableDelete && <Fab onPress={openDeleteModal} iconName="trash" />}

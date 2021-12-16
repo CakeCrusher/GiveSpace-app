@@ -1,23 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
-import { WebView } from 'react-native-webview';
-import {
-  Modal,
-  Text,
-  Image,
-  Flex,
-  Center,
-  HStack,
-  VStack,
-  Button,
-} from 'native-base';
+import React, { useState } from 'react';
+import { Modal, Text, Image, Flex, VStack, Button } from 'native-base';
 
 const SelectItemModal = ({
   navigation,
   isOpen,
   onClose,
   handlePurchaseItem,
+  handleCancelPurchase,
+  userState,
   isUser,
   item,
 }) => {
@@ -28,11 +18,9 @@ const SelectItemModal = ({
     handlePurchaseItem(item.id, () => setIsLoading(false));
   };
 
-  const handleLinkPress = () => {
-    onClose();
-    navigation.navigate('WebView', {
-      uri: item.item_url,
-    });
+  const handleCancel = () => {
+    setIsLoading(true);
+    handleCancelPurchase(item.id, () => setIsLoading(false));
   };
 
   const handleAmazonLink = () => {
@@ -71,17 +59,31 @@ const SelectItemModal = ({
               {item.name}
             </Text>
             <Text fontSize="md">{'$' + item.price}</Text>
-            {!isUser && (
-              <Button
-                onPress={handlePurchase}
-                mr="auto"
-                isLoading={isLoading}
-                colorScheme={item.status ? 'gray' : 'primary'}
-                disabled={item.status}
-              >
-                Mark for Purchase
-              </Button>
-            )}
+            {!isUser &&
+              (!item.status ? (
+                <Button
+                  onPress={handlePurchase}
+                  mr="auto"
+                  isLoading={isLoading}
+                  colorScheme={'primary'}
+                >
+                  {item.status === userState.id
+                    ? 'Cancel'
+                    : 'Mark for Purchase'}
+                </Button>
+              ) : (
+                <Button
+                  onPress={handleCancel}
+                  mr="auto"
+                  isLoading={isLoading}
+                  colorScheme={
+                    item.status !== userState.id ? 'gray' : 'primary'
+                  }
+                  disabled={item.status !== userState.id}
+                >
+                  {item.status === userState.id ? 'Cancel' : 'Reserved'}
+                </Button>
+              ))}
           </Flex>
           <VStack mt="6" space="4">
             <Button onPress={handleAmazonLink}>Amazon Link</Button>

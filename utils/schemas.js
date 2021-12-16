@@ -408,6 +408,21 @@ mutation MyMutation($item_id: uuid = "", $user_id: uuid = "", $list_id: uuid = "
 }
 `;
 
+export const CANCEL_ITEM_FOR_PURCHASE = `
+mutation MyMutation($item_id: uuid = "", $list_id: uuid = "") {
+  update_item(where: {id: {_eq: $item_id}}, _set: {status: null}) {
+    returning {
+      id
+    }
+  }
+  update_list(where: {id: {_eq: $list_id}}, _set: {date_modified: "now()"}) {
+    returning {
+      id
+    }
+  }
+}
+`;
+
 export const UPDATE_USER_IMAGE = `
 mutation MyMutation($image_base64: String = "", $image_type: String = "", $old_image_url: String = "", $user_id: String = "") {
   update_user_image(image_base64: $image_base64, image_type: $image_type, old_image_url: $old_image_url, user_id: $user_id) {
