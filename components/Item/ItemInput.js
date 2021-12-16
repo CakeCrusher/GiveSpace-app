@@ -1,13 +1,13 @@
-import { Feather } from '@expo/vector-icons';
-import { Button, HStack, Icon, Input } from 'native-base';
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { addListItem } from '../../redux/actions/user';
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
-import { SCRAPE_ITEM } from '../../utils/schemas';
+import { Feather } from "@expo/vector-icons";
+import { Button, HStack, Icon, Input } from "native-base";
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { addListItem } from "../../redux/actions/user";
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+import { SCRAPE_ITEM } from "../../utils/schemas";
 
 const ItemInput = ({ listId, addListItem }) => {
-  const itemName = useField('text');
+  const itemName = useField("text");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleItemSubmit = async () => {
@@ -30,17 +30,18 @@ const ItemInput = ({ listId, addListItem }) => {
       });
     setTimeout(() => {
       setIsLoading(false);
-      itemName.onChangeText('');
+      itemName.onChangeText("");
     }, 500);
   };
 
   return (
     <HStack>
-      <Input {...itemName} placeholder="item name" />
+      <Input {...itemName} placeholder="item name" borderRightRadius="0" />
       <Button
-        borderRadius="32"
         onPress={handleItemSubmit}
         isLoading={isLoading}
+        borderRadius="3"
+        borderLeftRadius="0"
       >
         <Icon as={<Feather name="plus" />} size="sm" color="white" />
       </Button>

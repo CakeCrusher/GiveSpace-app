@@ -9,6 +9,7 @@ const initState = {
     //       id: null,
     //       title: null,
     //       date_modified: null,
+    //       date_event: null,
     //       items: [
     //         {
     //           id: null,
@@ -39,14 +40,14 @@ const initState = {
 
 const friendFilter = (stateFriends, payloadFriends) => {
   if (!stateFriends) {
-    stateFriends = []
+    stateFriends = [];
   }
   const stateFriendsIds = stateFriends.map((friend) => friend.id);
   const newList = [];
   payloadFriends.forEach((friend) => {
     if (stateFriendsIds.includes(friend.id)) {
       const friendInState = stateFriends.find(
-        (stateFriend) => stateFriend.id === friend.id,
+        (stateFriend) => stateFriend.id === friend.id
       );
       newList.push({ ...friendInState });
     } else {
@@ -59,24 +60,24 @@ const friendFilter = (stateFriends, payloadFriends) => {
 
 const friends = (state = initState, action) => {
   switch (action.type) {
-    case 'SET_FRIENDS':
-      console.log('SET_FRIENDS', action.payload);
+    case "SET_FRIENDS":
+      console.log("SET_FRIENDS", action.payload);
       return {
         ...action.payload,
       };
-    case 'SET_FRIEND_LIST': {
+    case "SET_FRIEND_LIST": {
       const userWithList = {
         ...state.list.find((user) =>
-          user.lists.find((list) => list.id === action.payload.id),
+          user.lists.find((list) => list.id === action.payload.id)
         ),
       };
       userWithList.lists = userWithList.lists.map((list) =>
-        list.id === action.payload.id ? action.payload : list,
+        list.id === action.payload.id ? action.payload : list
       );
 
       const newFriendsList = [
         ...state.list.map((friend) =>
-          friend.id === userWithList.id ? userWithList : friend,
+          friend.id === userWithList.id ? userWithList : friend
         ),
       ];
 
@@ -84,32 +85,38 @@ const friends = (state = initState, action) => {
         list: newFriendsList,
       };
     }
-    case 'RELOAD_FRIENDS':
+    case "RELOAD_FRIENDS":
       const newList = friendFilter(state.list, action.payload.list);
-      const newPendingMe = friendFilter(state.pendingMe, action.payload.pendingMe);
-      const newPendingThem = friendFilter(state.pendingThem, action.payload.pendingThem);
+      const newPendingMe = friendFilter(
+        state.pendingMe,
+        action.payload.pendingMe
+      );
+      const newPendingThem = friendFilter(
+        state.pendingThem,
+        action.payload.pendingThem
+      );
 
       const newState = {
         list: newList,
         pendingMe: newPendingMe,
         pendingThem: newPendingThem,
       };
-      console.log('!newState', newState)
+      console.log("!newState", newState);
 
       return {
         ...newState,
       };
-    case 'ADD_PENDING_THEM':
+    case "ADD_PENDING_THEM":
       return {
         ...state,
         pendingThem: [...state.pendingThem, action.payload],
       };
-    case 'ACCEPT_FRIEND':
-      console.log('!newState', {
+    case "ACCEPT_FRIEND":
+      console.log("!newState", {
         ...state,
         pendingMe: [
           ...state.pendingMe.filter(
-            (friend) => friend.id !== action.payload.id,
+            (friend) => friend.id !== action.payload.id
           ),
         ],
         list: [...state.list, action.payload],
@@ -118,24 +125,24 @@ const friends = (state = initState, action) => {
         ...state,
         pendingMe: [
           ...state.pendingMe.filter(
-            (friend) => friend.id !== action.payload.id,
+            (friend) => friend.id !== action.payload.id
           ),
         ],
         list: [...state.list, action.payload],
       };
-    case 'REMOVE_PENDINGME':
+    case "REMOVE_PENDINGME":
       return {
         ...state,
         pendingMe: [
           ...state.pendingMe.filter((friend) => friend.id !== action.payload),
         ],
       };
-    case 'REMOVE_FRIEND':
+    case "REMOVE_FRIEND":
       return {
         ...state,
         list: [...state.list.filter((friend) => friend.id !== action.payload)],
       };
-    case 'REMOVE_PENDINGTHEM':
+    case "REMOVE_PENDINGTHEM":
       return {
         ...state,
         pendingThem: [

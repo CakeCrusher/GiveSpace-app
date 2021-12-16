@@ -12,6 +12,7 @@ const initState = {
     //   id: null,
     //   title: null,
     //   date_modified: null,
+    //   date_event: null,
     //   items: [
     //     {
     //       id: null,
@@ -97,6 +98,20 @@ const user = (state = initState, action) => {
         ...state.lists.find((list) => list.id === action.payload.listId),
       };
       listToEdit.title = action.payload.title;
+      return {
+        ...state,
+        lists: [
+          ...state.lists.map((list) =>
+            list.id === action.payload.listId ? listToEdit : list
+          ),
+        ],
+      };
+    }
+    case "EDIT_LIST_DATE_EVENT": {
+      const listToEdit = {
+        ...state.lists.find((list) => list.id === action.payload.listId),
+      };
+      listToEdit.date_event = action.payload.dateEvent;
       return {
         ...state,
         lists: [

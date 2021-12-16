@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 export const SUBSCRIBE_LIST = gql`
   subscription getItems($list_id: uuid = "") {
     list(where: { id: { _eq: $list_id } }) {
@@ -47,6 +47,7 @@ lists(order_by: {date_modified: desc}) {
   user_id
   date_modified
   date_created
+  date_event
   title
   items {
     id
@@ -64,6 +65,7 @@ friend_rels {
       title
       date_created
       date_modified
+      date_event
       items {
         id
         name
@@ -80,6 +82,7 @@ friend_rels {
       title
       date_created
       date_modified
+      date_event
       items {
         id
         name
@@ -193,6 +196,7 @@ query MyQuery($user_id: uuid = "") {
         title
         date_created
         date_modified
+        date_event
         items {
           id
           name
@@ -248,6 +252,7 @@ mutation MyMutation($user_id: uuid = "") {
       title
       date_created
       date_modified
+      date_event
       items {
         name
         item_url
@@ -270,6 +275,7 @@ query MyQuery($list_id: uuid = "") {
     title
     date_created
     date_modified
+    date_event
     id
     user_id
     items {
@@ -412,6 +418,7 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
           title
           date_created
           date_modified
+          date_event
           items {
             id
             name
@@ -460,4 +467,20 @@ mutation MyMutation($image_base64: String = "", $image_type: String = "", $old_i
 //   "user_id": "cec88518-0a56-4c92-b7ab-97d3b01ad2d9",
 //   "old_image_url": "https://storage.cloud.google.com/givespace-pictures/faa86d2a-339b-46be-a4b4-99a2558b26ec.jpeg",
 //   "image_base64": "..."
+// }
+
+export const UPDATE_LIST_DATE_EVENT = `
+mutation MyMutation($list_id: uuid = "", $date_event: timestamptz = "") {
+  update_list(where: {id: {_eq: $list_id}}, _set: {date_event: $date_event}) {
+    returning {
+      title
+      id
+      date_event
+    }
+  }
+}
+`;
+// {
+//   "list_id": "d89c7a9c-4bd0-4a75-8191-caf1ef0bba38",
+//   "date_event": "2021-12-16T17:35:35.123Z"
 // }
