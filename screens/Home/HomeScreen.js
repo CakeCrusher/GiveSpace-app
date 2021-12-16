@@ -98,22 +98,6 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
                   />
                 </Box>
               ))}
-            {friendsWithLists.length > 0 &&
-              friendsWithLists.map((friend, index) => (
-                <Box h="50" w="full" key={friend.id}>
-                  <ListPreview
-                    key={index}
-                    username={friend.username}
-                    listData={friend.lists[0]}
-                    avatar={
-                      friend.profile_pic_url ||
-                      'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
-                    }
-                    onPress={() => handleLoadList(friend.lists[0], friend)}
-                    flex="1"
-                  />
-                </Box>
-              ))}
           </VStack>
         </VStack>
       </ScrollView>
