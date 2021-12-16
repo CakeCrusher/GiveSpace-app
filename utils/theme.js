@@ -27,6 +27,7 @@ const theme = extendTheme({
     },
   },
   sizes: {
+    22: 88,
     42: 168,
     44: 176,
     50: 202,

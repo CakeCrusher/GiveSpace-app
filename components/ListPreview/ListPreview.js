@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Avatar,
   Text,
   Box,
   Center,
@@ -14,15 +13,8 @@ import {
 import InnerTitle from '../InnerTitle/InnerTitle';
 
 const ListPreview = (props) => {
-  const { avatar, username, listData, check } = props;
+  const { listData, check } = props;
   const { title, items } = listData;
-
-  const date = new Date(listData.date_modified);
-  const dateString = date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
 
   const spliced = items ? [...items].splice(0, 5) : [];
   const fill = [];
@@ -57,14 +49,6 @@ const ListPreview = (props) => {
       >
         <VStack px="4" py="2" bg="#FFF" flex="1" borderRadius="8">
           <Pressable onPress={props.onPress}>
-            {avatar && (
-              <HStack alignItems="center" space="2" mb="2">
-                <Avatar size="xs" bg="#FAA" source={{ uri: avatar }} />
-                <Text fontSize="xs">
-                  {username} updated &#8226; {dateString}
-                </Text>
-              </HStack>
-            )}
             <HStack justifyContent="space-between" alignItems="center">
               <InnerTitle fontSize="2xl" isTruncated>
                 {title}

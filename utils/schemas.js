@@ -3,6 +3,7 @@ export const SUBSCRIBE_LIST = gql`
   subscription getItems($list_id: uuid = "") {
     list(where: { id: { _eq: $list_id } }) {
       title
+      date_created
       date_modified
       id
       user_id
@@ -45,6 +46,7 @@ lists(order_by: {date_modified: desc}) {
   id
   user_id
   date_modified
+  date_created
   title
   items {
     id
@@ -60,6 +62,7 @@ friend_rels {
       id
       user_id
       title
+      date_created
       date_modified
       items {
         id
@@ -75,6 +78,7 @@ friend_rels {
       id
       user_id
       title
+      date_created
       date_modified
       items {
         id
@@ -187,6 +191,7 @@ query MyQuery($user_id: uuid = "") {
         id
         user_id
         title
+        date_created
         date_modified
         items {
           id
@@ -241,6 +246,7 @@ mutation MyMutation($user_id: uuid = "") {
       id
       user_id
       title
+      date_created
       date_modified
       items {
         name
@@ -262,6 +268,7 @@ export const GET_LIST = `
 query MyQuery($list_id: uuid = "") {
   list(where: {id: {_eq: $list_id}}) {
     title
+    date_created
     date_modified
     id
     user_id
@@ -403,6 +410,7 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
           id
           user_id
           title
+          date_created
           date_modified
           items {
             id
@@ -419,7 +427,6 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
 //   "user_first_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b",
 //   "user_second_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
-
 
 export const MARK_ITEM_FOR_PURCHASE = `
 mutation MyMutation($item_id: uuid = "", $user_id: uuid = "", $list_id: uuid = "") {

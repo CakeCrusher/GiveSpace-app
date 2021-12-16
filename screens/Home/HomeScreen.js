@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Text, Button, HStack, VStack, Box, ScrollView } from 'native-base';
 
-import { ListPreview, InnerTitle } from '../../components';
+import { ListPreview, ActivityCard, InnerTitle } from '../../components';
 
 import Flare from '../../components/Flare';
 
@@ -62,14 +62,14 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
         </VStack>
 
         <InnerTitle bg="#f1f1f1" w="100%">
-          Your Feed
+          Activity
         </InnerTitle>
         <VStack flex="7" space="2">
-          <VStack flex="1" space="2">
+          <VStack flex="1" pt="2" space="4">
             {friendsWithLists.length > 0 &&
               friendsWithLists.map((friend, index) => (
-                <Box h="50" w="full" key={friend.id}>
-                  <ListPreview
+                <Box w="full" key={friend.id}>
+                  <ActivityCard
                     key={index}
                     username={friend.username}
                     listData={friend.lists[0]}
@@ -84,8 +84,72 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               ))}
             {friendsWithLists.length > 0 &&
               friendsWithLists.map((friend, index) => (
-                <Box h="50" w="full" key={friend.id}>
-                  <ListPreview
+                <Box w="full" key={friend.id}>
+                  <ActivityCard
+                    key={index}
+                    username={friend.username}
+                    listData={friend.lists[0]}
+                    avatar={
+                      friend.profile_pic_url ||
+                      'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
+                    }
+                    onPress={() => handleLoadList(friend.lists[0], friend)}
+                    flex="1"
+                  />
+                </Box>
+              ))}
+            {friendsWithLists.length > 0 &&
+              friendsWithLists.map((friend, index) => (
+                <Box w="full" key={friend.id}>
+                  <ActivityCard
+                    key={index}
+                    username={friend.username}
+                    listData={friend.lists[0]}
+                    avatar={
+                      friend.profile_pic_url ||
+                      'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
+                    }
+                    onPress={() => handleLoadList(friend.lists[0], friend)}
+                    flex="1"
+                  />
+                </Box>
+              ))}
+            {friendsWithLists.length > 0 &&
+              friendsWithLists.map((friend, index) => (
+                <Box w="full" key={friend.id}>
+                  <ActivityCard
+                    key={index}
+                    username={friend.username}
+                    listData={friend.lists[0]}
+                    avatar={
+                      friend.profile_pic_url ||
+                      'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
+                    }
+                    onPress={() => handleLoadList(friend.lists[0], friend)}
+                    flex="1"
+                  />
+                </Box>
+              ))}
+            {friendsWithLists.length > 0 &&
+              friendsWithLists.map((friend, index) => (
+                <Box w="full" key={friend.id}>
+                  <ActivityCard
+                    key={index}
+                    username={friend.username}
+                    listData={friend.lists[0]}
+                    avatar={
+                      friend.profile_pic_url ||
+                      'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
+                    }
+                    onPress={() => handleLoadList(friend.lists[0], friend)}
+                    flex="1"
+                  />
+                </Box>
+              ))}
+            {friendsWithLists.length > 0 &&
+              friendsWithLists.map((friend, index) => (
+                <Box w="full" key={friend.id}>
+                  <ActivityCard
                     key={index}
                     username={friend.username}
                     listData={friend.lists[0]}
