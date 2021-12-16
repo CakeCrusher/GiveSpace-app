@@ -1,21 +1,48 @@
-import gql from "graphql-tag";
+const list_vital = (items) => {
+  result = items
+    ? `
+      id
+      user_id
+      title
+      items {
+        ${items}
+      }
+    `
+    : `
+      id
+      user_id
+      title
+    `;
+  return result;
+};
+
+const list_dates = `
+date_created
+date_modified
+date_event
+`;
+
+const items_preview = `
+id
+name
+`;
+
+const items_full = `
+${items_preview}
+status
+date_created
+name
+item_url
+image_url
+price
+`;
+
+import gql from 'graphql-tag';
 export const SUBSCRIBE_LIST = gql`
   subscription getItems($list_id: uuid = "") {
     list(where: { id: { _eq: $list_id } }) {
-      title
-      date_created
-      date_modified
-      id
-      user_id
-      items {
-        image_url
-        item_url
-        name
-        price
-        date_created
-        id
-        status
-      }
+      ${list_dates}
+      ${list_vital(items_full)}
     }
   }
 `;
@@ -43,16 +70,8 @@ address
 profile_pic_url
 birthday
 lists(order_by: {date_modified: desc}) {
-  id
-  user_id
-  date_modified
-  date_created
-  date_event
-  title
-  items {
-    id
-    name
-  }
+  ${list_dates}
+  ${list_vital(items_preview)}
 }
 friend_rels {
   user {
@@ -60,16 +79,8 @@ friend_rels {
     username
     profile_pic_url
     lists(order_by: {date_modified: desc}) {
-      id
-      user_id
-      title
-      date_created
-      date_modified
-      date_event
-      items {
-        id
-        name
-      }
+      ${list_dates}
+      ${list_vital(items_preview)}
     }
   }
   userByUserSecondId {
@@ -77,16 +88,8 @@ friend_rels {
     username
     profile_pic_url
     lists(order_by: {date_modified: desc}) {
-      id
-      user_id
-      title
-      date_created
-      date_modified
-      date_event
-      items {
-        id
-        name
-      }
+      ${list_dates}
+      ${list_vital(items_preview)}
     }
   }
   type
@@ -133,8 +136,7 @@ export const UPDATE_LIST_TITLE = `
 mutation MyMutation($list_id: uuid = "", $title: String = "") {
   update_list(where: {id: {_eq: $list_id}}, _set: {title: $title}) {
     returning {
-      title
-      id
+    ${list_vital(null)}
     }
   }
 }
@@ -191,16 +193,8 @@ query MyQuery($user_id: uuid = "") {
       username
       profile_pic_url
       lists(order_by: {date_modified: desc}) {
-        id
-        user_id
-        title
-        date_created
-        date_modified
-        date_event
-        items {
-          id
-          name
-        }
+        ${list_dates}
+        ${list_vital(items_preview)}
       }
     }
     type
@@ -247,18 +241,8 @@ export const CREATE_LIST = `
 mutation MyMutation($user_id: uuid = "") {
   insert_list(objects: {user_id: $user_id}) {
     returning {
-      id
-      user_id
-      title
-      date_created
-      date_modified
-      date_event
-      items {
-        name
-        item_url
-        image_url
-        price
-      }
+      ${list_dates}
+      ${list_vital(items_preview)}
     }
   }
 }
@@ -272,21 +256,8 @@ mutation MyMutation($user_id: uuid = "") {
 export const GET_LIST = `
 query MyQuery($list_id: uuid = "") {
   list(where: {id: {_eq: $list_id}}) {
-    title
-    date_created
-    date_modified
-    date_event
-    id
-    user_id
-    items {
-      image_url
-      item_url
-      name
-      price
-      date_created
-      id
-      status
-    }
+    ${list_dates}
+    ${list_vital(items_full)}
   }
 }
 `;
@@ -298,12 +269,7 @@ export const SCRAPE_ITEM = `
 mutation MyMutation($item_name: String = "", $list_id: String = "") {
   scrape_item(item_name: $item_name, list_id: $list_id) {
     itemIdToItem {
-      image_url
-      item_url
-      name
-      price
-      date_created
-      id
+      ${items_full}
     }
   }
 }
@@ -413,16 +379,8 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
         username
         profile_pic_url
         lists(order_by: {date_modified: desc}) {
-          id
-          user_id
-          title
-          date_created
-          date_modified
-          date_event
-          items {
-            id
-            name
-          }
+          ${list_dates}
+          ${list_vital(items_preview)}
         }
       }
     }
