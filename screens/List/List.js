@@ -15,8 +15,7 @@ import {
   VStack,
   Center,
   ScrollView,
-} from "native-base";
-import { Share } from "react-native";
+} from 'native-base';
 
 import {
   editListTitle,
@@ -35,7 +34,7 @@ import {
 import SelectItemModal from './SelectItemModal';
 import { PopoverIcon, Fab } from '../../components';
 import Flare from '../../components/Flare';
-import ShareButton from "../../components/ShareButton";
+import ShareButton from '../../components/ShareButton';
 
 import useListSubscription from './useListSubscription';
 
@@ -62,8 +61,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        })
-      )
+        }),
+      ),
     )
       .then((res) => {
         for (let result of res) {
@@ -127,12 +126,22 @@ const List = ({
   userData,
   editListTitle,
 }) => {
+  const [enableSearch, setEnableSearch] = useState(false);
+  const searchInput = useField('text');
+
   const [selectItem, setSelectItem] = useState(null);
 
   const [enableDelete, setEnableDelete] = useState(false);
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
-  const title = useField("text", list.title);
+  const listFilter =
+    enableSearch && searchInput.value !== ''
+      ? list.items.filter((item) =>
+          item.name.toLowerCase().includes(searchInput.value.toLowerCase()),
+        )
+      : list.items;
+
+  const title = useField('text', list.title);
 
   const handleSelectDelete = (itemId) => {
     console.log(itemId);
@@ -201,7 +210,9 @@ const List = ({
       .catch((err) => console.log(err));
   };
 
-  const handleSettingsToggle = () => {};
+  const handleEnableSearch = () => {
+    setEnableSearch((prev) => !prev);
+  };
 
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
@@ -219,12 +230,12 @@ const List = ({
             source={{
               uri:
                 userData.profile_pic_url ||
-                "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
             }}
           />
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
+          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
           {isUser ? (
             <Flex h="12">
               <Input
@@ -232,6 +243,7 @@ const List = ({
                 borderColor="#ffffff00"
                 placeholder="list title"
                 fontSize="2xl"
+                ml="-2"
                 onEndEditing={handleTitleSet}
                 h="50"
                 {...title}
@@ -256,8 +268,9 @@ const List = ({
           />
 
           <HStack flex="3">
-            <HStack ml="auto" space="4">
-              <Pressable onPress={() => {}}>
+            <HStack ml="auto" space="4" alignItems="center">
+              {enableSearch && <Input h="8" ml="4" {...searchInput} />}
+              <Pressable onPress={handleEnableSearch}>
                 <Icon as={<Feather name="search" />} size="sm" />
               </Pressable>
               {isUser && (
@@ -292,7 +305,7 @@ const List = ({
       <VStack flex="8">
         <ScrollView>
           <HStack flexWrap="wrap" justifyContent="space-between">
-            {list.items.map((item) => (
+            {listFilter.map((item) => (
               <Flex onPress={handleCardPress} key={item.id} w="48%">
                 {enableDelete ? (
                   <ItemCard
