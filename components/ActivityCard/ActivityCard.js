@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Icon,
   Avatar,
@@ -8,28 +8,41 @@ import {
   HStack,
   ZStack,
   Pressable,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
 
 const ActivityCard = (props) => {
-  const { listData, avatar, username, onPress } = props;
+  const { friendObj, onPress } = props;
 
-  const created = new Date(listData.date_created);
-  const modified = new Date(listData.date_modified);
-  const dif = modified.getTime() - created.getTime();
-  const isCreated = dif < 8640000;
+  let info;
 
-  const message = isCreated ? 'created' : 'updated';
-  const iconName = isCreated ? 'upload' : 'edit-3';
+  if (friendObj.label === "event") {
+    const now = new Date();
+    const modified = new Date(friendObj.list.date_modified);
+    const nowToModified = now.getTime() - modified.getTime();
+    const nowToModifiedHours = nowToModified / 3600000;
+    const nowToModifiedDays = Math.ceil(nowToModified / 86400000);
 
-  const styles = { ...props };
-  delete styles.listData;
-  delete styles.avatar;
-  delete styles.onPress;
+    info = {
+      message: `list due in ${nowToModifiedDays} days`,
+      icon: "calendar",
+    };
+  }
+  if (friendObj.label === "update") {
+    info = {
+      message: "updated",
+      icon: "edit-3",
+    };
+  }
+  if (friendObj.label === "create") {
+    info = {
+      message: "created",
+      icon: "upload",
+    };
+  }
 
   return (
-    <ZStack minH={isCreated ? '16' : '16'}>
-      {/* <ZStack minH={isCreated ? '16' : '22'}> */}
+    <ZStack minH="18">
       <Box
         position="absolute"
         bottom="0"
@@ -51,26 +64,27 @@ const ActivityCard = (props) => {
       >
         <Pressable onPress={onPress}>
           <HStack space="2" p="2">
-            <Avatar size="xs" bg="secondary" source={{ uri: avatar }} />
+            <Avatar
+              size="xs"
+              bg="secondary"
+              source={{ uri: friendObj.profile_pic_url }}
+            />
 
             <VStack>
               <HStack alignItems="center" space="2">
-                <Icon as={<Feather name={iconName} />} size="xs" />
+                <Icon as={<Feather name={info.icon} />} size="xs" />
                 <HStack>
-                  <Text>{username}</Text>
-                  <Text color="secondary.500">{' ' + message}</Text>
+                  <Text pr={1}>
+                    {friendObj.label === "event"
+                      ? friendObj.username + "'s"
+                      : friendObj.username}
+                  </Text>
+                  <Text color="secondary.500">{" " + info.message}</Text>
                 </HStack>
               </HStack>
-
-              {isCreated ? (
-                <VStack>
-                  <Text fontSize="lg">{listData.title}</Text>
-                </VStack>
-              ) : (
-                <VStack>
-                  <Text fontSize="lg">{listData.title}</Text>
-                </VStack>
-              )}
+              <VStack>
+                <Text fontSize="lg">{friendObj.list.title}</Text>
+              </VStack>
             </VStack>
           </HStack>
         </Pressable>

@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Text, Button, HStack, VStack, Box, ScrollView } from 'native-base';
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { Text, Button, HStack, VStack, Box, ScrollView } from "native-base";
 
-import { ListPreview, ActivityCard, InnerTitle } from '../../components';
+import { ListPreview, ActivityCard, InnerTitle } from "../../components";
 
-import Flare from '../../components/Flare';
+import Flare from "../../components/Flare";
+import Feed from "./Feed";
 
 const HomeScreen = ({ userState, friendsState, navigation }) => {
   const handleLoadList = (listData, userData) => {
-    navigation.navigate('Home', {
-      screen: 'List',
+    navigation.navigate("Home", {
+      screen: "List",
       params: {
         listData,
         userData,
@@ -17,17 +18,6 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
     });
   };
 
-  const friendsWithLists = friendsState.list.filter(
-    (friend) => friend.lists.length > 0,
-  );
-  const splitFriends = [];
-  for (let i = 0; i < friendsWithLists.length; i++) {
-    if (i % 2 === 0) {
-      splitFriends.push([friendsWithLists[i]]);
-    } else {
-      splitFriends[splitFriends.length - 1].push(friendsWithLists[i]);
-    }
-  }
   //console.log(splitFriends);
   let timeNow = new Date().toLocaleDateString();
   // transform time to readable format
@@ -53,7 +43,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               <Button
                 mt="2"
                 variant="outline"
-                onPress={() => navigation.navigate('My Lists')}
+                onPress={() => navigation.navigate("My Lists")}
               >
                 All Lists
               </Button>
@@ -65,24 +55,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
           Activity
         </InnerTitle>
         <VStack flex="7" space="2">
-          <VStack flex="1" pt="2" space="4">
-            {friendsWithLists.length > 0 &&
-              friendsWithLists.map((friend, index) => (
-                <Box w="full" key={friend.id}>
-                  <ActivityCard
-                    key={index}
-                    username={friend.username}
-                    listData={friend.lists[0]}
-                    avatar={
-                      friend.profile_pic_url ||
-                      'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
-                    }
-                    onPress={() => handleLoadList(friend.lists[0], friend)}
-                    flex="1"
-                  />
-                </Box>
-              ))}
-          </VStack>
+          <Feed handleLoadList={handleLoadList} />
         </VStack>
       </ScrollView>
     </VStack>
