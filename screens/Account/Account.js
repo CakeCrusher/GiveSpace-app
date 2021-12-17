@@ -263,9 +263,9 @@ const Account = ({
           </VStack>
         </HStack>
 
-        <Pressable onPress={copyToClipboard}>
+        <TouchableOpacity onPress={copyToClipboard}>
           <HStack space="4" mt="4">
-            <HStack space="1" alignItems="flex-start">
+            <HStack space="1" alignItems="center">
               <LocationSvg />
               {isUser ? (
                 <Flex h="9">
@@ -289,7 +289,7 @@ const Account = ({
               ) : null}
             </HStack>
           </HStack>
-        </Pressable>
+        </TouchableOpacity>
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">
