@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Linking } from 'react-native';
-import { Modal, Text, Image, Flex, VStack, Button } from 'native-base';
+import React, { useState } from "react";
+import { Linking } from "react-native";
+import { Modal, Text, Image, Flex, VStack, Button } from "native-base";
 
 const SelectItemModal = ({
   navigation,
@@ -26,12 +26,8 @@ const SelectItemModal = ({
 
   const handleAmazonLink = () => {
     onClose();
-    const formatted = item.name.split(' ').join('+');
-    Linking.openURL(
-      `com.amazon.mobile.shopping.web://amazon.com/s?k=${formatted}`,
-    );
-    // TODO: Should see if there's a way to have the browser act as a fallback
-    //const formatted = item.name.split(' ').join('+');
+    const formatted = item.name.split(" ").join("+");
+    Linking.openURL(`https://www.amazon.com/s?k=${formatted}&ref=nb_sb_noss_2`);
     //navigation.navigate('WebView', {
     //  uri: `https://www.amazon.com/s?k=${formatted}`,
     //});
@@ -39,17 +35,13 @@ const SelectItemModal = ({
 
   const handleWalmartLink = () => {
     onClose();
-    const formatted = item.name.split(' ').join('+');
-    navigation.navigate('WebView', {
-      uri: `https://www.walmart.com/search?q=${formatted}`,
-    });
+    const formatted = item.name.split(" ").join("+");
+    Linking.openURL(`https://www.walmart.com/search?q=${formatted}`);
   };
   const handleTargetLink = () => {
     onClose();
-    const formatted = item.name.split(' ').join('+');
-    navigation.navigate('WebView', {
-      uri: `https://www.target.com/s?searchTerm=${formatted}`,
-    });
+    const formatted = item.name.split(" ").join("+");
+    Linking.openURL(`https://www.target.com/s?searchTerm=${formatted}`);
   };
 
   return (
@@ -64,18 +56,18 @@ const SelectItemModal = ({
             <Text fontSize="xl" fontWeight="bold">
               {item.name}
             </Text>
-            <Text fontSize="md">{'$' + item.price}</Text>
+            <Text fontSize="md">{"$" + item.price}</Text>
             {!isUser &&
               (!item.status ? (
                 <Button
                   onPress={handlePurchase}
                   mr="auto"
                   isLoading={isLoading}
-                  colorScheme={'primary'}
+                  colorScheme={"primary"}
                 >
                   {item.status === userState.id
-                    ? 'Cancel'
-                    : 'Mark for Purchase'}
+                    ? "Cancel"
+                    : "Mark for Purchase"}
                 </Button>
               ) : (
                 <Button
@@ -83,11 +75,11 @@ const SelectItemModal = ({
                   mr="auto"
                   isLoading={isLoading}
                   colorScheme={
-                    item.status !== userState.id ? 'gray' : 'primary'
+                    item.status !== userState.id ? "gray" : "primary"
                   }
                   disabled={item.status !== userState.id}
                 >
-                  {item.status === userState.id ? 'Cancel' : 'Reserved'}
+                  {item.status === userState.id ? "Cancel" : "Reserved"}
                 </Button>
               ))}
           </Flex>
