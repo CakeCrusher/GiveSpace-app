@@ -4,7 +4,6 @@
     "slug": "givespace",
     "version": "2.1.0",
     "assetBundlePatterns": ["**/*"],
-    "permissions": ["CONTACTS"],
     "plugins": [
       "expo-contacts",
       "expo-screen-orientation",
@@ -31,6 +30,18 @@
         "wasm",
         "svg"
       ]
+    },
+    "android": {
+      "permissions": [
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET"
+      ],
+      "package": "com.givespace"
     }
   },
   "name": "Project-Wishlist"
