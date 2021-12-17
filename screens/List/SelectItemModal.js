@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
-import { Linking } from 'react-native';
-import { Modal, Text, Image, Flex, VStack, Button } from 'native-base';
+import { Share, Linking } from 'react-native';
+import {
+  Modal,
+  Text,
+  Image,
+  Flex,
+  VStack,
+  HStack,
+  Button,
+  Pressable,
+  Icon,
+} from 'native-base';
+import { Feather } from '@expo/vector-icons';
 
 const SelectItemModal = ({
   navigation,
@@ -52,14 +63,38 @@ const SelectItemModal = ({
     });
   };
 
+  const copyAmazonLink = () => {
+    const formatted = item.name.split(' ').join('+');
+    Share.share({
+      message: `https://www.amazon.com/s?k=${formatted}`,
+    }).catch((err) => console.log('Could not create Link', err));
+  };
+
+  const copyWalmartLink = () => {
+    const formatted = item.name.split(' ').join('+');
+    Share.share({
+      message: `https://www.walmart.com/search?q=${formatted}`,
+    }).catch((err) => console.log('Could not create Link', err));
+  };
+
+  const copyTargetLink = () => {
+    const formatted = item.name.split(' ').join('+');
+    Share.share({
+      message: `https://www.target.com/s?searchTerm=${formatted}`,
+    }).catch((err) => console.log('Could not create Link', err));
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <Modal.Content maxW="85%">
+      <Modal.Content w="100%">
         <Modal.CloseButton />
-        <Modal.Body px="8" py="4">
+        <Modal.Body px="8" py="4" w="100%">
+          {/* Image */}
           <Flex flex="3" alignItems="center">
             <Image size="48" src={item.image_url} alt={item.name} />
           </Flex>
+
+          {/* Name, Price, Mark Button*/}
           <Flex mt="6" flex="1" justifyContent="center">
             <Text fontSize="xl" fontWeight="bold">
               {item.name}
@@ -91,10 +126,81 @@ const SelectItemModal = ({
                 </Button>
               ))}
           </Flex>
+
+          {/* Buttons */}
           <VStack mt="6" space="4">
-            <Button onPress={handleAmazonLink}>Amazon Link</Button>
-            <Button onPress={handleWalmartLink}>Walmart Link</Button>
-            <Button onPress={handleTargetLink}>Target Link</Button>
+            <HStack alignItems="center" space="4">
+              <Pressable
+                onPress={handleAmazonLink}
+                bg="secondary.500"
+                rounded="full"
+                py="2"
+                pl="20"
+                flex="4"
+              >
+                <HStack flex="1" alignItems="center">
+                  <Icon
+                    as={<Feather name="shopping-cart" />}
+                    size="sm"
+                    color="white"
+                  />
+                  <Text fontSize="md" ml="4" color="white">
+                    Amazon
+                  </Text>
+                </HStack>
+              </Pressable>
+              <Pressable onPress={copyAmazonLink}>
+                <Icon as={<Feather name="link" />} size="sm" />
+              </Pressable>
+            </HStack>
+            <HStack alignItems="center" space="4">
+              <Pressable
+                onPress={handleWalmartLink}
+                bg="secondary.500"
+                rounded="full"
+                py="2"
+                pl="20"
+                flex="4"
+              >
+                <HStack flex="1" alignItems="center">
+                  <Icon
+                    as={<Feather name="shopping-cart" />}
+                    size="sm"
+                    color="white"
+                  />
+                  <Text fontSize="md" ml="4" color="white">
+                    Walmart
+                  </Text>
+                </HStack>
+              </Pressable>
+              <Pressable onPress={copyWalmartLink}>
+                <Icon as={<Feather name="link" />} size="sm" />
+              </Pressable>
+            </HStack>
+            <HStack alignItems="center" space="4">
+              <Pressable
+                onPress={handleTargetLink}
+                bg="secondary.500"
+                rounded="full"
+                py="2"
+                pl="20"
+                flex="4"
+              >
+                <HStack flex="1" alignItems="center">
+                  <Icon
+                    as={<Feather name="shopping-cart" />}
+                    size="sm"
+                    color="white"
+                  />
+                  <Text fontSize="md" ml="4" color="white">
+                    Target
+                  </Text>
+                </HStack>
+              </Pressable>
+              <Pressable onPress={copyTargetLink}>
+                <Icon as={<Feather name="link" />} size="sm" />
+              </Pressable>
+            </HStack>
           </VStack>
         </Modal.Body>
       </Modal.Content>
