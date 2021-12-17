@@ -119,6 +119,8 @@ const AllListsWrapper = ({
         handleCreateList={handleCreateList}
         handleConfirmDelete={handleConfirmDelete}
         handleLoadList={handleLoadList}
+        userState={userState}
+        navigation={navigation}
       />
     );
   }
@@ -140,6 +142,8 @@ const AllLists = ({
   handleCreateList,
   handleConfirmDelete,
   handleLoadList,
+  userState,
+  navigation,
 }) => {
   console.log(userData.lists);
   const [enableDelete, setEnableDelete] = useState(false);
@@ -173,23 +177,42 @@ const AllLists = ({
     setDeleteModal(true);
   };
 
+  const handleLoadAccount = () => {
+    console.log("handleLoadAccount");
+    // navigation.navigate("FriendAccount", {
+    //   userId: userData.id,
+    // });
+    if (isUser) {
+      navigation.navigate("Account");
+    } else {
+      navigation.navigate("Friends", {
+        screen: "FriendAccount",
+        params: { userId: userData.id },
+      });
+    }
+  };
+
   return (
     <VStack space="4" p="4" flex="1" safeArea>
       <Flare />
       <HStack mt={8} flex="1" alignItems="center">
-        <Avatar
-          key={userData.profile_pic_url}
-          bg="#FAA"
-          source={{
-            uri: userData.profile_pic_url,
-          }}
-        >
-          EX
-        </Avatar>
-        <Heading ml="4">
+        <Pressable onPress={handleLoadAccount}>
+          <Avatar
+            key={isUser ? userState.profile_pic_url : userData.profile_pic_url}
+            bg="#FAA"
+            source={{
+              uri: isUser
+                ? userState.profile_pic_url
+                : userData.profile_pic_url,
+            }}
+          >
+            EX
+          </Avatar>
+        </Pressable>
+        <Text fontSize="3xl" ml="4">
           {isUser ? "Your " : `${userData.username}'s `}
           Lists
-        </Heading>
+        </Text>
         {isUser && (
           <Flex ml="auto">
             <PopoverIcon iconName="more-vertical" menuTitle="List Options">
@@ -236,7 +259,11 @@ const AllLists = ({
               );
             })
           ) : (
-            <Text>{userData.username} doesn't have any lists.</Text>
+            <Text>
+              {isUser
+                ? "You dont have any lists yet. DO press the big red button."
+                : `${userData.username} doesn't have any lists.`}
+            </Text>
           )}
         </ScrollView>
       </VStack>

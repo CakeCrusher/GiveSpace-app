@@ -23,6 +23,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { ListPreview, LoadingScreen, PopoverIcon } from "../../components";
 import { BirthdaySvg, LocationSvg } from "../../resources";
+import { TouchableOpacity, Clipboard } from "react-native";
 
 import { fetchGraphQL, useField } from "../../utils/helperFunctions";
 import {
@@ -207,6 +208,12 @@ const Account = ({
     }
   };
 
+  const copyToClipboard = () => {
+    if (!isUser && address.value) {
+      Clipboard.setString(address.value);
+    }
+  };
+
   return (
     <VStack flex="1" p="4" safeArea>
       <Flare />
@@ -256,28 +263,33 @@ const Account = ({
           </VStack>
         </HStack>
 
-        <HStack space="4" mt="4">
-          <HStack space="1" alignItems="center">
-            <LocationSvg />
-            {isUser ? (
-              <Flex h="9">
-                <Input
-                  backgroundColor="#ffffff00"
-                  borderColor="#ffffff00"
-                  placeholder="delivery address"
-                  fontSize="sm"
-                  onEndEditing={handleAddressSet}
-                  h="10"
-                  {...address}
-                />
-              </Flex>
-            ) : (
-              <Text fontSize="sm">
-                {user.address || "(no delivery address)"}
-              </Text>
-            )}
+        <Pressable onPress={copyToClipboard}>
+          <HStack space="4" mt="4">
+            <HStack space="1" alignItems="flex-start">
+              <LocationSvg />
+              {isUser ? (
+                <Flex h="9">
+                  <Input
+                    backgroundColor="#ffffff00"
+                    borderColor="#ffffff00"
+                    placeholder="delivery address"
+                    fontSize="sm"
+                    onEndEditing={handleAddressSet}
+                    h="10"
+                    {...address}
+                  />
+                </Flex>
+              ) : (
+                <Text fontSize="sm">
+                  {user.address || "(no delivery address)"}
+                </Text>
+              )}
+              {user.address && !isUser ? (
+                <Icon opacity={0.7} as={<Feather name="copy" />} size="xs" />
+              ) : null}
+            </HStack>
           </HStack>
-        </HStack>
+        </Pressable>
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">

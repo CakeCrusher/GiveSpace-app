@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   VStack,
   HStack,
@@ -11,18 +11,18 @@ import {
   Pressable,
   Button,
   ScrollView,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
 
-import { Fab } from '../../components';
-import DisplayFriendRow from './DisplayFriendRow';
-import AddFriendModal from './AddFriendModal';
-import { GET_FRIENDS, GET_FRIEND_RELS } from '../../utils/schemas';
+import { Fab } from "../../components";
+import DisplayFriendRow from "./DisplayFriendRow";
+import AddFriendModal from "./AddFriendModal";
+import { GET_FRIENDS, GET_FRIEND_RELS } from "../../utils/schemas";
 
-import { reloadFriends } from '../../redux/actions/friends';
-import Flare from '../../components/Flare';
+import { reloadFriends } from "../../redux/actions/friends";
+import Flare from "../../components/Flare";
 
 const FriendsScreen = ({
   navigation,
@@ -33,7 +33,7 @@ const FriendsScreen = ({
   const [showSearch, setShowSearch] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const search = useField('text', '');
+  const search = useField("text", "");
 
   const handleSearchToggle = () => {
     setShowSearch((e) => !e);
@@ -78,7 +78,7 @@ const FriendsScreen = ({
         </HStack>
 
         <SlideFade in={showSearch}>
-          <Box h={showSearch ? '8' : '0'} px={showSearch ? '4' : '0'}>
+          <Box h={showSearch ? "8" : "0"} px={showSearch ? "4" : "0"}>
             {showSearch && <Input {...search} placeholder="search" />}
           </Box>
         </SlideFade>
@@ -120,7 +120,7 @@ const FriendsScreen = ({
           )}
 
           <VStack flex="5">
-            <Text fontSize="xl">You're Friends</Text>
+            <Text fontSize="xl">Your Friends</Text>
             {friendsState.list.map((friend) => (
               <DisplayFriendRow
                 key={friend.id}

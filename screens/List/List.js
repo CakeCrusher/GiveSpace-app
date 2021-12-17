@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
+import React, { useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
 import {
   Text,
   Avatar,
@@ -15,32 +15,32 @@ import {
   VStack,
   Center,
   ScrollView,
-} from 'native-base';
+} from "native-base";
 
 import {
   editListDateEvent,
   editListTitle,
   populateListUser,
   removeItems,
-} from '../../redux/actions/user';
-import { populateListFriends } from '../../redux/actions/friends';
-import ItemCard from '../../components/Item/ItemCard';
-import ItemInput from '../../components/Item/ItemInput';
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+} from "../../redux/actions/user";
+import { populateListFriends } from "../../redux/actions/friends";
+import ItemCard from "../../components/Item/ItemCard";
+import ItemInput from "../../components/Item/ItemInput";
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
 import {
   DELETE_ITEM,
   UPDATE_LIST_TITLE,
   MARK_ITEM_FOR_PURCHASE,
   CANCEL_ITEM_FOR_PURCHASE,
   UPDATE_LIST_DATE_EVENT,
-} from '../../utils/schemas';
-import SelectItemModal from './SelectItemModal';
-import { PopoverIcon, Fab } from '../../components';
-import Flare from '../../components/Flare';
-import ShareButton from '../../components/ShareButton';
+} from "../../utils/schemas";
+import SelectItemModal from "./SelectItemModal";
+import { PopoverIcon, Fab } from "../../components";
+import Flare from "../../components/Flare";
+import ShareButton from "../../components/ShareButton";
 
-import useListSubscription from './useListSubscription';
-import DateInput from '../../components/DateInput';
+import useListSubscription from "./useListSubscription";
+import DateInput from "../../components/DateInput";
 
 const ListWrapper = ({
   route,
@@ -51,7 +51,7 @@ const ListWrapper = ({
   editListDateEvent,
 }) => {
   const { listData, userData } = route.params;
-  console.log('userData');
+  console.log("userData");
   const isUser = userState.id === listData.user_id;
 
   const { list, error } = useListSubscription(listData);
@@ -66,8 +66,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        }),
-      ),
+        })
+      )
     )
       .then((res) => {
         for (let result of res) {
@@ -134,10 +134,10 @@ const List = ({
   editListTitle,
   editListDateEvent,
 }) => {
-  const title = useField('text', list.title);
+  const title = useField("text", list.title);
 
   const [enableSearch, setEnableSearch] = useState(false);
-  const searchInput = useField('text');
+  const searchInput = useField("text");
 
   const [selectItem, setSelectItem] = useState(null);
 
@@ -146,7 +146,7 @@ const List = ({
   const [deleteModal, setDeleteModal] = useState(false);
 
   const [date, setDate] = useState(
-    list.date_event ? new Date(list.date_event) : null,
+    list.date_event ? new Date(list.date_event) : null
   );
 
   /** OTHER USER functions **/
@@ -228,7 +228,7 @@ const List = ({
         } else {
           editListDateEvent(
             list.id,
-            fetchRes.data.update_list.returning[0].date_event,
+            fetchRes.data.update_list.returning[0].date_event
           );
         }
       })
@@ -236,9 +236,9 @@ const List = ({
   };
 
   const listFilter =
-    enableSearch && searchInput.value !== ''
+    enableSearch && searchInput.value !== ""
       ? list.items.filter((item) =>
-          item.name.toLowerCase().includes(searchInput.value.toLowerCase()),
+          item.name.toLowerCase().includes(searchInput.value.toLowerCase())
         )
       : list.items;
 
@@ -258,9 +258,24 @@ const List = ({
     setEnableSearch((prev) => !prev);
   };
 
-  if (list.title.includes('Christmas')) {
-    console.log('!list', list);
+  if (list.title.includes("Christmas")) {
+    console.log("!list", list);
   }
+
+  const handleLoadAccount = () => {
+    console.log("handleLoadAccount");
+    // navigation.navigate("FriendAccount", {
+    //   userId: userData.id,
+    // });
+    if (isUser) {
+      navigation.navigate("Account");
+    } else {
+      navigation.navigate("Friends", {
+        screen: "FriendAccount",
+        params: { userId: userData.id },
+      });
+    }
+  };
 
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
@@ -273,17 +288,20 @@ const List = ({
           </Pressable>
         </Box>
         <Box flex="1">
-          <Avatar
-            bg="#FAA"
-            source={{
-              uri:
-                userData.profile_pic_url ||
-                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
-            }}
-          />
+          <Pressable onPress={handleLoadAccount}>
+            <Avatar
+              key={userData.profile_pic_url}
+              bg="#FAA"
+              source={{
+                uri:
+                  userData.profile_pic_url ||
+                  "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+              }}
+            />
+          </Pressable>
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
+          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
           {isUser ? (
             <Flex h="12">
               <Input
