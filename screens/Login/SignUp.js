@@ -4,6 +4,7 @@ import {
   Heading,
   Link,
   Button,
+  Pressable,
   Input,
   HStack,
   Flex,
@@ -18,7 +19,7 @@ import * as Contacts from 'expo-contacts';
 import parsePhoneNumber from 'libphonenumber-js';
 import PhoneInput from 'react-native-phone-number-input';
 import { REGISTER_USER } from '../../utils/schemas';
-import { PresentsSvg } from '../../resources';
+import { FriendsSvg, PresentsSvg } from '../../resources';
 
 // TODO: Need to do a 2nd pass and implement validation
 const Signup = ({ signinDispatch, toSignIn }) => {
@@ -43,20 +44,41 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     }
   };
   const stepOneStack = (
-    <VStack w="48" flex="5" space={4} justifyContent="flex-start">
-      <Flex h="8">
-        <Input {...username} placeholder="username" />
-      </Flex>
-      <Flex h="8">
-        <Input {...password} placeholder="password" />
-      </Flex>
-      <Flex h="8">
-        <Input {...passwordConfirm} placeholder="confirm password" />
-      </Flex>
-      <VStack space={4}>
-        <Button onPress={handleForewardStep}>Next</Button>
+    <>
+      <VStack my={8} justifyContent="center" alignItems="center">
+        <Text fontSize="2xl">Create an account</Text>
+        <HStack>
+          <Text fontSize="2xl">or </Text>
+          <Pressable onPress={toSignIn}>
+            <Text fontSize="2xl" underline>
+              log in
+            </Text>
+          </Pressable>
+        </HStack>
       </VStack>
-    </VStack>
+      <VStack w="64" flex="5" space={2} justifyContent="flex-start">
+        <Flex h="10">
+          <Input {...username} placeholder="username" fontSize="md" />
+        </Flex>
+        <Flex h="10">
+          <Input {...password} placeholder="password" fontSize="md" />
+        </Flex>
+        <Flex h="10">
+          <Input
+            {...passwordConfirm}
+            placeholder="confirm password"
+            fontSize="md"
+          />
+        </Flex>
+        <VStack space={4} mt="4">
+          <Button onPress={handleForewardStep} fontSize="md">
+            <Text fontSize="lg" color="white">
+              Sign Up
+            </Text>
+          </Button>
+        </VStack>
+      </VStack>
+    </>
   );
   const handleBackStep = () => setSignUpStep(signUpStep - 1);
   const getContacts = async () => {
@@ -86,9 +108,9 @@ const Signup = ({ signinDispatch, toSignIn }) => {
           failedContacts.push(contact);
         }
       });
-      return ["0"].concat(numbers);
+      return ['0'].concat(numbers);
     }
-    return ["0"].concat([]);
+    return ['0'].concat([]);
   };
   const handleSubmit = async () => {
     if (!phoneInput.current.isValidNumber(phoneNumber.value)) {
@@ -103,7 +125,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
       username: username.value,
       password: password.value,
       phone_number: '+' + phoneInput.current.state.code + phoneNumber.value,
-      contacts_phone_numbers: ["0", ...contactsPhoneNumbers],
+      contacts_phone_numbers: ['0', ...contactsPhoneNumbers],
     });
     console.log('!userRes', userRes);
     if (userRes.errors || !userRes.data.register.userIdToUser) {
@@ -115,45 +137,64 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     return;
   };
   const stepTwoStack = (
-    <VStack w="48" flex="3" space={4} justifyContent="flex-start">
-      <Center>  
-        <PhoneInput
-          ref={phoneInput}
-          defaultValue={phoneNumber.value}
-          defaultCode="US"
-          layout="second"
-          onChangeText={phoneNumber.onChangeText}
-        />
-      </Center>
-      <HStack space={4}>
-        <Button variant="subtle" onPress={handleBackStep}>
-          Back
-        </Button>
-        <Button isLoading={isLoading} onPress={handleSubmit}>
-          Sign Up
-        </Button>
-      </HStack>
-    </VStack>
+    <>
+      <VStack my={8} justifyContent="center" alignItems="center">
+        <Text fontSize="2xl" textAlign="center">
+          Add your phone number to get connected with contacts{' '}
+        </Text>
+      </VStack>
+      <VStack w="48" flex="3" space={4} justifyContent="flex-start">
+        <Center>
+          <PhoneInput
+            ref={phoneInput}
+            defaultValue={phoneNumber.value}
+            defaultCode="US"
+            layout="second"
+            onChangeText={phoneNumber.onChangeText}
+          />
+        </Center>
+        <Flex>
+          <Button isLoading={isLoading} onPress={handleSubmit}>
+            <Text fontSize="lg" color="white">
+              Let's Go
+            </Text>
+          </Button>
+        </Flex>
+      </VStack>
+      <Pressable
+        position="absolute"
+        bottom="8"
+        left="0"
+        onPress={handleBackStep}
+      >
+        <Text fontSize="lg" underline>
+          back
+        </Text>
+      </Pressable>
+    </>
   );
 
   return (
     <Center flex="1" safeArea>
-      <VStack flex="5" justifyContent="flex-end">
-        <Text fontSize="3xl" textAlign="center">
-          Welcome To
-        </Text>
-        <Text fontSize="3xl" textAlign="center">
-          GiftSpace
-        </Text>
-        <Flex maxH="64" maxW="64">
-          <PresentsSvg />
-        </Flex>
-        <Center mt="4">
-          <Text>Create an account</Text>
-          <HStack mb={4}>
-            <Text>or </Text>
-            <Link onPress={toSignIn}>log in</Link>
-          </HStack>
+      <VStack flex={4} justifyContent="flex-end" alignItems="center">
+        {signUpStep === 0 ? (
+          <Center>
+            <Text fontSize="5xl">Welcome To</Text>
+            <HStack alignItems="center" justifyContent="center">
+              <Text color="primary.500" fontSize="5xl">
+                Give
+              </Text>
+              <Text fontSize="5xl">Space</Text>
+            </HStack>
+          </Center>
+        ) : (
+          <Center>
+            <Text fontSize="5xl">Let's find your</Text>
+            <Text fontSize="5xl">friends</Text>
+          </Center>
+        )}
+        <Center maxH="64" maxW="64">
+          {signUpStep === 0 ? <PresentsSvg /> : <FriendsSvg />}
         </Center>
         {error && (
           <Center>

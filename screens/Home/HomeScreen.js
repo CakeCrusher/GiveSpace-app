@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { Text, Button, HStack, VStack, Box, ScrollView } from "native-base";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Text, Button, HStack, VStack, Box, ScrollView } from 'native-base';
 
-import { ListPreview, ActivityCard, InnerTitle } from "../../components";
+import { ListPreview, ActivityCard, InnerTitle } from '../../components';
 
-import Flare from "../../components/Flare";
-import Feed from "./Feed";
+import Flare from '../../components/Flare';
+import Feed from './Feed';
 
 const HomeScreen = ({ userState, friendsState, navigation }) => {
   const handleLoadList = (listData, userData) => {
-    navigation.navigate("Home", {
-      screen: "List",
+    navigation.navigate('Home', {
+      screen: 'List',
       params: {
         listData,
         userData,
@@ -43,7 +43,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               <Button
                 mt="2"
                 variant="outline"
-                onPress={() => navigation.navigate("My Lists")}
+                onPress={() => navigation.navigate('My Lists')}
               >
                 All Lists
               </Button>
