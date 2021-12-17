@@ -153,11 +153,9 @@ const List = ({
   const handlePurchaseItem = (itemId, cb) => {
     fetchGraphQL(MARK_ITEM_FOR_PURCHASE, {
       item_id: itemId,
-      list_id: list.id,
       user_id: userState.id,
     })
       .then((res) => {
-        console.log(res);
         if (res.errors) {
           console.warn(res.errors);
         }
@@ -169,11 +167,8 @@ const List = ({
   const handleCancelPurchase = (itemId, cb) => {
     fetchGraphQL(CANCEL_ITEM_FOR_PURCHASE, {
       item_id: itemId,
-      list_id: list.id,
     })
       .then((res) => {
-        console.log('RES');
-        console.log(res);
         if (res.errors) {
           console.warn(res.errors);
         }
