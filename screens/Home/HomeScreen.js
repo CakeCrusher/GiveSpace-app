@@ -32,7 +32,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
 
         <InnerTitle>Recent</InnerTitle>
         <VStack flex="5" space="2">
-          {userState.lists[0] && (
+          {userState.lists[0] ? (
             <>
               <ListPreview
                 onPress={() => handleLoadList(userState.lists[0], userState)}
@@ -47,6 +47,10 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               >
                 All Lists
               </Button>
+            </>
+          ) : (
+            <>
+              <Text>You have not lists yet. Create one in "My Lists"!</Text>
             </>
           )}
         </VStack>
