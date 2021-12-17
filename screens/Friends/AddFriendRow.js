@@ -1,10 +1,10 @@
-import React from "react";
-import { Avatar, HStack, Text, Flex, Button } from "native-base";
-import { connect } from "react-redux";
+import React from 'react';
+import { Avatar, HStack, Text, Flex, Button } from 'native-base';
+import { connect } from 'react-redux';
 
 const AddFriendRow = ({ user, addFriend, friendState, userState }) => {
   // TODO: Add Friend functionality
-  console.log('!friendState', friendState)
+  console.log('!friendState', friendState);
   return (
     <HStack justifyContent="space-between">
       {/* Avatar */}
@@ -12,7 +12,9 @@ const AddFriendRow = ({ user, addFriend, friendState, userState }) => {
         <Avatar
           bg="#FAA"
           source={{
-            uri: userState.profile_pic_url || "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
+            uri:
+              user.profile_pic_url ||
+              'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
           }}
           size="sm"
         >
@@ -34,6 +36,5 @@ const AddFriendRow = ({ user, addFriend, friendState, userState }) => {
 const mapStateToProps = (state) => ({
   userState: state.user,
 });
-const mapDispatchToProps = (dispatch) => ({
-});
+const mapDispatchToProps = (dispatch) => ({});
 export default connect(mapStateToProps, mapDispatchToProps)(AddFriendRow);

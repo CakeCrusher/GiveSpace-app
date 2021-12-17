@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as Contacts from 'expo-contacts';
-import {
-  Avatar,
-  Text,
-  Button,
-  HStack,
-  VStack,
-  Box,
-  ScrollView,
-} from 'native-base';
+import { Text, Button, HStack, VStack, Box, ScrollView } from 'native-base';
 
-import { ListPreview, InnerTitle } from '../../components';
+import { ListPreview, ActivityCard, InnerTitle } from '../../components';
 
-import { setUser, logout } from '../../redux/actions/user';
-import MockApi from '../../utils/MockApi';
 import Flare from '../../components/Flare';
+import Feed from './Feed';
 
-const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
+const HomeScreen = ({ userState, friendsState, navigation }) => {
   const handleLoadList = (listData, userData) => {
     navigation.navigate('Home', {
       screen: 'List',
@@ -28,70 +18,50 @@ const HomeScreen = ({ userState, friendsState, logout, navigation }) => {
     });
   };
 
-  const friendsWithLists = friendsState.list.filter(
-    (friend) => friend.lists.length > 0,
-  );
-  const splitFriends = [];
-  for (let i = 0; i < friendsWithLists.length; i++) {
-    if (i % 2 === 0) {
-      splitFriends.push([friendsWithLists[i]]);
-    } else {
-      splitFriends[splitFriends.length - 1].push(friendsWithLists[i]);
-    }
-  }
   //console.log(splitFriends);
   let timeNow = new Date().toLocaleDateString();
   // transform time to readable format
   return (
-    <VStack space="2"  p="4" flex="1" justifyContent="space-between" safeArea>
+    <VStack space="2" px="4" flex="1" justifyContent="space-between" safeArea>
       <Flare />
-      <HStack mt={8} justifyContent="space-between">
-        <Text fontSize="md">Hello, {userState.username}</Text>
-        <Text fontSize="md">{timeNow}</Text>
-      </HStack>
+      <ScrollView stickyHeaderIndices={[0, 3]}>
+        <HStack justifyContent="space-between" bg="#f1f1f1">
+          <Text fontSize="md">Hello, {userState.username}</Text>
+          <Text fontSize="md">{timeNow}</Text>
+        </HStack>
 
-      <VStack flex="5" space="2">
         <InnerTitle>Recent</InnerTitle>
-        {userState.lists[0] && (
-          <>
-            <ListPreview
-              onPress={() => handleLoadList(userState.lists[0], userState)}
-              username={userState.username}
-              listData={userState.lists[0]}
-              flex="1"
-            />
-            <Button
-              mt="2"
-              variant="outline"
-              onPress={() => navigation.navigate('My Lists')}
-            >
-              All Lists
-            </Button>
-          </>
-        )}
-      </VStack>
-
-      <VStack flex="7" space="2" overflow="scroll">
-        <InnerTitle>Friends Activity</InnerTitle>
-        <VStack flex="1" space="2" flexWrap="wrap">
-          {friendsWithLists.length > 0 &&
-            friendsWithLists.map((friend, index) => (
-              <Box h="50" w="full" key={friend.id}>
-                <ListPreview
-                  key={index}
-                  username={friend.username}
-                  listData={friend.lists[0]}
-                  avatar={
-                    friend.profile_pic_url ||
-                    'https://via.placeholder.com/50/66071A/FFFFFF?text=GS'
-                  }
-                  onPress={() => handleLoadList(friend.lists[0], friend)}
-                  flex="1"
-                />
-              </Box>
-            ))}
+        <VStack flex="5" space="2">
+          {userState.lists[0] ? (
+            <>
+              <ListPreview
+                onPress={() => handleLoadList(userState.lists[0], userState)}
+                username={userState.username}
+                listData={userState.lists[0]}
+                flex="1"
+              />
+              <Button
+                mt="2"
+                variant="outline"
+                onPress={() => navigation.navigate('My Lists')}
+              >
+                All Lists
+              </Button>
+            </>
+          ) : (
+            <>
+              <Text>You have not lists yet. Create one in "My Lists"!</Text>
+            </>
+          )}
         </VStack>
-      </VStack>
+
+        <InnerTitle bg="#f1f1f1" w="100%">
+          Activity
+        </InnerTitle>
+        <VStack flex="7" space="2">
+          <Feed handleLoadList={handleLoadList} />
+        </VStack>
+      </ScrollView>
     </VStack>
   );
 };
@@ -100,8 +70,6 @@ const mapStateToProps = (state) => ({
   userState: state.user,
   friendsState: state.friends,
 });
-const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(logout()),
-});
+const mapDispatchToProps = (dispatch) => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

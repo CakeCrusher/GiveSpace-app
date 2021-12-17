@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Pressable, Avatar, HStack, Text, Flex, Button } from 'native-base';
+import React, { useState } from "react";
+import { Pressable, Avatar, HStack, Text, Flex, Button } from "native-base";
 import {
   friendState,
   acceptFriendRel,
   deleteFriendRel,
-} from '../../utils/helperFunctions';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
-import { acceptFriend, removeFriend } from '../../redux/actions/friends';
+} from "../../utils/helperFunctions";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
+import { acceptFriend, removeFriend } from "../../redux/actions/friends";
 
 const DisplayFriendRow = ({
   friend,
@@ -24,15 +24,15 @@ const DisplayFriendRow = ({
   //};
 
   const handleLoadAccount = () => {
-    console.log('handleLoadAccount');
-    navigation.navigate('FriendAccount', {
+    console.log("handleLoadAccount");
+    navigation.navigate("FriendAccount", {
       userId: friend.id,
     });
   };
 
   const handleLoadLists = () => {
-    navigation.navigate('FriendsLists', {
-      tabName: 'Friends',
+    navigation.navigate("FriendsLists", {
+      tabName: "Friends",
       userId: friend.id,
     });
   };
@@ -40,7 +40,7 @@ const DisplayFriendRow = ({
   const handleAcceptFriend = async () => {
     setIsLoading(true);
     const friendRes = await acceptFriendRel(userState.id, friend.id);
-    console.log('!friendRes', friendRes);
+    console.log("!friendRes", friendRes);
     acceptFriend(friendRes.data.update_friend_rel.returning[0].user);
     setIsLoading(false);
   };
@@ -48,7 +48,7 @@ const DisplayFriendRow = ({
   const handleRemoveFriend = async (type) => {
     setIsLoading(true);
     const fetchRes = await deleteFriendRel(userState.id, friend.id);
-    console.log('!fetchRes', fetchRes);
+    console.log("!fetchRes", fetchRes);
     removeFriend(friend.id, type);
     setIsLoading(false);
   };
@@ -65,7 +65,7 @@ const DisplayFriendRow = ({
             source={{
               uri:
                 friend.profile_pic_url ||
-                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+                "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
             }}
           >
             EX
@@ -75,12 +75,12 @@ const DisplayFriendRow = ({
       <Flex flex="3" justifyContent="center">
         <Text fontSize="xl">{friend.username}</Text>
       </Flex>
-      {friendState(friend.id, friendsState) === 'friends' && (
+      {friendState(friend.id, friendsState) === "friends" && (
         <HStack space="4" alignItems="center">
           <Button
             isDisabled={friend.username === "GiveSpace"}
             isLoading={isLoading}
-            onPress={() => handleRemoveFriend('friends')}
+            onPress={() => handleRemoveFriend("friends")}
             h="10"
           >
             <Feather name="user-minus" size={16} color="white" />
@@ -90,11 +90,11 @@ const DisplayFriendRow = ({
           </Button>
         </HStack>
       )}
-      {friendState(friend.id, friendsState) === 'pendingMe' && (
+      {friendState(friend.id, friendsState) === "pendingMe" && (
         <HStack space="4" alignItems="center">
           <Button
             isLoading={isLoading}
-            onPress={() => handleRemoveFriend('pendingMe')}
+            onPress={() => handleRemoveFriend("pendingMe")}
             h="10"
           >
             <Feather name="user-x" size={16} color="white" />
@@ -104,7 +104,7 @@ const DisplayFriendRow = ({
           </Button>
         </HStack>
       )}
-      {friendState(friend.id, friendsState) === 'pendingThem' && (
+      {friendState(friend.id, friendsState) === "pendingThem" && (
         <HStack space="4" alignItems="center">
           {/* <Button
             isLoading={isLoading}

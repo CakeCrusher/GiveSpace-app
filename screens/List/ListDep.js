@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 import {
   Text,
+  Heading,
   Avatar,
   Icon,
   Button,
@@ -15,59 +16,128 @@ import {
   VStack,
   Center,
   ScrollView,
-} from "native-base";
+} from 'native-base';
 
 import {
-  editListDateEvent,
   editListTitle,
   populateListUser,
   removeItems,
-} from "../../redux/actions/user";
-import { populateListFriends } from "../../redux/actions/friends";
-import ItemCard from "../../components/Item/ItemCard";
-import ItemInput from "../../components/Item/ItemInput";
-import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+} from '../../redux/actions/user';
+import { populateListFriends } from '../../redux/actions/friends';
+import ItemCard from '../../components/Item/ItemCard';
+import ItemInput from '../../components/Item/ItemInput';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 import {
+  GET_LIST,
   DELETE_ITEM,
   UPDATE_LIST_TITLE,
+  SUBSCRIBE_LIST,
   MARK_ITEM_FOR_PURCHASE,
-  CANCEL_ITEM_FOR_PURCHASE,
-  UPDATE_LIST_DATE_EVENT,
-} from "../../utils/schemas";
-import SelectItemModal from "./SelectItemModal";
-import { PopoverIcon, Fab } from "../../components";
-import Flare from "../../components/Flare";
-import ShareButton from "../../components/ShareButton";
+} from '../../utils/schemas';
+import SelectItemModal from './SelectItemModal';
+import { LoadingScreen, PopoverIcon, Fab } from '../../components';
+import Flare from '../../components/Flare';
 
-import useListSubscription from "./useListSubscription";
-import DateInput from "../../components/DateInput";
+import { useSubscription } from '@apollo/client';
 
 const ListWrapper = ({
   route,
   navigation,
   userState,
+  friendsState,
+  populateListFriends,
+  populateListUser,
   removeItems,
   editListTitle,
-  editListDateEvent,
 }) => {
   const { listData, userData } = route.params;
-  console.log("userData");
   const isUser = userState.id === listData.user_id;
 
-  const { list, error } = useListSubscription(listData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(null);
+  const [displayList, setDisplayList] = useState(null);
+  const { data, loading, error } = useSubscription(SUBSCRIBE_LIST, {
+    variables: { list_id: listData.id },
+  });
 
   if (error) {
     throw new Error(error);
   }
 
+  //useEffect(() => {
+  //  const addListToState = async () => {
+  //    try {
+  //      console.log('FETCHING');
+  //      const listRes = await fetchGraphQL(GET_LIST, {
+  //        list_id: listData.id,
+  //      });
+  //      console.log('addListToState!', listRes);
+
+  //      if (listRes.errors || !listRes.data.list[0]) {
+  //        throw new Error(listRes.errors);
+  //      } else {
+  //        if (isUser) {
+  //          console.log('isUser!');
+  //          setDisplayList(listRes.data.list[0]);
+  //          populateListUser(listRes.data.list[0]);
+  //        } else {
+  //          console.log('isFriend!');
+  //          setDisplayList(listRes.data.list[0]);
+  //          populateListFriends(listRes.data.list[0]);
+  //        }
+  //      }
+  //    } catch (err) {
+  //      console.warn(err);
+  //    } finally {
+  //      setIsLoading(false);
+  //    }
+  //  };
+
+  //  const checkState = () => {
+  //    console.log('CHECKING CACHE');
+  //    let list;
+  //    let needsUpdate = true;
+
+  //    if (isUser) {
+  //      list = userState.lists.find((list) => list.id === listData.id);
+  //    } else {
+  //      const friend = friendsState.list.find(
+  //        (user) => user.id === listData.user_id,
+  //      );
+  //      if (friend) {
+  //        list = friend.lists.find((list) => list.id === listData.id);
+  //      }
+  //    }
+
+  //    if (list) {
+  //      console.log('check for update');
+  //      needsUpdate =
+  //        list.items.find((e) => Object.keys(e).length === 2) !== undefined;
+  //    }
+
+  //    if (needsUpdate) {
+  //      console.log(list);
+  //      console.log('needs update');
+  //      addListToState();
+  //    } else {
+  //      console.log('no update');
+  //      setDisplayList(list);
+  //      setIsLoading(false);
+  //    }
+  //  };
+
+  //  checkState();
+  //}, [userState, friendsState, listData]);
+
   const handleConfirmDelete = (itemIds, cb) => {
     console.log(itemIds);
+    setIsLoading(true);
     Promise.all(
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        })
-      )
+        }),
+      ),
     )
       .then((res) => {
         for (let result of res) {
@@ -83,6 +153,7 @@ const ListWrapper = ({
           deletedIds: confirmedIds,
           listId: displayList.id,
         });
+        setIsLoading(false);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -90,7 +161,7 @@ const ListWrapper = ({
       });
   };
 
-  if (error) {
+  if (hasError) {
     return (
       <VStack safeArea>
         <Center mt="4">
@@ -100,19 +171,21 @@ const ListWrapper = ({
     );
   }
 
-  if (list) {
+  if (data) {
     return (
       <List
         navigation={navigation}
         isUser={isUser}
         userData={userData}
-        userState={userState}
-        list={list}
+        list={data.list[0]}
         handleConfirmDelete={handleConfirmDelete}
         editListTitle={editListTitle}
-        editListDateEvent={editListDateEvent}
       />
     );
+  }
+
+  if (loading) {
+    return <LoadingScreen isLoading={true} />;
   }
 
   return (
@@ -130,51 +203,44 @@ const List = ({
   isUser,
   handleConfirmDelete,
   userData,
-  userState,
   editListTitle,
-  editListDateEvent,
 }) => {
-  const title = useField("text", list.title);
-
-  const [enableSearch, setEnableSearch] = useState(false);
-  const searchInput = useField("text");
-
   const [selectItem, setSelectItem] = useState(null);
+  const [showNewModal, setShowNewModal] = useState(false);
 
   const [enableDelete, setEnableDelete] = useState(false);
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
+  const title = useField('text', list.title);
 
-  const [date, setDate] = useState(
-    list.date_event ? new Date(list.date_event) : null
-  );
+  const handleSelectDelete = (itemId) => {
+    console.log(itemId);
+    setSelectDelete((prev) => {
+      if (prev.has(itemId)) {
+        prev.delete(itemId);
+      } else {
+        prev.add(itemId);
+        console.log(prev);
+      }
+      return prev;
+    });
+  };
 
   /** OTHER USER functions **/
   const handlePurchaseItem = (itemId, cb) => {
     fetchGraphQL(MARK_ITEM_FOR_PURCHASE, {
       item_id: itemId,
-      user_id: userState.id,
+      list_id: list.id,
+      user_id: userData.id,
     })
       .then((res) => {
+        console.log(res);
         if (res.errors) {
           console.warn(res.errors);
         }
         cb();
       })
-      .catch((err) => console.warn(err));
-  };
-
-  const handleCancelPurchase = (itemId, cb) => {
-    fetchGraphQL(CANCEL_ITEM_FOR_PURCHASE, {
-      item_id: itemId,
-    })
-      .then((res) => {
-        if (res.errors) {
-          console.warn(res.errors);
-        }
-        cb();
-      })
-      .catch((err) => console.warn(err));
+      .catch((err) => console.log(err));
   };
 
   /** LIST OWNER functions **/
@@ -215,67 +281,7 @@ const List = ({
       .catch((err) => console.log(err));
   };
 
-  const onDateChange = (selectedDate) => {
-    setDate(selectedDate);
-    editListDateEvent(list.id, selectedDate.toISOString());
-    fetchGraphQL(UPDATE_LIST_DATE_EVENT, {
-      list_id: list.id,
-      date_event: selectedDate.toISOString(),
-    })
-      .then((fetchRes) => {
-        if (fetchRes.errors || !fetchRes.data.update_list.returning[0]) {
-          console.log(fetchRes.errors);
-        } else {
-          editListDateEvent(
-            list.id,
-            fetchRes.data.update_list.returning[0].date_event
-          );
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const listFilter =
-    enableSearch && searchInput.value !== ""
-      ? list.items.filter((item) =>
-          item.name.toLowerCase().includes(searchInput.value.toLowerCase())
-        )
-      : list.items;
-
-  const handleSelectDelete = (itemId) => {
-    console.log(itemId);
-    setSelectDelete((prev) => {
-      if (prev.has(itemId)) {
-        prev.delete(itemId);
-      } else {
-        prev.add(itemId);
-      }
-      return prev;
-    });
-  };
-
-  const handleEnableSearch = () => {
-    setEnableSearch((prev) => !prev);
-  };
-
-  if (list.title.includes("Christmas")) {
-    console.log("!list", list);
-  }
-
-  const handleLoadAccount = () => {
-    console.log("handleLoadAccount");
-    // navigation.navigate("FriendAccount", {
-    //   userId: userData.id,
-    // });
-    if (isUser) {
-      navigation.navigate("Account");
-    } else {
-      navigation.navigate("Friends", {
-        screen: "FriendAccount",
-        params: { userId: userData.id },
-      });
-    }
-  };
+  const handleSettingsToggle = () => {};
 
   return (
     <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
@@ -288,20 +294,16 @@ const List = ({
           </Pressable>
         </Box>
         <Box flex="1">
-          <Pressable onPress={handleLoadAccount}>
-            <Avatar
-              key={userData.profile_pic_url}
-              bg="#FAA"
-              source={{
-                uri:
-                  userData.profile_pic_url ||
-                  "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
-              }}
-            />
-          </Pressable>
+          <Avatar
+            source={{
+              uri:
+                userData.profile_pic_url ||
+                'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+            }}
+          />
         </Box>
         <VStack flex="5" justifyContent="center">
-          <Text fontSize="xs">{isUser ? "You" : userData.username}</Text>
+          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
           {isUser ? (
             <Flex h="12">
               <Input
@@ -309,7 +311,6 @@ const List = ({
                 borderColor="#ffffff00"
                 placeholder="list title"
                 fontSize="2xl"
-                ml="-2"
                 onEndEditing={handleTitleSet}
                 h="50"
                 {...title}
@@ -318,12 +319,6 @@ const List = ({
           ) : (
             <Text fontSize="2xl">{list.title}</Text>
           )}
-          <DateInput
-            date={date}
-            isUser={isUser}
-            onDateChange={onDateChange}
-            placeholder="Event date"
-          />
         </VStack>
       </HStack>
 
@@ -335,14 +330,14 @@ const List = ({
           flex="1"
           p="2"
         >
-          <ShareButton
-            message={`https://give-space-website.vercel.app/list/${list.id}`}
-          />
+          {/* <HStack flex="2" space="2">
+            <Icon as={<Feather name="share-2" />} size="sm" />
+            <Text>Share</Text>
+          </HStack> */}
 
           <HStack flex="3">
-            <HStack ml="auto" space="4" alignItems="center">
-              {enableSearch && <Input h="8" ml="4" {...searchInput} />}
-              <Pressable onPress={handleEnableSearch}>
+            <HStack ml="auto" space="4">
+              <Pressable onPress={() => {}}>
                 <Icon as={<Feather name="search" />} size="sm" />
               </Pressable>
               {isUser && (
@@ -377,7 +372,7 @@ const List = ({
       <VStack flex="8">
         <ScrollView>
           <HStack flexWrap="wrap" justifyContent="space-between">
-            {listFilter.map((item) => (
+            {list.items.map((item) => (
               <Flex onPress={handleCardPress} key={item.id} w="48%">
                 {enableDelete ? (
                   <ItemCard
@@ -406,9 +401,7 @@ const List = ({
           onClose={handleClearSelect}
           item={list.items.find((e) => e.id === selectItem)}
           isUser={isUser}
-          userState={userState}
           handlePurchaseItem={handlePurchaseItem}
-          handleCancelPurchase={handleCancelPurchase}
         />
       )}
       {enableDelete && <Fab onPress={openDeleteModal} iconName="trash" />}
@@ -455,8 +448,6 @@ const mapDispatchToProps = (dispatch) => ({
   populateListUser: (list) => dispatch(populateListUser(list)),
   removeItems: (data) => dispatch(removeItems(data)),
   editListTitle: (id, title) => dispatch(editListTitle(id, title)),
-  editListDateEvent: (id, dateEvent) =>
-    dispatch(editListDateEvent(id, dateEvent)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListWrapper);

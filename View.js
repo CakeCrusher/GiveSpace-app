@@ -15,6 +15,9 @@ import { GET_FRIEND_RELS, SIGN_IN_USER_BY_USERNAME } from './utils/schemas';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import Welcome from './screens/Login/Welcome';
 
+import { useSubscription } from '@apollo/client';
+import { SUBSCRIBE_LIST } from './utils/schemas';
+
 const Tab = createBottomTabNavigator();
 
 const View = ({
@@ -51,7 +54,10 @@ const View = ({
     const fetchRes = await fetchGraphQL(GET_FRIEND_RELS, {
       user_id: userState.id,
     });
-    console.log('!fetchRes', fetchRes.data.friend_rel.filter((f) => f.type === 'pending_first'));
+    //console.log(
+    //  '!fetchRes',
+    //  fetchRes.data.friend_rel.filter((f) => f.type === 'pending_first'),
+    //);
     const friends = fetchRes.data.friend_rel;
     reloadFriends(friends);
   };

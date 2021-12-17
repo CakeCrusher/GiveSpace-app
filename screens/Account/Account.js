@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Svg, Path } from 'react-native-svg';
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { Svg, Path } from "react-native-svg";
 
 import {
   Text,
@@ -18,20 +18,22 @@ import {
   Icon,
   Popover,
   Modal,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
 
-import { ListPreview, LoadingScreen, PopoverIcon } from '../../components';
-import { BirthdaySvg, LocationSvg } from '../../resources';
+import { ListPreview, LoadingScreen, PopoverIcon } from "../../components";
+import { BirthdaySvg, LocationSvg } from "../../resources";
+import { TouchableOpacity, Clipboard } from "react-native";
 
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
 import {
   DELETE_USER,
   SIGN_IN_USER_BY_ID,
   UPDATE_USER_ADDRESS,
-} from '../../utils/schemas';
-import { editAddress, logout } from '../../redux/actions/user';
-import Flare from '../../components/Flare';
+} from "../../utils/schemas";
+import { editAddress, logout } from "../../redux/actions/user";
+import Flare from "../../components/Flare";
+import GalleryButton from "../../components/GalleryButton";
 
 const AccountWrapper = ({
   route,
@@ -145,11 +147,11 @@ const Account = ({
   editAddress,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const address = useField('text', user.address);
+  const address = useField("text", user.address);
 
   const handleLoadList = (listData, userData) => {
-    navigation.navigate('Home', {
-      screen: 'List',
+    navigation.navigate("Home", {
+      screen: "List",
       params: {
         listData,
         userData,
@@ -197,12 +199,18 @@ const Account = ({
 
   const handleNavigation = () => {
     if (isUser) {
-      navigation.navigate('My Lists');
+      navigation.navigate("My Lists");
     } else {
-      navigation.navigate('Friends', {
-        screen: 'FriendsLists',
+      navigation.navigate("Friends", {
+        screen: "FriendsLists",
         params: { userId: user.id },
       });
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (!isUser && address.value) {
+      Clipboard.setString(address.value);
     }
   };
 
@@ -226,18 +234,22 @@ const Account = ({
         </HStack>
 
         <HStack alignItems="center" space="4">
+          {console.log("!user.profile_pic_url", user.profile_pic_url)}
           <Box flex="2">
-            <Avatar
-              bg="#FAA"
-              size="xl"
-              source={{
-                uri:
-                  user.profile_pic_url ||
-                  'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
-              }}
-            >
-              EX
-            </Avatar>
+            {isUser ? (
+              <GalleryButton />
+            ) : (
+              <Avatar
+                bg="#FAA"
+                size="xl"
+                key={user.profile_pic_url}
+                source={{
+                  uri: user.profile_pic_url,
+                }}
+              >
+                EX
+              </Avatar>
+            )}
           </Box>
           <VStack flex="5" ml="auto">
             <Text fontSize="3xl">{user && user.username}</Text>
@@ -251,30 +263,37 @@ const Account = ({
           </VStack>
         </HStack>
 
-        <HStack space="4" mt="4">
-          <HStack space="1" alignItems="center">
-            <LocationSvg />
-            {isUser ? (
-              <Flex h="9">
-                <Input
-                  backgroundColor="#ffffff00"
-                  borderColor="#ffffff00"
-                  placeholder="delivery address"
-                  fontSize="sm"
-                  onEndEditing={handleAddressSet}
-                  h="10"
-                  {...address}
-                />
-              </Flex>
-            ) : (
-              <Text fontSize="sm">{user.address || '(no address)'}</Text>
-            )}
+        <TouchableOpacity onPress={copyToClipboard}>
+          <HStack space="4" mt="4">
+            <HStack space="1" alignItems="center">
+              <LocationSvg />
+              {isUser ? (
+                <Flex h="9">
+                  <Input
+                    backgroundColor="#ffffff00"
+                    borderColor="#ffffff00"
+                    placeholder="delivery address"
+                    fontSize="sm"
+                    onEndEditing={handleAddressSet}
+                    h="10"
+                    {...address}
+                  />
+                </Flex>
+              ) : (
+                <Text fontSize="sm">
+                  {user.address || "(no delivery address)"}
+                </Text>
+              )}
+              {user.address && !isUser ? (
+                <Icon opacity={0.7} as={<Feather name="copy" />} size="xs" />
+              ) : null}
+            </HStack>
           </HStack>
-        </HStack>
+        </TouchableOpacity>
 
         <VStack flex="5" space="2">
           <Text fontSize="2xl">
-            {isUser ? 'My' : user.username + "'s"} Lists
+            {isUser ? "My" : user.username + "'s"} Lists
           </Text>
           {lists ? (
             <>

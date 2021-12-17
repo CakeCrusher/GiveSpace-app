@@ -1,3 +1,52 @@
+const list_vital = (items) => {
+  result = items
+    ? `
+      id
+      user_id
+      title
+      items {
+        ${items}
+      }
+    `
+    : `
+      id
+      user_id
+      title
+    `;
+  return result;
+};
+
+const list_dates = `
+date_created
+date_modified
+date_event
+`;
+
+const items_preview = `
+id
+name
+`;
+
+const items_full = `
+${items_preview}
+status
+date_created
+name
+item_url
+image_url
+price
+`;
+
+import gql from 'graphql-tag';
+export const SUBSCRIBE_LIST = gql`
+  subscription getItems($list_id: uuid = "") {
+    list(where: { id: { _eq: $list_id } }) {
+      ${list_dates}
+      ${list_vital(items_full)}
+    }
+  }
+`;
+
 export const CREATE_USER = `
 mutation MyMutation($password: String = "", $phone_number: String = "", $username: String = "") {
   insert_user(objects: {password: $password, username: $username, phone_number: $phone_number}) {
@@ -21,14 +70,8 @@ address
 profile_pic_url
 birthday
 lists(order_by: {date_modified: desc}) {
-  id
-  user_id
-  date_modified
-  title
-  items {
-    id
-    name
-  }
+  ${list_dates}
+  ${list_vital(items_preview)}
 }
 friend_rels {
   user {
@@ -36,14 +79,8 @@ friend_rels {
     username
     profile_pic_url
     lists(order_by: {date_modified: desc}) {
-      id
-      user_id
-      title
-      date_modified
-      items {
-        id
-        name
-      }
+      ${list_dates}
+      ${list_vital(items_preview)}
     }
   }
   userByUserSecondId {
@@ -51,14 +88,8 @@ friend_rels {
     username
     profile_pic_url
     lists(order_by: {date_modified: desc}) {
-      id
-      user_id
-      title
-      date_modified
-      items {
-        id
-        name
-      }
+      ${list_dates}
+      ${list_vital(items_preview)}
     }
   }
   type
@@ -105,12 +136,11 @@ export const UPDATE_LIST_TITLE = `
 mutation MyMutation($list_id: uuid = "", $title: String = "") {
   update_list(where: {id: {_eq: $list_id}}, _set: {title: $title}) {
     returning {
-      title
-      id
+    ${list_vital(null)}
     }
   }
 }
-`
+`;
 // {
 //   "list_id": "b6450dfd-d0f0-4799-9449-13c3f8b74a9e",
 //   "title": "wishlist"
@@ -125,7 +155,7 @@ mutation MyMutation($user_id: uuid = "", $address: String = "") {
     }
   }
 }
-`
+`;
 // {
 //   "user_id": "676b788a-8350-488b-8e49-08c6c40b5c78",
 //   "address": "wishlist"
@@ -163,20 +193,14 @@ query MyQuery($user_id: uuid = "") {
       username
       profile_pic_url
       lists(order_by: {date_modified: desc}) {
-        id
-        user_id
-        title
-        date_modified
-        items {
-          id
-          name
-        }
+        ${list_dates}
+        ${list_vital(items_preview)}
       }
     }
     type
   }
 }
-`
+`;
 // {
 //   "user_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
 // }
@@ -217,16 +241,8 @@ export const CREATE_LIST = `
 mutation MyMutation($user_id: uuid = "") {
   insert_list(objects: {user_id: $user_id}) {
     returning {
-      id
-      user_id
-      title
-      date_modified
-      items {
-        name
-        item_url
-        image_url
-        price
-      }
+      ${list_dates}
+      ${list_vital(items_preview)}
     }
   }
 }
@@ -240,18 +256,8 @@ mutation MyMutation($user_id: uuid = "") {
 export const GET_LIST = `
 query MyQuery($list_id: uuid = "") {
   list(where: {id: {_eq: $list_id}}) {
-    title
-    date_modified
-    id
-    user_id
-    items {
-      image_url
-      item_url
-      name
-      price
-      date_created
-      id
-    }
+    ${list_dates}
+    ${list_vital(items_full)}
   }
 }
 `;
@@ -263,12 +269,7 @@ export const SCRAPE_ITEM = `
 mutation MyMutation($item_name: String = "", $list_id: String = "") {
   scrape_item(item_name: $item_name, list_id: $list_id) {
     itemIdToItem {
-      image_url
-      item_url
-      name
-      price
-      date_created
-      id
+      ${items_full}
     }
   }
 }
@@ -301,8 +302,7 @@ query MyQuery($user_id: uuid = "") {
     }
   }
 }
-`
-
+`;
 
 export const SEARCH_FOR_USERS = `
 query MyQuery($search: String = "") {
@@ -325,7 +325,7 @@ mutation MyMutation($item_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "item_id": "d6b2f6c2-0b2e-43a7-9fc3-df7879ff336e"
 // }
@@ -338,7 +338,7 @@ mutation MyMutation($list_id: uuid = "", $_eq: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "list_id": "ec8e03f0-754c-4b2e-b367-236ef1916b13"
 // }
@@ -351,7 +351,7 @@ mutation MyMutation($user_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "user_id": "535d6804-b9a6-43cb-b9fa-76192292193c"
 // }
@@ -364,7 +364,7 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
     }
   }
 }
-`
+`;
 // {
 //   "user_first_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693",
 //   "user_second_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b"
@@ -379,22 +379,71 @@ mutation MyMutation($user_first_id: uuid = "", $user_second_id: uuid = "") {
         username
         profile_pic_url
         lists(order_by: {date_modified: desc}) {
-          id
-          user_id
-          title
-          date_modified
-          items {
-            id
-            name
-          }
+          ${list_dates}
+          ${list_vital(items_preview)}
         }
       }
     }
   }
 }
 
-`
+`;
 // {
 //   "user_first_id": "6539bd82-b610-4049-a03b-6898a5cd1d8b",
 //   "user_second_id": "7c55600d-e5f1-48f3-83d6-3c16ec918693"
+// }
+
+export const MARK_ITEM_FOR_PURCHASE = `
+mutation MyMutation($item_id: uuid = "", $user_id: uuid = "") {
+  update_item(where: {id: {_eq: $item_id}}, _set: {status: $user_id}) {
+    returning {
+      id
+    }
+  }
+}
+`;
+
+export const CANCEL_ITEM_FOR_PURCHASE = `
+mutation MyMutation($item_id: uuid = "") {
+  update_item(where: {id: {_eq: $item_id}}, _set: {status: null}) {
+    returning {
+      id
+    }
+  }
+}
+`;
+
+export const UPDATE_USER_IMAGE = `
+mutation MyMutation($image_base64: String = "", $image_type: String = "", $old_image_url: String = "", $user_id: String = "") {
+  update_user_image(image_base64: $image_base64, image_type: $image_type, old_image_url: $old_image_url, user_id: $user_id) {
+    updateUserImageUserIdToUser {
+      id
+      profile_pic_url
+
+    }
+  }
+}
+`;
+
+// {
+//   "image_type": "jpeg",
+//   "user_id": "cec88518-0a56-4c92-b7ab-97d3b01ad2d9",
+//   "old_image_url": "https://storage.cloud.google.com/givespace-pictures/faa86d2a-339b-46be-a4b4-99a2558b26ec.jpeg",
+//   "image_base64": "..."
+// }
+
+export const UPDATE_LIST_DATE_EVENT = `
+mutation MyMutation($list_id: uuid = "", $date_event: timestamptz = "") {
+  update_list(where: {id: {_eq: $list_id}}, _set: {date_event: $date_event}) {
+    returning {
+      title
+      id
+      date_event
+    }
+  }
+}
+`;
+// {
+//   "list_id": "d89c7a9c-4bd0-4a75-8191-caf1ef0bba38",
+//   "date_event": "2021-12-16T17:35:35.123Z"
 // }
