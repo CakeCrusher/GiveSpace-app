@@ -2,13 +2,9 @@
   "expo": {
     "name": "GiveSpace",
     "slug": "givespace",
-    "version": "2.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "permissions": [
-      "CONTACTS"
-    ],
+    "version": "2.1.0",
+    "assetBundlePatterns": ["**/*"],
+    "permissions": ["CONTACTS"],
     "plugins": [
       "expo-contacts",
       "expo-screen-orientation",
