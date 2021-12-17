@@ -2,7 +2,7 @@
   "expo": {
     "name": "GiveSpace",
     "slug": "givespace",
-    "version": "2.1.0",
+    "version": "1.1.0",
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       "expo-contacts",
