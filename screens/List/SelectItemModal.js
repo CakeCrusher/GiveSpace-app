@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Linking } from 'react-native';
 import { Modal, Text, Image, Flex, VStack, Button } from 'native-base';
 
 const SelectItemModal = ({
@@ -26,9 +27,14 @@ const SelectItemModal = ({
   const handleAmazonLink = () => {
     onClose();
     const formatted = item.name.split(' ').join('+');
-    navigation.navigate('WebView', {
-      uri: `https://www.amazon.com/s?k=${formatted}`,
-    });
+    Linking.openURL(
+      `com.amazon.mobile.shopping.web://amazon.com/s?k=${formatted}`,
+    );
+    // TODO: Should see if there's a way to have the browser act as a fallback
+    //const formatted = item.name.split(' ').join('+');
+    //navigation.navigate('WebView', {
+    //  uri: `https://www.amazon.com/s?k=${formatted}`,
+    //});
   };
 
   const handleWalmartLink = () => {

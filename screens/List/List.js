@@ -62,7 +62,6 @@ const ListWrapper = ({
 
   const handleConfirmDelete = (itemIds, cb) => {
     console.log(itemIds);
-    setIsLoading(true);
     Promise.all(
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
@@ -84,7 +83,6 @@ const ListWrapper = ({
           deletedIds: confirmedIds,
           listId: displayList.id,
         });
-        setIsLoading(false);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -155,11 +153,9 @@ const List = ({
   const handlePurchaseItem = (itemId, cb) => {
     fetchGraphQL(MARK_ITEM_FOR_PURCHASE, {
       item_id: itemId,
-      list_id: list.id,
       user_id: userState.id,
     })
       .then((res) => {
-        console.log(res);
         if (res.errors) {
           console.warn(res.errors);
         }
@@ -171,11 +167,8 @@ const List = ({
   const handleCancelPurchase = (itemId, cb) => {
     fetchGraphQL(CANCEL_ITEM_FOR_PURCHASE, {
       item_id: itemId,
-      list_id: list.id,
     })
       .then((res) => {
-        console.log('RES');
-        console.log(res);
         if (res.errors) {
           console.warn(res.errors);
         }
