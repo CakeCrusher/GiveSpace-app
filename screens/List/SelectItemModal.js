@@ -51,16 +51,18 @@ const SelectItemModal = ({
   const handleWalmartLink = () => {
     onClose();
     const formatted = item.name.split(' ').join('+');
-    navigation.navigate('WebView', {
-      uri: `https://www.walmart.com/search?q=${formatted}`,
-    });
+    Linking.openURL(`walmart://search?q=${formatted}`);
+    //navigation.navigate('WebView', {
+    //  uri: `https://www.walmart.com/search?q=${formatted}`,
+    //});
   };
   const handleTargetLink = () => {
     onClose();
     const formatted = item.name.split(' ').join('+');
-    navigation.navigate('WebView', {
-      uri: `https://www.target.com/s?searchTerm=${formatted}`,
-    });
+    Linking.openURL(`target://ui.target.com`);
+    //navigation.navigate('WebView', {
+    //  uri: `https://www.target.com/s?searchTerm=${formatted}`,
+    //});
   };
 
   const copyAmazonLink = () => {
