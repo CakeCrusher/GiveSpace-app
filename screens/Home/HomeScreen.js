@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Text, Button, HStack, VStack, Box, ScrollView } from 'native-base';
+import { Text, Button, HStack, VStack, ScrollView } from 'native-base';
 
-import { ListPreview, ActivityCard, InnerTitle } from '../../components';
+import { ListPreview, InnerTitle } from '../../components';
 
-import Flare from '../../components/Flare';
+import { Flare } from '../../components';
 import Feed from './Feed';
 
 const HomeScreen = ({ userState, friendsState, navigation }) => {

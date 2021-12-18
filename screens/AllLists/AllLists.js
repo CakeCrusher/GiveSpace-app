@@ -17,12 +17,17 @@ import {
 import { connect } from "react-redux";
 import { Feather } from "@expo/vector-icons";
 
-import { ListPreview, LoadingScreen, Fab, PopoverIcon } from "../../components";
+import {
+  ListPreview,
+  LoadingScreen,
+  Fab,
+  Flare,
+  PopoverIcon,
+} from "../../components";
 
 import { addList, removeLists } from "../../redux/actions/user";
 import { fetchGraphQL } from "../../utils/helperFunctions";
 import { CREATE_LIST, DELETE_LIST } from "../../utils/schemas";
-import Flare from "../../components/Flare";
 
 const AllListsWrapper = ({
   route,

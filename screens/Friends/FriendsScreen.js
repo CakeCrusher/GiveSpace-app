@@ -22,7 +22,7 @@ import AddFriendModal from "./AddFriendModal";
 import { GET_FRIENDS, GET_FRIEND_RELS } from "../../utils/schemas";
 
 import { reloadFriends } from "../../redux/actions/friends";
-import Flare from "../../components/Flare";
+import { Flare } from "../../components";
 
 const FriendsScreen = ({
   navigation,

@@ -1,11 +1,8 @@
 import React from 'react';
-import { Button, Icon, View } from 'native-base';
-import { Feather } from '@expo/vector-icons';
-import { Flare1, Flare2 } from '../resources';
+import { View } from 'native-base';
+import { Flare1, Flare2 } from '../../resources';
 
 const Flare = () => {
-  const random = Math.random();
-
   if (true) {
     return (
       <View
@@ -19,7 +16,7 @@ const Flare = () => {
         left="-25"
         zIndex="99"
       >
-        <Flare1/>
+        <Flare1 />
       </View>
     );
   } else {
@@ -34,11 +31,10 @@ const Flare = () => {
         left="0"
         zIndex="99"
       >
-        <Flare2/>
+        <Flare2 />
       </View>
     );
   }
-
 };
 
 export default Flare;

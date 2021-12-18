@@ -1,8 +1,8 @@
-import React from "react";
-import { Text, Button, HStack, VStack, Box, ScrollView } from "native-base";
+import React from 'react';
+import { VStack, Box } from 'native-base';
 
-import { ListPreview, ActivityCard, InnerTitle } from "../../components";
-import { connect } from "react-redux";
+import { ActivityCard } from '../../components';
+import { connect } from 'react-redux';
 
 const Feed = ({ friendsState, handleLoadList }) => {
   const now = new Date();
@@ -28,37 +28,37 @@ const Feed = ({ friendsState, handleLoadList }) => {
     if (nowToEvent > 0 && nowToEventDays <= 7) {
       // Event
       const score = 7 / nowToEventDays;
-      console.log("!Event", friendObj.username, nowToEvent);
+      console.log('!Event', friendObj.username, nowToEvent);
 
-      return { label: "event", score };
+      return { label: 'event', score };
     } else if (difCreatedToUpdatedDays > 1) {
       // Update
       if (nowToModifiedDays < 0.5) {
         const score = 12 / nowToModifiedHours;
-        console.log("!update", nowToModifiedHours);
+        console.log('!update', nowToModifiedHours);
 
-        return { label: "update", score };
+        return { label: 'update', score };
       } else {
         const score = 2 / nowToModifiedDays;
 
-        return { label: "update", score };
+        return { label: 'update', score };
       }
     } else if (difCreatedToUpdatedDays <= 1) {
       // Create
       if (nowToCreatedDays < 0.5) {
         const score = 3;
 
-        return { label: "create", score };
+        return { label: 'create', score };
       } else {
         const score = 1 / nowToCreatedDays;
 
-        return { label: "create", score };
+        return { label: 'create', score };
       }
     }
   };
 
   const friendsWithLists = friendsState.list.filter(
-    (friend) => friend.lists.length > 0
+    (friend) => friend.lists.length > 0,
   );
 
   const friendLists = [];
@@ -84,12 +84,12 @@ const Feed = ({ friendsState, handleLoadList }) => {
     return b.score - a.score;
   });
   console.log(
-    "!sortedFriendLists",
+    '!sortedFriendLists',
     sortedFriendLists.map((fl) => ({
       username: fl.username,
       score: fl.score,
       title: fl.list.title,
-    }))
+    })),
   );
 
   const orderedLists = [];
