@@ -7,23 +7,32 @@ import {
   Pressable,
   Input,
   Modal,
+  Center,
   Box,
   Flex,
   HStack,
   VStack,
   ScrollView,
 } from 'native-base';
+import { Feather } from '@expo/vector-icons';
 
 import {
   ItemInput,
   ItemCard,
   Flare,
+  ScreenContainer,
   DateInput,
   ShareButton,
   PopoverIcon,
+  Fab,
 } from '../../components';
-import { useField } from '../../utils/helperFunctions';
-import { Feather } from '@expo/vector-icons';
+import { useField, fetchGraphQL } from '../../utils/helperFunctions';
+import {
+  UPDATE_LIST_TITLE,
+  MARK_ITEM_FOR_PURCHASE,
+  CANCEL_ITEM_FOR_PURCHASE,
+  UPDATE_LIST_DATE_EVENT,
+} from '../../utils/schemas';
 
 import SelectItemModal from './SelectItemModal';
 
@@ -181,16 +190,15 @@ const ListDisplay = ({
   };
 
   return (
-    <VStack flex="1" maxW="100%" p="4" space="2" safeArea>
-      <Flare />
+    <ScreenContainer>
       {/* Nav, ListTitle, Username*/}
-      <HStack mt={8} flex="1" alignItems="center" mx="-2">
+      <HStack flex="3" alignItems="center" mx="-2">
         <Box flex="1">
           <Pressable onPress={() => navigation.goBack()}>
             <Icon as={<Feather name="chevron-left" />} size="xl" />
           </Pressable>
         </Box>
-        <Box flex="1">
+        <Center flex="1">
           <Pressable onPress={handleLoadAccount}>
             <Avatar
               key={userData.profile_pic_url}
@@ -202,11 +210,11 @@ const ListDisplay = ({
               }}
             />
           </Pressable>
-        </Box>
-        <VStack flex="5" justifyContent="center">
+        </Center>
+        <VStack flex="5" pl="4" justifyContent="center">
           <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
           {isUser ? (
-            <Flex h="12">
+            <Flex h="10">
               <Input
                 backgroundColor="#ffffff00"
                 borderColor="#ffffff00"
@@ -214,7 +222,6 @@ const ListDisplay = ({
                 fontSize="2xl"
                 ml="-2"
                 onEndEditing={handleTitleSet}
-                h="50"
                 {...title}
               />
             </Flex>
@@ -231,7 +238,7 @@ const ListDisplay = ({
       </HStack>
 
       {/* Share, Search, Options*/}
-      <VStack flex="1">
+      <VStack flex="2">
         <HStack
           alignItems="center"
           justifyContent="space-between"
@@ -272,12 +279,12 @@ const ListDisplay = ({
 
       {/* Add Item, Item Modal, Display Items*/}
       {isUser && (
-        <VStack flex="1">
+        <VStack flex="2">
           <ItemInput listId={list.id} />
         </VStack>
       )}
 
-      <VStack flex="8">
+      <VStack flex="16">
         <ScrollView>
           <HStack flexWrap="wrap" justifyContent="space-between">
             {listFilter.map((item) => (
@@ -344,7 +351,7 @@ const ListDisplay = ({
           </Modal.Body>
         </Modal.Content>
       </Modal>
-    </VStack>
+    </ScreenContainer>
   );
 };
 

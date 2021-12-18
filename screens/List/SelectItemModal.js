@@ -13,7 +13,6 @@ import {
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 
-
 const SelectItemModal = ({
   navigation,
   isOpen,
@@ -25,6 +24,7 @@ const SelectItemModal = ({
   item,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  console.log(item.image_url);
 
   const handlePurchase = () => {
     setIsLoading(true);
@@ -38,7 +38,7 @@ const SelectItemModal = ({
 
   const handleAmazonLink = () => {
     onClose();
-    const formatted = item.name.split(" ").join("+");
+    const formatted = item.name.split(' ').join('+');
     Linking.openURL(`https://www.amazon.com/s?k=${formatted}&ref=nb_sb_noss_2`);
     //navigation.navigate('WebView', {
     //  uri: `https://www.amazon.com/s?k=${formatted}`,
@@ -47,13 +47,13 @@ const SelectItemModal = ({
 
   const handleWalmartLink = () => {
     onClose();
-    const formatted = item.name.split(" ").join("+");
+    const formatted = item.name.split(' ').join('+');
     Linking.openURL(`https://www.walmart.com/search?q=${formatted}`);
   };
-  
+
   const handleTargetLink = () => {
     onClose();
-    const formatted = item.name.split(" ").join("+");
+    const formatted = item.name.split(' ').join('+');
     Linking.openURL(`https://www.target.com/s?searchTerm=${formatted}`);
   };
 
@@ -80,12 +80,17 @@ const SelectItemModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <Modal.Content w="100%">
+      <Modal.Content w="90%">
         <Modal.CloseButton />
-        <Modal.Body px="8" py="4" w="100%">
+        <Modal.Body px="8" py="4">
           {/* Image */}
           <Flex flex="3" alignItems="center">
-            <Image size="48" src={item.image_url} alt={item.name} />
+            <Image
+              size="48"
+              src={item.image_url}
+              alt={item.name}
+              resizeMode="contain"
+            />
           </Flex>
 
           {/* Name, Price, Mark Button*/}
@@ -93,18 +98,18 @@ const SelectItemModal = ({
             <Text fontSize="xl" fontWeight="bold">
               {item.name}
             </Text>
-            <Text fontSize="md">{"$" + item.price}</Text>
+            <Text fontSize="md">{'$' + item.price}</Text>
             {!isUser &&
               (!item.status ? (
                 <Button
                   onPress={handlePurchase}
                   mr="auto"
                   isLoading={isLoading}
-                  colorScheme={"primary"}
+                  colorScheme={'primary'}
                 >
                   {item.status === userState.id
-                    ? "Cancel"
-                    : "Mark for Purchase"}
+                    ? 'Cancel'
+                    : 'Mark for Purchase'}
                 </Button>
               ) : (
                 <Button
@@ -112,11 +117,11 @@ const SelectItemModal = ({
                   mr="auto"
                   isLoading={isLoading}
                   colorScheme={
-                    item.status !== userState.id ? "gray" : "primary"
+                    item.status !== userState.id ? 'gray' : 'primary'
                   }
                   disabled={item.status !== userState.id}
                 >
-                  {item.status === userState.id ? "Cancel" : "Reserved"}
+                  {item.status === userState.id ? 'Cancel' : 'Reserved'}
                 </Button>
               ))}
           </Flex>

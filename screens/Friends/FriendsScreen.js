@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import {
   VStack,
   HStack,
   Box,
+  Center,
   SlideFade,
   Icon,
   Input,
   Text,
   Flex,
-  Pressable,
   Button,
   ScrollView,
-} from "native-base";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
-import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+} from 'native-base';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
+import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 
-import { Fab } from "../../components";
-import DisplayFriendRow from "./DisplayFriendRow";
-import AddFriendModal from "./AddFriendModal";
-import { GET_FRIENDS, GET_FRIEND_RELS } from "../../utils/schemas";
+import { Fab, ScreenContainer } from '../../components';
+import DisplayFriendRow from './DisplayFriendRow';
+import AddFriendModal from './AddFriendModal';
+import { GET_FRIEND_RELS } from '../../utils/schemas';
 
-import { reloadFriends } from "../../redux/actions/friends";
-import { Flare } from "../../components";
+import { reloadFriends } from '../../redux/actions/friends';
 
 const FriendsScreen = ({
   navigation,
@@ -33,11 +32,7 @@ const FriendsScreen = ({
   const [showSearch, setShowSearch] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const search = useField("text", "");
-
-  const handleSearchToggle = () => {
-    setShowSearch((e) => !e);
-  };
+  const search = useField('text', '');
 
   const handleRefresh = () => {
     setIsLoading(true);
@@ -53,32 +48,32 @@ const FriendsScreen = ({
   const handleSettingsToggle = () => {};
 
   return (
-    <VStack space="4" p="4" flex="15" safeArea>
-      <Flare />
+    <ScreenContainer>
       <ScrollView>
-        <HStack flex="1" justifyContent="space-between">
-          <Flex flex="5">
+        <HStack flex="1" alignContent="center" justifyContent="space-between">
+          <Box flex="5">
             <Text fontSize="3xl">Friends</Text>
-          </Flex>
+          </Box>
 
-          <HStack
-            alignContent="center"
-            justifyContent="space-between"
-            flex="1"
-            p="2"
-          >
-            <Button onPress={handleRefresh} m="auto" isLoading={isLoading}>
+          <Center justifyContent="space-between" flex="1" p="2">
+            <Button
+              onPress={handleRefresh}
+              m="auto"
+              h="10"
+              w="12"
+              isLoading={isLoading}
+            >
               <Icon
                 as={<Feather name="refresh-ccw" />}
                 size="sm"
                 color="white"
               />
             </Button>
-          </HStack>
+          </Center>
         </HStack>
 
         <SlideFade in={showSearch}>
-          <Box h={showSearch ? "8" : "0"} px={showSearch ? "4" : "0"}>
+          <Box h={showSearch ? '8' : '0'} px={showSearch ? '4' : '0'}>
             {showSearch && <Input {...search} placeholder="search" />}
           </Box>
         </SlideFade>
@@ -134,7 +129,7 @@ const FriendsScreen = ({
       </ScrollView>
       <AddFriendModal isOpen={isAdding} onClose={() => setIsAdding(false)} />
       <Fab iconName="user-plus" onPress={() => setIsAdding(true)} />
-    </VStack>
+    </ScreenContainer>
   );
 };
 

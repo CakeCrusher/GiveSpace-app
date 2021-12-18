@@ -51,7 +51,7 @@ const ListWrapper = ({
           .map((e) => e.data.delete_item.returning[0].id);
         removeItems({
           deletedIds: confirmedIds,
-          listId: displayList.id,
+          listId: listData.id,
         });
       })
       .catch((err) => console.log(err))

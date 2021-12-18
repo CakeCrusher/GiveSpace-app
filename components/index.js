@@ -12,3 +12,4 @@ export { default as ShareButton } from './ShareButton/ShareButton';
 export { default as GalleryButton } from './GalleryButton/GalleryButton';
 export { default as Flare } from './Flare/Flare';
 export { default as TabIcon } from './TabIcon/TabIcon';
+export { default as ScreenContainer } from './ScreenContainer/ScreenContainer';

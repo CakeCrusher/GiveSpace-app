@@ -6,12 +6,13 @@ const Flare = () => {
   if (true) {
     return (
       <View
+        opacity={0.8}
         colorScheme="primary"
         position="absolute"
         borderRadius="32"
         // h="100"
         // w="200"
-        top="-25"
+        top="-35"
         zIndex="-10"
         left="-25"
         zIndex="99"

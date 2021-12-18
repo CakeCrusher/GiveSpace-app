@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Text, Button, HStack, VStack, ScrollView } from 'native-base';
 
-import { ListPreview, InnerTitle } from '../../components';
+import { ScreenContainer, ListPreview, InnerTitle } from '../../components';
 
 import { Flare } from '../../components';
 import Feed from './Feed';
@@ -22,8 +22,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
   let timeNow = new Date().toLocaleDateString();
   // transform time to readable format
   return (
-    <VStack space="2" px="4" flex="1" justifyContent="space-between" safeArea>
-      <Flare />
+    <ScreenContainer>
       <ScrollView stickyHeaderIndices={[0, 3]}>
         <HStack justifyContent="space-between" bg="#f1f1f1">
           <Text fontSize="md">Hello, {userState.username}</Text>
@@ -42,6 +41,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               />
               <Button
                 mt="2"
+                _text={{ fontSize: 'xl' }}
                 variant="outline"
                 onPress={() => navigation.navigate('My Lists')}
               >
@@ -62,7 +62,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
           <Feed handleLoadList={handleLoadList} />
         </VStack>
       </ScrollView>
-    </VStack>
+    </ScreenContainer>
   );
 };
 

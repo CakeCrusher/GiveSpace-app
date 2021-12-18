@@ -16,6 +16,7 @@ import { Feather } from '@expo/vector-icons';
 import { TouchableOpacity, Clipboard } from 'react-native';
 
 import {
+  ScreenContainer,
   Flare,
   GalleryButton,
   ListPreview,
@@ -28,7 +29,7 @@ import DeleteAccountModal from './DeleteAccountModal';
 
 const UserOptions = ({ handleLogout, handleStartDelete }) => {
   return (
-    <HStack flex="1" mt={8} justifyContent="flex-end">
+    <HStack flex="1" justifyContent="flex-end" alignItems="center">
       <Box p="2">
         <PopoverIcon iconName="more-vertical" menuTitle="User Options">
           <Pressable onPress={handleLogout}>
@@ -125,8 +126,7 @@ const AccountDisplay = ({
   };
 
   return (
-    <VStack flex="1" p="4" safeArea>
-      <Flare />
+    <ScreenContainer>
       <ScrollView>
         <HStack mb="2" alignItems="center" justifyContent="space-between">
           {/* TODO: Update these pressables */}
@@ -220,7 +220,11 @@ const AccountDisplay = ({
                 </Box>
               </ScrollView>
               <Box h="2" />
-              <Button variant="outline" onPress={handleNavigation}>
+              <Button
+                _text={{ fontSize: 'xl' }}
+                variant="outline"
+                onPress={handleNavigation}
+              >
                 All Lists
               </Button>
             </>
@@ -238,18 +242,8 @@ const AccountDisplay = ({
         onClose={() => setShowDelete(false)}
         handleConfirmDelete={handleConfirmDelete}
       />
-    </VStack>
+    </ScreenContainer>
   );
 };
-
-const mapStateToProps = (state) => ({
-  userState: state.user,
-  friendsState: state.friends,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(logout()),
-  editAddress: (address) => dispatch(editAddress(address)),
-});
 
 export default AccountDisplay;

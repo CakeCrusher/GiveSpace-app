@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   Heading,
@@ -13,21 +13,22 @@ import {
   VStack,
   ScrollView,
   Icon,
-} from "native-base";
-import { connect } from "react-redux";
-import { Feather } from "@expo/vector-icons";
+} from 'native-base';
+import { connect } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
 
 import {
   ListPreview,
   LoadingScreen,
   Fab,
   Flare,
+  ScreenContainer,
   PopoverIcon,
-} from "../../components";
+} from '../../components';
 
-import { addList, removeLists } from "../../redux/actions/user";
-import { fetchGraphQL } from "../../utils/helperFunctions";
-import { CREATE_LIST, DELETE_LIST } from "../../utils/schemas";
+import { addList, removeLists } from '../../redux/actions/user';
+import { fetchGraphQL } from '../../utils/helperFunctions';
+import { CREATE_LIST, DELETE_LIST } from '../../utils/schemas';
 
 const AllListsWrapper = ({
   route,
@@ -57,7 +58,7 @@ const AllListsWrapper = ({
 
   const handleLoadList = (listData) => {
     navigation.navigate(tabName, {
-      screen: "List",
+      screen: 'List',
       params: { listData, userData },
     });
   };
@@ -71,7 +72,7 @@ const AllListsWrapper = ({
           throw new Error(res.errors);
         }
 
-        console.log("NEW ID:", res.data.insert_list.returning[0].id);
+        console.log('NEW ID:', res.data.insert_list.returning[0].id);
         listData = res.data.insert_list.returning[0];
 
         addList(listData);
@@ -81,7 +82,7 @@ const AllListsWrapper = ({
       .finally(() => {
         setIsLoading(false);
         navigation.navigate(tabName, {
-          screen: "List",
+          screen: 'List',
           params: { listData, userData: userState },
         });
       });
@@ -93,8 +94,8 @@ const AllListsWrapper = ({
       listIds.map((list_id) =>
         fetchGraphQL(DELETE_LIST, {
           list_id,
-        })
-      )
+        }),
+      ),
     )
       .then((res) => {
         if (res[0].errors) {
@@ -183,24 +184,23 @@ const AllLists = ({
   };
 
   const handleLoadAccount = () => {
-    console.log("handleLoadAccount");
+    console.log('handleLoadAccount');
     // navigation.navigate("FriendAccount", {
     //   userId: userData.id,
     // });
     if (isUser) {
-      navigation.navigate("Account");
+      navigation.navigate('Account');
     } else {
-      navigation.navigate("Friends", {
-        screen: "FriendAccount",
+      navigation.navigate('Friends', {
+        screen: 'FriendAccount',
         params: { userId: userData.id },
       });
     }
   };
 
   return (
-    <VStack space="4" p="4" flex="1" safeArea>
-      <Flare />
-      <HStack mt={8} flex="1" alignItems="center">
+    <ScreenContainer>
+      <HStack flex="1" alignItems="center">
         <Pressable onPress={handleLoadAccount}>
           <Avatar
             key={isUser ? userState.profile_pic_url : userData.profile_pic_url}
@@ -215,7 +215,7 @@ const AllLists = ({
           </Avatar>
         </Pressable>
         <Text fontSize="3xl" ml="4">
-          {isUser ? "Your " : `${userData.username}'s `}
+          {isUser ? 'Your ' : `${userData.username}'s `}
           Lists
         </Text>
         {isUser && (
@@ -238,7 +238,8 @@ const AllLists = ({
           </Flex>
         )}
       </HStack>
-      <VStack flex="15">
+
+      <VStack flex="9">
         <ScrollView>
           {userData.lists.length > 0 ? (
             userData.lists.map((list, i) => {
@@ -250,8 +251,8 @@ const AllLists = ({
                       listData={list}
                       check={{
                         onPress: () => handleSelectDelete(list.id),
-                        top: "4",
-                        right: "6",
+                        top: '4',
+                        right: '6',
                       }}
                     />
                   ) : (
@@ -266,7 +267,7 @@ const AllLists = ({
           ) : (
             <Text>
               {isUser
-                ? "You dont have any lists yet. DO press the big red button."
+                ? 'You dont have any lists yet. DO press the big red button.'
                 : `${userData.username} doesn't have any lists.`}
             </Text>
           )}
@@ -308,7 +309,7 @@ const AllLists = ({
           </Modal.Body>
         </Modal.Content>
       </Modal>
-    </VStack>
+    </ScreenContainer>
   );
 };
 
