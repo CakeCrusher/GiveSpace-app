@@ -1,4 +1,23 @@
-# Project-Wishlist 🎁
+<img src="https://pbs.twimg.com/media/FGSSACWXEAcy0Qy?format=jpg&name=small" align="left"
+     alt="GiveSpace icon" width="60" style="border-radius: 10px;" height="60">
+# GiveSpace
+### Hassle-free gift wishlists for friends and family
+
+## Objective
+Create and share wishlists with ease.
+
+## Description
+- Make gift-giving effortless and fun
+- Easily create and share wishlists
+- Connect with friends and family
+- Organize with others to give meaningful gifts
+
+GiveSpace makes it easy to make your wishlist and share it with others. The app recognizes your list’s items and automatically fills in the details. It's that simple.
+Find your friends and family on the app to view their lists and give the perfect gift. Lists will mark which items have been bought, so there’s no risk of unwanted duplicates.
+GiveSpace is the ultimate tool for holidays, birthdays, weddings, baby showers, and more.
+
+
+
 ## Objective
 **Develop an platform to** bring together the gift giver and receiver and facilitate the exchange of gifts. An all encompassing gift giving platform from the discovery of people's desired presents to the completed delivery.
 
@@ -12,25 +31,32 @@
 
 ## Tech stack (All open for suggestions, especially those unckecked)
 
-⬜ Expo (app development)
-
-⬜ Amazon API (get inventory, purchase, deliver)
+⬜ (Ecommerce experience)
 
 ⬜ Stripe (payment handler)
 
-✅ Huggingface (text analysis)
+✅ Expo (react native app client)
 
 ✅ Flask (backend)
 
 ✅ Hasura (database)
 
-⬜ ...
+✅ Next.js (website)
 
-## Deadline
-### [December 15](https://timee.io/20211114T0500?tl=Project%20Wishlist%20MVP%20deadline)
+✅ Node (temporary scraping backend)
+
+✅ Huggingface (text analysis)
+
+⬜ ...
 
 ## Future
 This project is only an initial stepping stone for collaborative purchases among broader fintech ambitions.
+
+## Repositories
+
+- [Flask server](https://github.com/CakeCrusher/GiveSpace-backend)
+- [GiveSpace Website](https://github.com/CakeCrusher/GiveSpace-Website)
+- [Node server](https://github.com/CakeCrusher/GiveSpace-node)
 
 ## Join
 ### [Discord](https://discord.gg/Edx24FEHmB)
