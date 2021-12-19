@@ -6,20 +6,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "permissions": [
-      "CONTACTS"
-    ],
-    "plugins": [
-      "expo-contacts",
-      "expo-screen-orientation",
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "The app accesses your photos to let customize your profile."
-        }
-      ],
-      "expo-file-system"
-    ],
     "packagerOpts": {
       "config": "metro.config.js",
       "sourceExts": [
@@ -35,7 +21,18 @@
         "wasm",
         "svg"
       ]
+    },
+    "android": {
+      "permissions": [
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET"
+      ],
+      "package": "com.ancillis.testing"
     }
-  },
-  "name": "Project-Wishlist"
+  }
 }

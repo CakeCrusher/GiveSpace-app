@@ -46,11 +46,13 @@ const Signup = ({ signinDispatch, toSignIn }) => {
   const stepOneStack = (
     <>
       <VStack my={8} justifyContent="center" alignItems="center">
-        <Text fontSize="2xl">Create an account</Text>
+        <Text fontSize="xl">Create an account</Text>
         <HStack>
-          <Text fontSize="2xl">or </Text>
+          <Text fontSize="xl" lineHeight="xs">
+            or{' '}
+          </Text>
           <Pressable onPress={toSignIn}>
-            <Text fontSize="2xl" underline>
+            <Text fontSize="xl" lineHeight="xs" underline>
               log in
             </Text>
           </Pressable>
@@ -139,8 +141,11 @@ const Signup = ({ signinDispatch, toSignIn }) => {
   const stepTwoStack = (
     <>
       <VStack my={8} justifyContent="center" alignItems="center">
-        <Text fontSize="2xl" textAlign="center">
-          Add your phone number to get connected with contacts{' '}
+        <Text fontSize="xl" textAlign="center">
+          Add your phone number to{' '}
+        </Text>
+        <Text fontSize="xl" lineHeight="xs" textAlign="center">
+          get connected with contacts{' '}
         </Text>
       </VStack>
       <VStack w="48" flex="3" space={4} justifyContent="flex-start">
@@ -179,7 +184,9 @@ const Signup = ({ signinDispatch, toSignIn }) => {
       <VStack flex={4} justifyContent="flex-end" alignItems="center">
         {signUpStep === 0 ? (
           <Center>
-            <Text fontSize="5xl">Welcome To</Text>
+            <Text fontSize="5xl" mb="-4">
+              Welcome To
+            </Text>
             <HStack alignItems="center" justifyContent="center">
               <Text color="primary.500" fontSize="5xl">
                 Give
@@ -189,7 +196,9 @@ const Signup = ({ signinDispatch, toSignIn }) => {
           </Center>
         ) : (
           <Center>
-            <Text fontSize="5xl">Let's find your</Text>
+            <Text fontSize="5xl" mb="-4">
+              Let's find your
+            </Text>
             <Text fontSize="5xl">friends</Text>
           </Center>
         )}

@@ -128,11 +128,16 @@ const AccountDisplay = ({
   return (
     <ScreenContainer>
       <ScrollView>
-        <HStack mb="2" alignItems="center" justifyContent="space-between">
+        <HStack
+          flex="3"
+          mb="2"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           {/* TODO: Update these pressables */}
           <Flex flex="1">
             <Pressable p="2" onPress={handleBack}>
-              <Icon as={<Feather name="chevron-left" />} size="lg" />
+              <Icon as={<Feather name="chevron-left" />} size="xl" />
             </Pressable>
           </Flex>
           {isUser && (

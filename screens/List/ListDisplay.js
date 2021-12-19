@@ -28,6 +28,7 @@ import {
 } from '../../components';
 import { useField, fetchGraphQL } from '../../utils/helperFunctions';
 import {
+  SCRAPE_ITEM,
   UPDATE_LIST_TITLE,
   MARK_ITEM_FOR_PURCHASE,
   CANCEL_ITEM_FOR_PURCHASE,
@@ -47,6 +48,9 @@ const ListDisplay = ({
   editListDateEvent,
 }) => {
   const title = useField('text', list.title);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const itemName = useField('text');
 
   const [enableSearch, setEnableSearch] = useState(false);
   const searchInput = useField('text');
@@ -90,6 +94,30 @@ const ListDisplay = ({
   };
 
   /** LIST OWNER functions **/
+  const handleItemSubmit = () => {
+    setIsSubmitting(true);
+    // create a promise called that resolves after 2 seconds
+    fetchGraphQL(SCRAPE_ITEM, {
+      list_id: list.id,
+      item_name: itemName.value,
+    })
+      .then((res) => {
+        if (res.errors || !res.data.scrape_item.itemIdToItem) {
+          setIsSubmitting(false);
+        } else {
+          addListItem(list.id, res.data.scrape_item.itemIdToItem);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+    setTimeout(() => {
+      setIsLoading(false);
+      itemName.onChangeText('');
+    }, 500);
+  };
+
   const handleEnableDelete = () => {
     setEnableDelete(true);
   };
@@ -203,6 +231,7 @@ const ListDisplay = ({
             <Avatar
               key={userData.profile_pic_url}
               bg="#FAA"
+              size="lg"
               source={{
                 uri:
                   userData.profile_pic_url ||
@@ -212,7 +241,7 @@ const ListDisplay = ({
           </Pressable>
         </Center>
         <VStack flex="5" pl="4" justifyContent="center">
-          <Text fontSize="xs">{isUser ? 'You' : userData.username}</Text>
+          <Text fontSize="lg">{isUser ? 'You' : userData.username}</Text>
           {isUser ? (
             <Flex h="10">
               <Input
@@ -220,7 +249,7 @@ const ListDisplay = ({
                 borderColor="#ffffff00"
                 placeholder="list title"
                 fontSize="2xl"
-                ml="-2"
+                p="0"
                 onEndEditing={handleTitleSet}
                 {...title}
               />
@@ -280,7 +309,12 @@ const ListDisplay = ({
       {/* Add Item, Item Modal, Display Items*/}
       {isUser && (
         <VStack flex="2">
-          <ItemInput listId={list.id} />
+          <ItemInput
+            itemName={itemName}
+            isSubmitting={isSubmitting}
+            handleItemSubmit={handleItemSubmit}
+            listId={list.id}
+          />
         </VStack>
       )}
 
@@ -305,6 +339,7 @@ const ListDisplay = ({
                 )}
               </Flex>
             ))}
+            {isSubmitting && <Flex onPress={() => {}} w="48%"></Flex>}
           </HStack>
         </ScrollView>
       </VStack>

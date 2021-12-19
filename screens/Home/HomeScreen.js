@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, Button, HStack, VStack, ScrollView } from 'native-base';
+import { Text, Button, HStack, VStack, Center, ScrollView } from 'native-base';
 
 import { ScreenContainer, ListPreview, InnerTitle } from '../../components';
 
-import { Flare } from '../../components';
 import Feed from './Feed';
 
 const HomeScreen = ({ userState, friendsState, navigation }) => {
@@ -29,7 +28,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
           <Text fontSize="md">{timeNow}</Text>
         </HStack>
 
-        <InnerTitle>Recent</InnerTitle>
+        <InnerTitle mb={2}>Recent</InnerTitle>
         <VStack flex="5" space="2">
           {userState.lists[0] ? (
             <>
@@ -49,13 +48,16 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               </Button>
             </>
           ) : (
-            <>
-              <Text>You have not lists yet. Create one in "My Lists"!</Text>
-            </>
+            <Center bg="#e4e4e4" borderRadius="8" py="16" px="8">
+              <Text color="#707070">You don't have any lists yet.</Text>
+              <Text color="#707070">
+                Create one in <Text underline>My Lists</Text>!
+              </Text>
+            </Center>
           )}
         </VStack>
 
-        <InnerTitle bg="#f1f1f1" w="100%">
+        <InnerTitle bg="#f1f1f1" w="100%" mt={4} mb={2}>
           Activity
         </InnerTitle>
         <VStack flex="7" space="2">

@@ -1,4 +1,5 @@
 import React from 'react';
+import Constants from 'expo-constants';
 import { View } from 'native-base';
 import { Flare1, Flare2 } from '../../resources';
 
@@ -12,10 +13,9 @@ const Flare = () => {
         borderRadius="32"
         // h="100"
         // w="200"
-        top="-35"
-        zIndex="-10"
-        left="-25"
-        zIndex="99"
+        top={-1 * Constants.statusBarHeight}
+        zIndex="98"
+        left="-15"
       >
         <Flare1 />
       </View>

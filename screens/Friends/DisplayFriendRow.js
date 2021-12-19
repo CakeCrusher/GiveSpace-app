@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Pressable, Avatar, HStack, Text, Flex, Button } from 'native-base';
+import {
+  Pressable,
+  Avatar,
+  HStack,
+  Text,
+  Flex,
+  Button,
+  Icon,
+  Spinner,
+} from 'native-base';
 import {
   friendState,
   acceptFriendRel,
@@ -69,7 +78,7 @@ const DisplayFriendRow = ({
         </Pressable>
       </Flex>
       <Flex flex="3" justifyContent="center">
-        <Text fontSize="xl">{friend.username}</Text>
+        <Text fontSize="lg">{friend.username}</Text>
       </Flex>
       {friendState(friend.id, friendsState) === 'friends' && (
         <HStack space="4" alignItems="center">
@@ -95,21 +104,17 @@ const DisplayFriendRow = ({
       )}
       {friendState(friend.id, friendsState) === 'pendingMe' && (
         <HStack space="4" alignItems="center">
-          <Button
-            isLoading={isLoading}
-            onPress={() => handleRemoveFriend('pendingMe')}
-            h="9"
-            w="9"
-          >
-            <Feather name="user-x" size={16} color="white" />
+          {isLoading && <Spinner />}
+          <Button onPress={handleAcceptFriend} colorScheme="green" h="9" w="9">
+            <Icon as={<Feather name="check" />} size="sm" color="white" />
           </Button>
           <Button
-            isLoading={isLoading}
-            onPress={handleAcceptFriend}
+            onPress={() => handleRemoveFriend('pendingMe')}
+            colorScheme="red"
             h="9"
             w="9"
           >
-            <Feather name="user-check" size={16} color="white" />
+            <Icon as={<Feather name="x" />} size="sm" color="white" />
           </Button>
         </HStack>
       )}

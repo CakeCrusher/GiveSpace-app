@@ -27,6 +27,7 @@ const theme = extendTheme({
       900: '#944152',
     },
   },
+  fontConfig: {},
   sizes: {
     22: 88,
     42: 168,
@@ -35,6 +36,38 @@ const theme = extendTheme({
     52: 214,
     18: 72,
   },
+  //fontConfig: {
+  //  Roboto: {
+  //    100: {
+  //      normal: 'Roboto-Light',
+  //      italic: 'Roboto-LightItalic',
+  //    },
+  //    200: {
+  //      normal: 'Roboto-Light',
+  //      italic: 'Roboto-LightItalic',
+  //    },
+  //    300: {
+  //      normal: 'Roboto-Light',
+  //      italic: 'Roboto-LightItalic',
+  //    },
+  //    400: {
+  //      normal: 'Roboto-Regular',
+  //      italic: 'Roboto-Italic',
+  //    },
+  //    500: {
+  //      normal: 'Roboto-Medium',
+  //    },
+  //    600: {
+  //      normal: 'Roboto-Medium',
+  //      italic: 'Roboto-MediumItalic',
+  //    },
+  //  },
+  //},
+  //fonts: {
+  //  heading: 'Roboto',
+  //  body: 'Roboto',
+  //  mono: 'Roboto',
+  //},
   components: {
     Button: {
       baseStyle: {
@@ -53,8 +86,14 @@ const theme = extendTheme({
     Input: {
       baseStyle: {
         bg: '#FFFFFF',
+        color: '#3a3a3a',
         flex: 1,
         maxH: 16,
+      },
+    },
+    Text: {
+      baseStyle: {
+        color: '#3a3a3a',
       },
     },
   },

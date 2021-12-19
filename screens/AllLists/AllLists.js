@@ -264,12 +264,18 @@ const AllLists = ({
                 </Box>
               );
             })
+          ) : isUser ? (
+            <Center bg="#e4e4e4" borderRadius="8" py="16" px="8">
+              <Text color="#707070">You don't have any lists yet.</Text>
+              <Text color="#707070">Create a new one below.</Text>
+            </Center>
           ) : (
-            <Text>
-              {isUser
-                ? 'You dont have any lists yet. DO press the big red button.'
-                : `${userData.username} doesn't have any lists.`}
-            </Text>
+            <Center bg="#e4e4e4" borderRadius="8" py="16" px="8">
+              <Text color="#707070">
+                {userData.username} doesn't have any lists yet.
+              </Text>
+              <Text color="#707070">Check back later!</Text>
+            </Center>
           )}
         </ScrollView>
       </VStack>

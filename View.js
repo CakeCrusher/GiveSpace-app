@@ -72,6 +72,17 @@ const View = ({
           }}
         />
         <Tab.Screen
+          name="My Lists"
+          component={MyLists}
+          options={{
+            tabBarShowLabel: false,
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon focused={focused} iconName="list" title="My Lists" />
+            ),
+          }}
+        />
+        <Tab.Screen
           name="Friends"
           component={Friends}
           listeners={{
@@ -82,17 +93,6 @@ const View = ({
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <TabIcon focused={focused} iconName="users" title="Friends" />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="My Lists"
-          component={MyLists}
-          options={{
-            tabBarShowLabel: false,
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <TabIcon focused={focused} iconName="list" title="My Lists" />
             ),
           }}
         />

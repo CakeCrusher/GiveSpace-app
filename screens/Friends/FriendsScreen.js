@@ -3,12 +3,10 @@ import {
   VStack,
   HStack,
   Box,
-  Center,
   SlideFade,
   Icon,
   Input,
   Text,
-  Flex,
   Button,
   ScrollView,
 } from 'native-base';
@@ -16,7 +14,7 @@ import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
 
-import { Fab, ScreenContainer } from '../../components';
+import { Fab, ScreenContainer, InnerTitle } from '../../components';
 import DisplayFriendRow from './DisplayFriendRow';
 import AddFriendModal from './AddFriendModal';
 import { GET_FRIEND_RELS } from '../../utils/schemas';
@@ -50,26 +48,25 @@ const FriendsScreen = ({
   return (
     <ScreenContainer>
       <ScrollView>
-        <HStack flex="1" alignContent="center" justifyContent="space-between">
+        <HStack
+          flex="1"
+          mb={4}
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Box flex="5">
-            <Text fontSize="3xl">Friends</Text>
+            <InnerTitle>Friends</InnerTitle>
           </Box>
 
-          <Center justifyContent="space-between" flex="1" p="2">
-            <Button
-              onPress={handleRefresh}
-              m="auto"
-              h="10"
-              w="12"
-              isLoading={isLoading}
-            >
+          <HStack justifyContent="flex-end" flex="1">
+            <Button onPress={handleRefresh} h="10" w="10" isLoading={isLoading}>
               <Icon
-                as={<Feather name="refresh-ccw" />}
+                as={<Feather name="refresh-cw" />}
                 size="sm"
                 color="white"
               />
             </Button>
-          </Center>
+          </HStack>
         </HStack>
 
         <SlideFade in={showSearch}>
@@ -88,8 +85,10 @@ const FriendsScreen = ({
         />
       ))*/}
           {friendsState.pendingMe && friendsState.pendingMe.length > 0 && (
-            <VStack flex="5">
-              <Text fontSize="xl">Recieved Requests</Text>
+            <VStack flex="5" mb={4}>
+              <Text fontSize="2xl" mb={2}>
+                Recieved Requests
+              </Text>
               {friendsState.pendingMe.map((friend) => (
                 <DisplayFriendRow
                   key={friend.id}
@@ -101,8 +100,10 @@ const FriendsScreen = ({
             </VStack>
           )}
           {friendsState.pendingThem && friendsState.pendingThem.length > 0 && (
-            <VStack flex="5">
-              <Text fontSize="xl">Sent Requests</Text>
+            <VStack flex="5" mb={4}>
+              <Text fontSize="2xl" mb={2}>
+                Sent Requests
+              </Text>
               {friendsState.pendingThem.map((friend) => (
                 <DisplayFriendRow
                   key={friend.id}
@@ -114,8 +115,10 @@ const FriendsScreen = ({
             </VStack>
           )}
 
-          <VStack flex="5">
-            <Text fontSize="xl">Your Friends</Text>
+          <VStack flex="5" mb={4}>
+            <Text fontSize="2xl" mb={2}>
+              Your Friends
+            </Text>
             {friendsState.list.map((friend) => (
               <DisplayFriendRow
                 key={friend.id}
