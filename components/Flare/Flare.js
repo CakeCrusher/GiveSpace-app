@@ -1,7 +1,7 @@
-import React from 'react';
-import Constants from 'expo-constants';
-import { View } from 'native-base';
-import { Flare1, Flare2 } from '../../resources';
+import React from "react";
+import Constants from "expo-constants";
+import { View } from "native-base";
+import { Flare1, Flare2 } from "../../resources";
 
 const Flare = () => {
   if (true) {
@@ -13,7 +13,7 @@ const Flare = () => {
         borderRadius="32"
         // h="100"
         // w="200"
-        top={-1 * Constants.statusBarHeight}
+        top={0}
         zIndex="98"
         left="-15"
       >
