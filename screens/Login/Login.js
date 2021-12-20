@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { VStack, Text, Button } from 'native-base';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { VStack, Text, Button } from "native-base";
+import { connect } from "react-redux";
 
-
-import SignUp from './SignUp';
-import SignIn from './SignIn';
+import SignUp from "./SignUp";
+import SignIn from "./SignIn";
+import { StatusBar } from "expo-status-bar";
 
 //TODO: need to rename post/fetchUser
 const Login = ({ postUser }) => {
@@ -16,6 +16,7 @@ const Login = ({ postUser }) => {
 
   return (
     <VStack flex="1" alignItems="center" justifyContent="center">
+      <StatusBar backgroundColor="#e79caa" style="light" />
       {isSignUp ? (
         <SignUp toSignIn={toSignIn} />
       ) : (
@@ -26,7 +27,6 @@ const Login = ({ postUser }) => {
 };
 
 const mapStateToProps = (state) => ({});
-const mapDispatchToProps = (dispatch) => ({
-});
+const mapDispatchToProps = (dispatch) => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

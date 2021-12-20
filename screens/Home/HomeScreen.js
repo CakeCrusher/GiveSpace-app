@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Text, Button, HStack, VStack, Box, ScrollView } from 'native-base';
+import { Text, Button, HStack, VStack, Center, ScrollView } from 'native-base';
 
-import { ListPreview, ActivityCard, InnerTitle } from '../../components';
+import { ScreenContainer, ListPreview, InnerTitle } from '../../components';
 
-import Flare from '../../components/Flare';
 import Feed from './Feed';
 
 const HomeScreen = ({ userState, friendsState, navigation }) => {
@@ -22,15 +21,14 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
   let timeNow = new Date().toLocaleDateString();
   // transform time to readable format
   return (
-    <VStack space="2" px="4" flex="1" justifyContent="space-between" safeArea>
-      <Flare />
+    <ScreenContainer>
       <ScrollView stickyHeaderIndices={[0, 3]}>
         <HStack justifyContent="space-between" bg="#f1f1f1">
           <Text fontSize="md">Hello, {userState.username}</Text>
           <Text fontSize="md">{timeNow}</Text>
         </HStack>
 
-        <InnerTitle>Recent</InnerTitle>
+        <InnerTitle mb={2}>Recent</InnerTitle>
         <VStack flex="5" space="2">
           {userState.lists[0] ? (
             <>
@@ -42,6 +40,7 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               />
               <Button
                 mt="2"
+                _text={{ fontSize: 'xl' }}
                 variant="outline"
                 onPress={() => navigation.navigate('My Lists')}
               >
@@ -49,20 +48,23 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
               </Button>
             </>
           ) : (
-            <>
-              <Text>You have not lists yet. Create one in "My Lists"!</Text>
-            </>
+            <Center bg="#e4e4e4" borderRadius="8" py="16" px="8">
+              <Text color="#707070">You don't have any lists yet.</Text>
+              <Text color="#707070">
+                Create one in <Text underline>My Lists</Text>!
+              </Text>
+            </Center>
           )}
         </VStack>
 
-        <InnerTitle bg="#f1f1f1" w="100%">
+        <InnerTitle bg="#f1f1f1" w="100%" mt={4} mb={2}>
           Activity
         </InnerTitle>
         <VStack flex="7" space="2">
           <Feed handleLoadList={handleLoadList} />
         </VStack>
       </ScrollView>
-    </VStack>
+    </ScreenContainer>
   );
 };
 

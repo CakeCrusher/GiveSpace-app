@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "GiveSpace",
-    "slug": "givespace",
-    "version": "1.1.0",
+    "slug": "give-space",
+    "version": "1.2.2",
+    "icon": "./resources/img/icon.png",
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       "expo-contacts",
@@ -10,11 +11,16 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let customize your profile."
+          "photosPermission": "The app accesses your photos to customize your profile."
         }
       ],
       "expo-file-system"
     ],
+    "splash": {
+      "image": "./resources/img/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "packagerOpts": {
       "config": "metro.config.js",
       "sourceExts": [
@@ -32,6 +38,13 @@
       ]
     },
     "android": {
+      "versionCode": 7,
+      "icon": "./resources/img/icon.png",
+      "adaptiveIcon": {
+        "backgroundColor": "#c9042c",
+        "foregroundImage": "./resources/img/icon.png",
+        "backgroundImage": "./resources/img/icon.png"
+      },
       "permissions": [
         "android.permission.READ_CONTACTS",
         "android.permission.WRITE_CONTACTS",
@@ -41,8 +54,8 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.INTERNET"
       ],
-      "package": "com.givespace"
+      "package": "com.reservadex"
     }
   },
-  "name": "Project-Wishlist"
+  "name": "GiveSpace"
 }

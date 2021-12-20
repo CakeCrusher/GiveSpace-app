@@ -5,7 +5,7 @@ const InnerTitle = (props) => {
   const styles = { ...props };
   delete styles.children;
   return (
-    <Text fontSize="4xl" fontWeight="medium" {...styles}>
+    <Text fontSize="4xl" fontWeight="semibold" {...styles}>
       {props.children}
     </Text>
   );

@@ -12,14 +12,10 @@ const AddFriendRow = ({ user, addFriend, friendState, userState }) => {
         <Avatar
           bg="#FAA"
           source={{
-            uri:
-              user.profile_pic_url ||
-              'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+            uri: user.profile_pic_url,
           }}
           size="sm"
-        >
-          EX
-        </Avatar>
+        />
       </Flex>
       <Flex flex="3" justifyContent="center">
         <Text fontSize="md">{user.username}</Text>
