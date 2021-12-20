@@ -3,7 +3,6 @@
     "name": "GiveSpace",
     "slug": "givespace",
     "version": "1.2.0",
-    "sdkVersion": "38.0.0",
     "icon": "./resources/img/icon.png",
     "assetBundlePatterns": ["**/*"],
     "plugins": [
