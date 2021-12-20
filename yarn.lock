@@ -1098,6 +1098,11 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
+"@expo-google-fonts/quicksand@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/quicksand/-/quicksand-0.2.0.tgz#0eff348829ef41a534a7b7552fe354c592260323"
+  integrity sha512-k42EVdjSI+hhX2zGqfXjefApJQ4PQKjfZyqh1G6PWXjKeXd/RRIAA7GKpTtwKpiQrq9Jy6iPXmK/Cq+jnC+ztA==
+
 "@expo-google-fonts/source-sans-pro@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/source-sans-pro/-/source-sans-pro-0.2.0.tgz#219e600fd24e6f507bb153f8cfc5d236a2c89d82"
@@ -2264,10 +2269,10 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
-"@react-native-community/datetimepicker@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-5.0.1.tgz#1113f4c999dff6fda3cb5926e53f5f9c22e42e62"
-  integrity sha512-yDQbGZbP7SiOLkB2j1F0i9sQvVMo/cv4BB3DnbzPzWWYOH6xSPL1D9hi3YY9UUaJKQnLNgXBRMUEAJkmMy8NTw==
+"@react-native-community/datetimepicker@3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-3.5.2.tgz#8e6feb30f2620e5abdf565d5fe74c0c04edcf6ae"
+  integrity sha512-TWRuAtr/DnrEcRewqvXMLea2oB+YF+SbtuYLHguALLxNJQLl/RFB7aTNZeF+OoH75zKFqtXECXV1/uxQUpA+sg==
   dependencies:
     invariant "^2.2.4"
 
@@ -4622,6 +4627,14 @@ expo-modules-core@~0.4.4, expo-modules-core@~0.4.8:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
+expo-modules-core@~0.4.7:
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-0.4.9.tgz#e808ca8a70c4ac0da2cfc7040e48a4c67aeee5b3"
+  integrity sha512-yuwYoEQMZNSysufsYgJVmncpeGopNi8Q3y5Q7MM05PT90Sc5CGqbYwJMYomF7MprTZAxCvayoRBCKgOlzutWog==
+  dependencies:
+    compare-versions "^3.4.0"
+    invariant "^2.2.4"
+
 expo-screen-orientation@~4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-4.0.3.tgz#a747c1782dccb74725127e4f3af92d35f42df560"
@@ -4630,13 +4643,14 @@ expo-screen-orientation@~4.0.3:
     "@expo/config-plugins" "^4.0.2"
     expo-modules-core "~0.4.4"
 
-expo-splash-screen@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.14.0.tgz#6ed61cba73c246de329e9bf903bb5964f50bb7a9"
-  integrity sha512-4ruZGrVFcOPVYsq5uH/tiu/2JZU2xyKV6sip12ZSOjCz9V109iPWde2amKV3Uctdb2g8Iqi8nIRIeOOCO3LbHQ==
+expo-splash-screen@~0.13.5:
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.13.5.tgz#ece76c092f2ce88e4660a70e532ed47909a01ddd"
+  integrity sha512-L/L0XlmmxSoyuooCVvbPBO4xUF9kAs+F0+fML3pf7miBOnTd/v9j5riKSmaDthNtM4AarXxgi0AXzSHQ1M3rZg==
   dependencies:
     "@expo/configure-splash-screen" "^0.6.0"
     "@expo/prebuild-config" "^3.0.6"
+    expo-modules-core "~0.4.7"
 
 expo-status-bar@~1.1.0:
   version "1.1.0"

@@ -184,14 +184,32 @@ const Signup = ({ signinDispatch, toSignIn }) => {
       <VStack flex={4} justifyContent="flex-end" alignItems="center">
         {signUpStep === 0 ? (
           <Center>
-            <Text fontSize="5xl" mb="-4">
+            <Text
+              fontFamily="wordmark"
+              color="black"
+              fontWeight={600}
+              fontSize="5xl"
+              mb="-4"
+            >
               Welcome To
             </Text>
             <HStack alignItems="center" justifyContent="center">
-              <Text color="primary.500" fontSize="5xl">
+              <Text
+                color="primary.500"
+                fontFamily="wordmark"
+                fontWeight={600}
+                fontSize="5xl"
+              >
                 Give
               </Text>
-              <Text fontSize="5xl">Space</Text>
+              <Text
+                fontFamily="wordmark"
+                fontWeight={600}
+                color="black"
+                fontSize="5xl"
+              >
+                Space
+              </Text>
             </HStack>
           </Center>
         ) : (
