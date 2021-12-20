@@ -14,7 +14,19 @@ const link = new WebSocketLink({
   },
 });
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies: {
+    list: {
+      fields: {
+        items: {
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
+      },
+    },
+  },
+});
 const client = new ApolloClient({ link, cache });
 
 export default client;

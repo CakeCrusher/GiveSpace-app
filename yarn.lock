@@ -1098,6 +1098,11 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
+"@expo-google-fonts/source-sans-pro@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/source-sans-pro/-/source-sans-pro-0.2.0.tgz#219e600fd24e6f507bb153f8cfc5d236a2c89d82"
+  integrity sha512-V+QMWNjX5gnvnw4JZkW0XbKC4IjWnxUv1Qw7sxuZXpWlOSjU2MmdTKLO+ibGvaX4xAvso5o9rKAYouCroxqrIw==
+
 "@expo/config-plugins@3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-3.1.0.tgz#0752ff33c5eab21cf42034a44e79df97f0f867f8"
@@ -4609,7 +4614,7 @@ expo-modules-autolinking@~0.3.4:
     find-up "~5.0.0"
     fs-extra "^9.1.0"
 
-expo-modules-core@~0.4.4, expo-modules-core@~0.4.7, expo-modules-core@~0.4.8:
+expo-modules-core@~0.4.4, expo-modules-core@~0.4.8:
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-0.4.8.tgz#6fed03fca9370793b0a4bebc4fe1a44b213ed445"
   integrity sha512-PElvF9/mw8TZ0FG3cQkQHB1yZEvtSrQ9nh90pINuTwmIUrxC427rgGoPrALsMaX90h94jTkPHODXHuX+Xsl/rg==
@@ -4625,14 +4630,13 @@ expo-screen-orientation@~4.0.3:
     "@expo/config-plugins" "^4.0.2"
     expo-modules-core "~0.4.4"
 
-expo-splash-screen@~0.13.5:
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.13.5.tgz#ece76c092f2ce88e4660a70e532ed47909a01ddd"
-  integrity sha512-L/L0XlmmxSoyuooCVvbPBO4xUF9kAs+F0+fML3pf7miBOnTd/v9j5riKSmaDthNtM4AarXxgi0AXzSHQ1M3rZg==
+expo-splash-screen@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.14.0.tgz#6ed61cba73c246de329e9bf903bb5964f50bb7a9"
+  integrity sha512-4ruZGrVFcOPVYsq5uH/tiu/2JZU2xyKV6sip12ZSOjCz9V109iPWde2amKV3Uctdb2g8Iqi8nIRIeOOCO3LbHQ==
   dependencies:
     "@expo/configure-splash-screen" "^0.6.0"
     "@expo/prebuild-config" "^3.0.6"
-    expo-modules-core "~0.4.7"
 
 expo-status-bar@~1.1.0:
   version "1.1.0"
@@ -4649,7 +4653,7 @@ expo-updates-interface@~0.4.0:
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-0.4.0.tgz#20961f2cb4bd068a74c29434affa08791dbaa240"
   integrity sha512-EUJaLnDAePikGEQT8w6gjCY3m/dlGgjZKVn5XBaxZMkHzOy3PDQo6QOcK/bcMdkA3CyNrvo6NCe+/7RHrgmK4A==
 
-expo-updates@~0.10.13:
+expo-updates@^0.10.15:
   version "0.10.15"
   resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.10.15.tgz#1fcfd78ff615307809ad38a3d37eaa67f7268282"
   integrity sha512-GHh1e0BwJY7aT+huGfneXpMhPKKkDIOBqCWyZDyTo7AWLj2C2ZCvgT2D9LWyl6v9WwxMEfO94RaYCQaayD/rfw==

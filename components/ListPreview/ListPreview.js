@@ -50,7 +50,7 @@ const ListPreview = (props) => {
         <VStack px="4" py="2" bg="#FFF" flex="1" borderRadius="8">
           <Pressable onPress={props.onPress}>
             <HStack justifyContent="space-between" alignItems="center">
-              <InnerTitle fontSize="2xl" isTruncated>
+              <InnerTitle fontSize="2xl" width="98%" isTruncated>
                 {title}
               </InnerTitle>
             </HStack>

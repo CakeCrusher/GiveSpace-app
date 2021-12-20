@@ -1,12 +1,11 @@
-import React from "react";
-import { Share } from "react-native";
-import { Button, HStack, Icon, Text, Box } from "native-base";
-import { Feather } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import React from 'react';
+import { Share } from 'react-native';
+import { Button, HStack, Icon, Text } from 'native-base';
+import { Feather } from '@expo/vector-icons';
 
 const ShareButton = ({ message }) => {
   const handleShare = async () => {
-    console.log("handleshare");
+    console.log('handleshare');
     // https://give-space-website.vercel.app/list/e2d57ee5-43bc-4f10-93e5-3d2b1604ec5a
     try {
       const result = await Share.share({

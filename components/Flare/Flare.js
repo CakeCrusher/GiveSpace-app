@@ -1,25 +1,23 @@
 import React from 'react';
-import { Button, Icon, View } from 'native-base';
-import { Feather } from '@expo/vector-icons';
-import { Flare1, Flare2 } from '../resources';
+import Constants from 'expo-constants';
+import { View } from 'native-base';
+import { Flare1, Flare2 } from '../../resources';
 
 const Flare = () => {
-  const random = Math.random();
-
   if (true) {
     return (
       <View
+        opacity={0.8}
         colorScheme="primary"
         position="absolute"
         borderRadius="32"
         // h="100"
         // w="200"
-        top="-25"
-        zIndex="-10"
-        left="-25"
-        zIndex="99"
+        top={-1 * Constants.statusBarHeight}
+        zIndex="98"
+        left="-15"
       >
-        <Flare1/>
+        <Flare1 />
       </View>
     );
   } else {
@@ -34,11 +32,10 @@ const Flare = () => {
         left="0"
         zIndex="99"
       >
-        <Flare2/>
+        <Flare2 />
       </View>
     );
   }
-
 };
 
 export default Flare;
