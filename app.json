@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "GiveSpace",
-    "slug": "com.reservadex",
+    "slug": "give-space",
     "version": "1.2.0",
     "icon": "./resources/img/icon.png",
     "assetBundlePatterns": ["**/*"],
@@ -11,7 +11,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let customize your profile."
+          "photosPermission": "The app accesses your photos to customize your profile."
         }
       ],
       "expo-file-system"
@@ -38,6 +38,7 @@
       ]
     },
     "android": {
+      "versionCode": 6,
       "icon": "./resources/img/icon.png",
       "adaptiveIcon": {
         "backgroundColor": "#c9042c",
@@ -52,7 +53,8 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.RECORD_AUDIO",
         "android.permission.INTERNET"
-      ]
+      ],
+      "package": "com.reservadex"
     }
   },
   "name": "GiveSpace"
