@@ -47,17 +47,19 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
     <Center flex="1" safeArea>
       <VStack flex="5" alignItems="center" justifyContent="flex-end">
         <Text fontSize="5xl" textAlign="center">
-          Welcome Back
+          Welcome back
         </Text>
         <Center maxH="64" maxW="64">
           <PresentsSvg />
         </Center>
         <VStack my={8} justifyContent="center" alignItems="center">
-          <Text fontSize="2xl">Log In</Text>
+          <Text fontSize="xl">Log in</Text>
           <HStack>
-            <Text fontSize="2xl">or </Text>
+            <Text fontSize="xl" lineHeight="xs">
+              or{' '}
+            </Text>
             <Pressable onPress={toSignUp}>
-              <Text fontSize="2xl" underline>
+              <Text fontSize="xl" lineHeight="xs" underline>
                 create an account
               </Text>
             </Pressable>
@@ -81,11 +83,11 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
         </Flex>
         <Button mt="4" isLoading={isLoading} onPress={handleSubmit}>
           <Text fontSize="lg" color="white">
-            Sign In
+            Sign in
           </Text>
         </Button>
         <VStack alignItems="center">
-          <Link>Forgot Your Password?</Link>
+          <Link>forgot your password?</Link>
         </VStack>
       </VStack>
     </Center>

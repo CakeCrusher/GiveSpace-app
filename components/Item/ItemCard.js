@@ -55,6 +55,7 @@ const ItemCard = (props) => {
                   }}
                   alt="item"
                   size="xl"
+                  resizeMode="contain"
                 />
               ) : (
                 <Center h="32" w="100%" bg="#484848" opacity="60">
