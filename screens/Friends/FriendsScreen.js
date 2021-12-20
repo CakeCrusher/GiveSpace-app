@@ -86,9 +86,9 @@ const FriendsScreen = ({
       ))*/}
           {friendsState.pendingMe && friendsState.pendingMe.length > 0 && (
             <VStack flex="5" mb={4}>
-              <Text fontSize="2xl" mb={2}>
+              <InnerTitle fontSize="2xl" mb={2}>
                 Recieved Requests
-              </Text>
+              </InnerTitle>
               {friendsState.pendingMe.map((friend) => (
                 <DisplayFriendRow
                   key={friend.id}
@@ -101,9 +101,9 @@ const FriendsScreen = ({
           )}
           {friendsState.pendingThem && friendsState.pendingThem.length > 0 && (
             <VStack flex="5" mb={4}>
-              <Text fontSize="2xl" mb={2}>
+              <InnerTitle fontSize="2xl" mb={2}>
                 Sent Requests
-              </Text>
+              </InnerTitle>
               {friendsState.pendingThem.map((friend) => (
                 <DisplayFriendRow
                   key={friend.id}
@@ -116,9 +116,9 @@ const FriendsScreen = ({
           )}
 
           <VStack flex="5" mb={4}>
-            <Text fontSize="2xl" mb={2}>
+            <InnerTitle fontSize="2xl" mb={2}>
               Your Friends
-            </Text>
+            </InnerTitle>
             {friendsState.list.map((friend) => (
               <DisplayFriendRow
                 key={friend.id}

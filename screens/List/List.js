@@ -9,6 +9,7 @@ import {
   removeItems,
 } from '../../redux/actions/user';
 import { populateListFriends } from '../../redux/actions/friends';
+import { addListItem } from '../../redux/actions/user';
 import { fetchGraphQL } from '../../utils/helperFunctions';
 import { DELETE_ITEM } from '../../utils/schemas';
 import useListSubscription from './useListSubscription';
@@ -79,6 +80,7 @@ const ListWrapper = ({
         userState={userState}
         list={list}
         handleConfirmDelete={handleConfirmDelete}
+        addListItem={addListItem}
         editListTitle={editListTitle}
         editListDateEvent={editListDateEvent}
       />
@@ -100,6 +102,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  addListItem: (listId, item) => dispatch(addListItem(listId, item)),
   populateListFriends: (list) => dispatch(populateListFriends(list)),
   populateListUser: (list) => dispatch(populateListUser(list)),
   removeItems: (data) => dispatch(removeItems(data)),

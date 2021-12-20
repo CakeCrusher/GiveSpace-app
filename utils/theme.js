@@ -1,4 +1,34 @@
 import { extendTheme } from 'native-base';
+import {
+  useFonts,
+  Source_Sans_Pro_ExtraLight200,
+  Source_Sans_Pro_ExtraLight200_Italic,
+  Source_Sans_Pro_Light300,
+  Source_Sans_Pro_Light300_Italic,
+  Source_Sans_Pro_Regular400,
+  Source_Sans_Pro_Regular400_Italic,
+  Source_Sans_Pro_SemiBold600,
+  Source_Sans_Pro_SemiBold600_Italic,
+  Source_Sans_Pro_Bold700,
+  Source_Sans_Pro_Bold700_Italic,
+  Source_Sans_Pro_Black900,
+  Source_Sans_Pro_Black900_Italic,
+} from '@expo-google-fonts/source-sans-pro';
+
+let [fontsLoaded] = useFonts({
+  Source_Sans_Pro_ExtraLight200,
+  Source_Sans_Pro_ExtraLight200_Italic,
+  Source_Sans_Pro_Light300,
+  Source_Sans_Pro_Light300_Italic,
+  Source_Sans_Pro_Regular400,
+  Source_Sans_Pro_Regular400_Italic,
+  Source_Sans_Pro_SemiBold600,
+  Source_Sans_Pro_SemiBold600_Italic,
+  Source_Sans_Pro_Bold700,
+  Source_Sans_Pro_Bold700_Italic,
+  Source_Sans_Pro_Black900,
+  Source_Sans_Pro_Black900_Italic,
+});
 
 const theme = extendTheme({
   colors: {
@@ -36,38 +66,27 @@ const theme = extendTheme({
     52: 214,
     18: 72,
   },
-  //fontConfig: {
-  //  Roboto: {
-  //    100: {
-  //      normal: 'Roboto-Light',
-  //      italic: 'Roboto-LightItalic',
-  //    },
-  //    200: {
-  //      normal: 'Roboto-Light',
-  //      italic: 'Roboto-LightItalic',
-  //    },
-  //    300: {
-  //      normal: 'Roboto-Light',
-  //      italic: 'Roboto-LightItalic',
-  //    },
-  //    400: {
-  //      normal: 'Roboto-Regular',
-  //      italic: 'Roboto-Italic',
-  //    },
-  //    500: {
-  //      normal: 'Roboto-Medium',
-  //    },
-  //    600: {
-  //      normal: 'Roboto-Medium',
-  //      italic: 'Roboto-MediumItalic',
-  //    },
-  //  },
-  //},
-  //fonts: {
-  //  heading: 'Roboto',
-  //  body: 'Roboto',
-  //  mono: 'Roboto',
-  //},
+  fontConfig: {
+    SansPro: {
+      200: {
+        normal: 'Source_Sans_Pro_ExtraLight200',
+        italic: 'Source_Sans_Pro_ExtraLight200_Italic',
+      },
+      300: {
+        normal: 'Source_Sans_Pro_ExtraLight300',
+        italic: 'Source_Sans_Pro_ExtraLight300_Italic',
+      },
+      400: {
+        normal: 'Source_Sans_Pro_Regular400',
+        italic: 'Source_Sans_Pro_Regular400_Italic',
+      },
+    },
+  },
+  fonts: {
+    heading: 'Roboto',
+    body: 'Roboto',
+    mono: 'Roboto',
+  },
   components: {
     Button: {
       baseStyle: {

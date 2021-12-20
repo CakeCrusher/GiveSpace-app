@@ -25,6 +25,7 @@ import {
   ShareButton,
   PopoverIcon,
   Fab,
+  InnerTitle,
 } from '../../components';
 import { useField, fetchGraphQL } from '../../utils/helperFunctions';
 import {
@@ -44,6 +45,7 @@ const ListDisplay = ({
   handleConfirmDelete,
   userData,
   userState,
+  addListItem,
   editListTitle,
   editListDateEvent,
 }) => {
@@ -110,10 +112,10 @@ const ListDisplay = ({
       })
       .catch((err) => {
         console.log(err);
-        setIsLoading(false);
+        setIsSubmitting(false);
       });
     setTimeout(() => {
-      setIsLoading(false);
+      setIsSubmitting(false);
       itemName.onChangeText('');
     }, 500);
   };
@@ -255,7 +257,9 @@ const ListDisplay = ({
               />
             </Flex>
           ) : (
-            <Text fontSize="2xl">{list.title}</Text>
+            <InnerTitle fontSize="2xl" isTruncated>
+              {list.title}
+            </InnerTitle>
           )}
           <DateInput
             date={date}

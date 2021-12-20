@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Text,
-  Heading,
   Button,
   Pressable,
   Avatar,
@@ -12,16 +11,14 @@ import {
   HStack,
   VStack,
   ScrollView,
-  Icon,
 } from 'native-base';
 import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
 
 import {
   ListPreview,
   LoadingScreen,
   Fab,
-  Flare,
+  InnerTitle,
   ScreenContainer,
   PopoverIcon,
 } from '../../components';
@@ -214,10 +211,10 @@ const AllLists = ({
             EX
           </Avatar>
         </Pressable>
-        <Text fontSize="3xl" ml="4">
+        <InnerTitle ml="4">
           {isUser ? 'Your ' : `${userData.username}'s `}
           Lists
-        </Text>
+        </InnerTitle>
         {isUser && (
           <Flex ml="auto">
             <PopoverIcon iconName="more-vertical" menuTitle="List Options">

@@ -21,6 +21,7 @@ import {
   GalleryButton,
   ListPreview,
   PopoverIcon,
+  InnerTitle,
 } from '../../components';
 import { DELETE_USER, UPDATE_USER_ADDRESS } from '../../utils/schemas';
 import { fetchGraphQL, useField } from '../../utils/helperFunctions';
@@ -167,7 +168,7 @@ const AccountDisplay = ({
             )}
           </Box>
           <VStack flex="5" ml="auto">
-            <Text fontSize="3xl">{user && user.username}</Text>
+            <InnerTitle>{user && user.username}</InnerTitle>
             {/*
           TODO: Description to be added
           <Text noOfLines={2}>
@@ -207,9 +208,7 @@ const AccountDisplay = ({
         </TouchableOpacity>
 
         <VStack flex="5" space="2">
-          <Text fontSize="2xl">
-            {isUser ? 'My' : user.username + "'s"} Lists
-          </Text>
+          <InnerTitle>{isUser ? 'My' : user.username + "'s"} Lists</InnerTitle>
           {lists ? (
             <>
               <ScrollView>
