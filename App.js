@@ -138,6 +138,7 @@ export default function App() {
       },
       Input: {
         baseStyle: {
+          _focus: { borderColor: '#0F0' },
           bg: '#FFFFFF',
           color: '#3a3a3a',
           flex: 1,
