@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "GiveSpace",
-    "slug": "givespace",
+    "slug": "com.reservadex",
     "version": "1.2.0",
     "icon": "./resources/img/icon.png",
     "assetBundlePatterns": ["**/*"],
@@ -38,9 +38,11 @@
       ]
     },
     "android": {
+      "icon": "./resources/img/icon.png",
       "adaptiveIcon": {
         "backgroundColor": "#c9042c",
-        "foregroundImage": "./resources/img/icon.png"
+        "foregroundImage": "./resources/img/icon.png",
+        "backgroundImage": "./resources/img/icon.png"
       },
       "permissions": [
         "android.permission.READ_CONTACTS",
