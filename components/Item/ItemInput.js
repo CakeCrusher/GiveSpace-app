@@ -1,7 +1,7 @@
-import { Feather } from '@expo/vector-icons';
-import { Button, HStack, Icon, Input } from 'native-base';
-import React from 'react';
-import { connect } from 'react-redux';
+import { Feather } from "@expo/vector-icons";
+import { Button, HStack, Icon, Input } from "native-base";
+import React from "react";
+import { connect } from "react-redux";
 
 const ItemInput = ({ itemName, isSubmitting, handleItemSubmit }) => {
   return (

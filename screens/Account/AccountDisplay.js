@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Text,
   Button,
@@ -11,9 +11,9 @@ import {
   Flex,
   Avatar,
   Icon,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
-import { TouchableOpacity, Clipboard } from 'react-native';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
+import { TouchableOpacity, Clipboard } from "react-native";
 
 import {
   ScreenContainer,
@@ -22,13 +22,18 @@ import {
   ListPreview,
   PopoverIcon,
   InnerTitle,
-} from '../../components';
-import { DELETE_USER, UPDATE_USER_ADDRESS } from '../../utils/schemas';
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
-import { LocationSvg } from '../../resources';
-import DeleteAccountModal from './DeleteAccountModal';
+} from "../../components";
+import { DELETE_USER, UPDATE_USER_ADDRESS } from "../../utils/schemas";
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+import { LocationSvg } from "../../resources";
+import DeleteAccountModal from "./DeleteAccountModal";
+import FeedbackModal from "./FeedbackModal";
 
-const UserOptions = ({ handleLogout, handleStartDelete }) => {
+const UserOptions = ({
+  handleLogout,
+  handleStartDelete,
+  handleStartFeedback,
+}) => {
   return (
     <HStack flex="1" justifyContent="flex-end" alignItems="center">
       <Box p="2">
@@ -36,6 +41,11 @@ const UserOptions = ({ handleLogout, handleStartDelete }) => {
           <Pressable onPress={handleLogout}>
             <Box p="2">
               <Text>Logout</Text>
+            </Box>
+          </Pressable>
+          <Pressable onPress={handleStartFeedback}>
+            <Box p="2" pt="4">
+              <Text>Feedback</Text>
             </Box>
           </Pressable>
           <Pressable onPress={handleStartDelete}>
@@ -59,11 +69,12 @@ const AccountDisplay = ({
   editAddress,
 }) => {
   const [showDelete, setShowDelete] = useState(false);
-  const address = useField('text', user.address);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const address = useField("text", user.address);
 
   const handleLoadList = (listData, userData) => {
-    navigation.navigate('Home', {
-      screen: 'List',
+    navigation.navigate("Home", {
+      screen: "List",
       params: {
         listData,
         userData,
@@ -77,6 +88,10 @@ const AccountDisplay = ({
 
   const handleStartDelete = () => {
     setShowDelete(true);
+  };
+
+  const handleStartFeedback = () => {
+    setShowFeedback(true);
   };
 
   const handleConfirmDelete = () => {
@@ -111,10 +126,10 @@ const AccountDisplay = ({
 
   const handleNavigation = () => {
     if (isUser) {
-      navigation.navigate('My Lists');
+      navigation.navigate("My Lists");
     } else {
-      navigation.navigate('Friends', {
-        screen: 'FriendsLists',
+      navigation.navigate("Friends", {
+        screen: "FriendsLists",
         params: { userId: user.id },
       });
     }
@@ -145,12 +160,13 @@ const AccountDisplay = ({
             <UserOptions
               handleLogout={handleLogout}
               handleStartDelete={handleStartDelete}
+              handleStartFeedback={handleStartFeedback}
             />
           )}
         </HStack>
 
         <HStack alignItems="center" space="4">
-          {console.log('!user.profile_pic_url', user.profile_pic_url)}
+          {console.log("!user.profile_pic_url", user.profile_pic_url)}
           <Box flex="2">
             {isUser ? (
               <GalleryButton />
@@ -197,7 +213,7 @@ const AccountDisplay = ({
                 </Flex>
               ) : (
                 <Text fontSize="sm">
-                  {user.address || '(no delivery address)'}
+                  {user.address || "(no delivery address)"}
                 </Text>
               )}
               {user.address && !isUser ? (
@@ -208,7 +224,7 @@ const AccountDisplay = ({
         </TouchableOpacity>
 
         <VStack flex="5" space="2">
-          <InnerTitle>{isUser ? 'My' : user.username + "'s"} Lists</InnerTitle>
+          <InnerTitle>{isUser ? "My" : user.username + "'s"} Lists</InnerTitle>
           {lists ? (
             <>
               <ScrollView>
@@ -225,7 +241,7 @@ const AccountDisplay = ({
               </ScrollView>
               <Box h="2" />
               <Button
-                _text={{ fontSize: 'xl' }}
+                _text={{ fontSize: "xl" }}
                 variant="outline"
                 onPress={handleNavigation}
               >
@@ -245,6 +261,10 @@ const AccountDisplay = ({
         isOpen={showDelete}
         onClose={() => setShowDelete(false)}
         handleConfirmDelete={handleConfirmDelete}
+      />
+      <FeedbackModal
+        isOpen={showFeedback}
+        onClose={() => setShowFeedback(false)}
       />
     </ScreenContainer>
   );

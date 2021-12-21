@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Icon,
   Avatar,
@@ -8,37 +8,39 @@ import {
   HStack,
   ZStack,
   Pressable,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
-import InnerTitle from '../InnerTitle/InnerTitle';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
+import InnerTitle from "../InnerTitle/InnerTitle";
 
 const ActivityCard = (props) => {
   const { friendObj, onPress } = props;
 
   let info;
 
-  if (friendObj.label === 'event') {
+  if (friendObj.label === "event") {
     const now = new Date();
-    const modified = new Date(friendObj.list.date_modified);
-    const nowToModified = now.getTime() - modified.getTime();
-    const nowToModifiedHours = nowToModified / 3600000;
-    const nowToModifiedDays = Math.ceil(nowToModified / 86400000);
+    const event = new Date(friendObj.list.date_event);
+    const nowToEvent = event.getTime() - now.getTime();
+    const nowToEventHours = nowToEvent / 3600000;
+    const nowToEventDays = Math.ceil(nowToEvent / 86400000);
 
     info = {
-      message: `list due in ${nowToModifiedDays} days`,
-      icon: 'calendar',
+      message: `list due in ${nowToEventDays} ${
+        nowToEventDays === 1 ? "day" : "days"
+      }`,
+      icon: "calendar",
     };
   }
-  if (friendObj.label === 'update') {
+  if (friendObj.label === "update") {
     info = {
-      message: 'updated',
-      icon: 'edit-3',
+      message: "updated",
+      icon: "edit-3",
     };
   }
-  if (friendObj.label === 'create') {
+  if (friendObj.label === "create") {
     info = {
-      message: 'created',
-      icon: 'upload',
+      message: "created",
+      icon: "upload",
     };
   }
 
@@ -76,11 +78,11 @@ const ActivityCard = (props) => {
                 <Icon as={<Feather name={info.icon} />} size="xs" />
                 <HStack>
                   <Text pr={1}>
-                    {friendObj.label === 'event'
+                    {friendObj.label === "event"
                       ? friendObj.username + "'s"
                       : friendObj.username}
                   </Text>
-                  <Text color="secondary.500">{' ' + info.message}</Text>
+                  <Text color="secondary.500">{" " + info.message}</Text>
                 </HStack>
               </HStack>
               <VStack>

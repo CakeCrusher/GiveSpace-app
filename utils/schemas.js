@@ -37,7 +37,7 @@ image_url
 price
 `;
 
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 export const SUBSCRIBE_LIST = gql`
   subscription getItems($list_id: uuid = "") {
     list(where: { id: { _eq: $list_id } }) {
@@ -446,4 +446,17 @@ mutation MyMutation($list_id: uuid = "", $date_event: timestamptz = "") {
 // {
 //   "list_id": "d89c7a9c-4bd0-4a75-8191-caf1ef0bba38",
 //   "date_event": "2021-12-16T17:35:35.123Z"
+// }
+
+export const SEND_FEEDBACK = `
+mutation MyMutation($body: String = "") {
+  insert_feedback(objects: {body: $body}) {
+    returning {
+      id
+    }
+  }
+}
+`;
+// {
+//   "body": "hello"
 // }
