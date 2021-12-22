@@ -90,9 +90,11 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
             Sign in
           </Text>
         </Button>
+        {/*
         <VStack alignItems="center">
           <Link>forgot your password?</Link>
         </VStack>
+        */}
       </VStack>
     </Center>
   );

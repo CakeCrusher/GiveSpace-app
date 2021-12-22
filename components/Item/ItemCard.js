@@ -24,7 +24,7 @@ const ItemCard = (props) => {
   delete styles.check;
 
   return (
-    <ZStack minH="48" {...styles}>
+    <ZStack minH="56" {...styles}>
       <Box
         position="absolute"
         bottom="0"
@@ -45,7 +45,7 @@ const ItemCard = (props) => {
         borderRadius="8"
       >
         <Pressable onPress={handlePress}>
-          <VStack p="2">
+          <VStack p="4">
             <Flex alignItems="center" justifyContent="center">
               {item.image_url ? (
                 <Image
@@ -64,7 +64,7 @@ const ItemCard = (props) => {
               )}
             </Flex>
             <VStack mt="2">
-              <Text fontSize="md" fontWeight="bold" textAlign="center">
+              <Text fontSize="md" fontWeight="bold" noOfLines={2} isTruncated>
                 {item.name}
               </Text>
             </VStack>

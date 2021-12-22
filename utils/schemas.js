@@ -306,7 +306,7 @@ query MyQuery($user_id: uuid = "") {
 
 export const SEARCH_FOR_USERS = `
 query MyQuery($search: String = "") {
-  user(where: {username: {_like: $search}}) {
+  user(where: {username: {_ilike: $search}}) {
     id
     username
     profile_pic_url

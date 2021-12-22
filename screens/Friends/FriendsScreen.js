@@ -119,7 +119,7 @@ const FriendsScreen = ({
             <InnerTitle fontSize="2xl" mb={2}>
               Your Friends
             </InnerTitle>
-            {friendsState.list.map((friend) => (
+            {friendsState.list.sort().map((friend) => (
               <DisplayFriendRow
                 key={friend.id}
                 friend={friend}

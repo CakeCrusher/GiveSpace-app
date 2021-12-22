@@ -68,7 +68,7 @@ const DisplayFriendRow = ({
     <HStack pb="5" justifyContent="space-between">
       {/* Avatar */}
       <Flex flex="1" justifyContent="center">
-        <Pressable onPress={isPending ? () => {} : handleLoadAccount}>
+        <Pressable onPress={isPending === false && handleLoadAccount}>
           <Avatar
             bg="#FAA"
             source={{
@@ -78,7 +78,9 @@ const DisplayFriendRow = ({
         </Pressable>
       </Flex>
       <Flex flex="3" justifyContent="center">
-        <Text fontSize="lg">{friend.username}</Text>
+        <Text onPress={isPending === false && handleLoadAccount} fontSize="lg">
+          {friend.username}
+        </Text>
       </Flex>
       {friendState(friend.id, friendsState) === 'friends' && (
         <HStack space="4" alignItems="center">

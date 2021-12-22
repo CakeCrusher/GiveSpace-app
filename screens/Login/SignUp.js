@@ -37,6 +37,8 @@ const Signup = ({ signinDispatch, toSignIn }) => {
   const handleForewardStep = () => {
     if (password.value !== passwordConfirm.value) {
       setError('Passwords do not match');
+    } else if (password.length < 8) {
+      setError('Passwords must be at least 8 characters');
     } else {
       setError(null);
 

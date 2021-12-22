@@ -83,12 +83,12 @@ export default function App() {
     },
     fontConfig: {},
     sizes: {
+      18: 72,
       22: 88,
       42: 168,
       44: 176,
       50: 202,
       52: 214,
-      18: 72,
     },
     fontConfig: {
       SansSource: {

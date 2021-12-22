@@ -5,8 +5,13 @@ import { Text, Button, HStack, VStack, Center, ScrollView } from 'native-base';
 import { ScreenContainer, ListPreview, InnerTitle } from '../../components';
 
 import Feed from './Feed';
+import { Pressable } from 'react-native';
 
 const HomeScreen = ({ userState, friendsState, navigation }) => {
+  const navigateMyLists = () => {
+    navigation.navigate('My Lists');
+  };
+
   const handleLoadList = (listData, userData) => {
     navigation.navigate('Home', {
       screen: 'List',
@@ -51,7 +56,11 @@ const HomeScreen = ({ userState, friendsState, navigation }) => {
             <Center bg="#e4e4e4" borderRadius="8" py="16" px="8">
               <Text color="#707070">You don't have any lists yet.</Text>
               <Text color="#707070">
-                Create one in <Text underline>My Lists</Text>!
+                Create one in&nbsp;
+                <Text onPress={navigateMyLists} underline>
+                  My Lists
+                </Text>
+                !
               </Text>
             </Center>
           )}

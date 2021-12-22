@@ -148,7 +148,10 @@ const AllLists = ({
   userState,
   navigation,
 }) => {
-  console.log(userData.lists);
+  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+  const togglePopover = () =>
+    setTimeout(() => setPopoverIsOpen((prev) => !prev), 100);
+
   const [enableDelete, setEnableDelete] = useState(false);
   const [selectDelete, setSelectDelete] = useState(new Set());
   const [deleteModal, setDeleteModal] = useState(false);
@@ -167,10 +170,12 @@ const AllLists = ({
   };
 
   const handleEnableDelete = () => {
+    togglePopover();
     setEnableDelete(true);
   };
 
   const handleCancelDelete = () => {
+    togglePopover();
     setDeleteModal(false);
     setEnableDelete(false);
     setSelectDelete(new Set());
@@ -217,7 +222,12 @@ const AllLists = ({
         </InnerTitle>
         {isUser && (
           <Flex ml="auto">
-            <PopoverIcon iconName="more-vertical" menuTitle="List Options">
+            <PopoverIcon
+              isOpen={popoverIsOpen}
+              toggleOpen={togglePopover}
+              iconName="more-vertical"
+              menuTitle="List Options"
+            >
               {enableDelete ? (
                 <Pressable onPress={handleCancelDelete}>
                   <Box p="2">
@@ -292,20 +302,16 @@ const AllLists = ({
             <VStack space="4">
               <HStack space="4">
                 <Button
-                  onPress={handleCancelDelete}
-                  flex="1"
-                  colorScheme="info"
-                >
-                  No
-                </Button>
-                <Button
                   onPress={() =>
                     handleConfirmDelete([...selectDelete], handleCancelDelete)
                   }
                   flex="1"
-                  colorScheme="danger"
+                  variant="outline"
                 >
                   Yes
+                </Button>
+                <Button onPress={handleCancelDelete} flex="1">
+                  No
                 </Button>
               </HStack>
             </VStack>
