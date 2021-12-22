@@ -27,6 +27,7 @@ import {
   SourceSansPro_900Black,
   SourceSansPro_900Black_Italic,
 } from '@expo-google-fonts/source-sans-pro';
+import { Quicksand_600SemiBold } from '@expo-google-fonts/quicksand';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,7 @@ export default function App() {
     SourceSansPro_700Bold_Italic,
     SourceSansPro_900Black,
     SourceSansPro_900Black_Italic,
+    Quicksand_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -81,12 +83,12 @@ export default function App() {
     },
     fontConfig: {},
     sizes: {
+      18: 72,
       22: 88,
       42: 168,
       44: 176,
       50: 202,
       52: 214,
-      18: 72,
     },
     fontConfig: {
       SansSource: {
@@ -115,11 +117,17 @@ export default function App() {
           italic: 'SourceSansPro_900Black_Italic',
         },
       },
+      Quicksand: {
+        600: {
+          normal: 'Quicksand_600SemiBold',
+        },
+      },
     },
     fonts: {
       heading: 'SansSource',
       body: 'SansSource',
       mono: 'SansSource',
+      wordmark: 'Quicksand',
     },
     components: {
       Button: {
@@ -138,6 +146,7 @@ export default function App() {
       },
       Input: {
         baseStyle: {
+          _focus: { borderColor: '#0F0' },
           bg: '#FFFFFF',
           color: '#3a3a3a',
           flex: 1,

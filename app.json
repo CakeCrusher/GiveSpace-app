@@ -4,7 +4,9 @@
     "slug": "give-space",
     "version": "1.2.2",
     "icon": "./resources/img/icon.png",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
       "expo-contacts",
       "expo-screen-orientation",
@@ -14,7 +16,8 @@
           "photosPermission": "The app accesses your photos to customize your profile."
         }
       ],
-      "expo-file-system"
+      "expo-file-system",
+      "expo-splash-screen"
     ],
     "splash": {
       "image": "./resources/img/splash.png",

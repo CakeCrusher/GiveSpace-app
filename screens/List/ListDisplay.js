@@ -19,7 +19,6 @@ import { Feather } from "@expo/vector-icons";
 import {
   ItemInput,
   ItemCard,
-  Flare,
   ScreenContainer,
   DateInput,
   ShareButton,
@@ -49,7 +48,19 @@ const ListDisplay = ({
   editListTitle,
   editListDateEvent,
 }) => {
-  const title = useField("text", list.title);
+  const placeholderItem = {
+    id: '',
+    list_id: list.id,
+    name: 'No Items',
+    image_url: 'https://i.imgur.com/BF1G9HV.png',
+    item_url: '',
+    price: '',
+  };
+  const title = useField('text', list.title);
+
+  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+  const togglePopover = () =>
+    setTimeout(() => setPopoverIsOpen((prev) => !prev), 100);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const itemName = useField("text");
@@ -122,10 +133,12 @@ const ListDisplay = ({
   };
 
   const handleEnableDelete = () => {
+    togglePopover();
     setEnableDelete(true);
   };
 
   const handleCancelDelete = () => {
+    togglePopover();
     setDeleteModal(false);
     setEnableDelete(false);
     setSelectDelete(new Set());
@@ -294,7 +307,12 @@ const ListDisplay = ({
                 <Icon as={<Feather name="search" />} size="sm" />
               </Pressable>
               {isUser && (
-                <PopoverIcon iconName="more-vertical" menuTitle="List Options">
+                <PopoverIcon
+                  isOpen={popoverIsOpen}
+                  toggleOpen={togglePopover}
+                  iconName="more-vertical"
+                  menuTitle="List Options"
+                >
                   {enableDelete ? (
                     <Pressable onPress={handleCancelDelete}>
                       <Box p="2">
@@ -347,7 +365,17 @@ const ListDisplay = ({
                 )}
               </Flex>
             ))}
-            {isSubmitting && <Flex onPress={() => {}} w="48%"></Flex>}
+            {list.items.length === 0 ? (
+              <Flex onPress={() => {}} w="48%">
+                <ItemCard item={placeholderItem} />
+              </Flex>
+            ) : (
+              listFilter.length === 0 && (
+                <Flex onPress={() => {}} w="48%">
+                  <ItemCard item={{ ...placeholderItem, name: 'No Results' }} />
+                </Flex>
+              )
+            )}
           </HStack>
         </ScrollView>
       </VStack>
@@ -374,20 +402,16 @@ const ListDisplay = ({
             <VStack space="4">
               <HStack space="4">
                 <Button
-                  onPress={handleCancelDelete}
-                  flex="1"
-                  colorScheme="info"
-                >
-                  No
-                </Button>
-                <Button
                   onPress={() =>
                     handleConfirmDelete([...selectDelete], handleCancelDelete)
                   }
                   flex="1"
-                  colorScheme="danger"
+                  variant="outline"
                 >
                   Yes
+                </Button>
+                <Button onPress={handleCancelDelete} flex="1">
+                  No
                 </Button>
               </HStack>
             </VStack>

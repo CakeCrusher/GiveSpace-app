@@ -29,36 +29,6 @@ import { LocationSvg } from "../../resources";
 import DeleteAccountModal from "./DeleteAccountModal";
 import FeedbackModal from "./FeedbackModal";
 
-const UserOptions = ({
-  handleLogout,
-  handleStartDelete,
-  handleStartFeedback,
-}) => {
-  return (
-    <HStack flex="1" justifyContent="flex-end" alignItems="center">
-      <Box p="2">
-        <PopoverIcon iconName="more-vertical" menuTitle="User Options">
-          <Pressable onPress={handleLogout}>
-            <Box p="2">
-              <Text>Logout</Text>
-            </Box>
-          </Pressable>
-          <Pressable onPress={handleStartFeedback}>
-            <Box p="2" pt="4">
-              <Text>Feedback</Text>
-            </Box>
-          </Pressable>
-          <Pressable onPress={handleStartDelete}>
-            <Box p="2" pt="4">
-              <Text color="red.500">Delete Account</Text>
-            </Box>
-          </Pressable>
-        </PopoverIcon>
-      </Box>
-    </HStack>
-  );
-};
-
 const AccountDisplay = ({
   navigation,
   isUser,
@@ -68,6 +38,10 @@ const AccountDisplay = ({
   logout,
   editAddress,
 }) => {
+  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+  const togglePopover = () =>
+    setTimeout(() => setPopoverIsOpen((prev) => !prev), 100);
+
   const [showDelete, setShowDelete] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const address = useField("text", user.address);
@@ -83,10 +57,12 @@ const AccountDisplay = ({
   };
 
   const handleLogout = () => {
+    togglePopover();
     logout();
   };
 
   const handleStartDelete = () => {
+    togglePopover();
     setShowDelete(true);
   };
 
@@ -157,11 +133,23 @@ const AccountDisplay = ({
             </Pressable>
           </Flex>
           {isUser && (
-            <UserOptions
-              handleLogout={handleLogout}
-              handleStartDelete={handleStartDelete}
-              handleStartFeedback={handleStartFeedback}
-            />
+            <PopoverIcon
+              isOpen={popoverIsOpen}
+              toggleOpen={togglePopover}
+              iconName="more-vertical"
+              menuTitle="User Options"
+            >
+              <Pressable onPress={handleLogout}>
+                <Box p="2">
+                  <Text>Logout</Text>
+                </Box>
+              </Pressable>
+              <Pressable onPress={handleStartDelete}>
+                <Box p="2" pt="4">
+                  <Text color="red.500">Delete Account</Text>
+                </Box>
+              </Pressable>
+            </PopoverIcon>
           )}
         </HStack>
 

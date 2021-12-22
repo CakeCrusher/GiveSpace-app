@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet } from 'react-native';
 import {
   Text,
-  Heading,
   Button,
   Pressable,
   Link,
@@ -46,7 +44,13 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
   return (
     <Center flex="1" safeArea>
       <VStack flex="5" alignItems="center" justifyContent="flex-end">
-        <Text fontSize="5xl" textAlign="center">
+        <Text
+          fontFamily="wordmark"
+          fontWeight={600}
+          color="black"
+          fontSize="5xl"
+          textAlign="center"
+        >
           Welcome back
         </Text>
         <Center maxH="64" maxW="64">
@@ -86,9 +90,11 @@ const SignIn = ({ toSignUp, signinDispatch }) => {
             Sign in
           </Text>
         </Button>
+        {/*
         <VStack alignItems="center">
           <Link>forgot your password?</Link>
         </VStack>
+        */}
       </VStack>
     </Center>
   );
