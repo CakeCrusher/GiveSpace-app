@@ -105,15 +105,18 @@ const ListDisplay = ({
     })
       .then((res) => {
         if (res.errors || !res.data.scrape_item.itemIdToItem) {
+          itemName.onChangeText("");
+          setIsSubmitting(false);
         } else {
           addListItem(list.id, res.data.scrape_item.itemIdToItem);
+          itemName.onChangeText("");
+          setIsSubmitting(false);
         }
       })
       .catch((err) => {
         console.log(err);
       });
     setTimeout(() => {
-      setIsSubmitting(false);
       itemName.onChangeText("");
     }, 500);
   };
@@ -175,12 +178,16 @@ const ListDisplay = ({
       .catch((err) => console.warn(err));
   };
 
-  const listFilter =
+  let listFilter =
     enableSearch && searchInput.value !== ""
       ? list.items.filter((item) =>
           item.name.toLowerCase().includes(searchInput.value.toLowerCase())
         )
       : list.items;
+
+  listFilter = isSubmitting
+    ? [...listFilter, { id: 0, name: "loading..." }]
+    : listFilter;
 
   const handleSelectDelete = (itemId) => {
     console.log(itemId);
@@ -313,7 +320,6 @@ const ListDisplay = ({
         <VStack flex="2">
           <ItemInput
             itemName={itemName}
-            isSubmitting={isSubmitting}
             handleItemSubmit={handleItemSubmit}
             listId={list.id}
           />
