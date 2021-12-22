@@ -49,14 +49,14 @@ const ListDisplay = ({
   editListDateEvent,
 }) => {
   const placeholderItem = {
-    id: '',
+    id: "",
     list_id: list.id,
-    name: 'No Items',
-    image_url: 'https://i.imgur.com/BF1G9HV.png',
-    item_url: '',
-    price: '',
+    name: "No Items",
+    image_url: "https://i.imgur.com/BF1G9HV.png",
+    item_url: "",
+    price: "",
   };
-  const title = useField('text', list.title);
+  const title = useField("text", list.title);
 
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
   const togglePopover = () =>
@@ -108,6 +108,7 @@ const ListDisplay = ({
 
   /** LIST OWNER functions **/
   const handleItemSubmit = () => {
+    itemName.onChangeText("");
     setIsSubmitting(true);
     // create a promise called that resolves after 2 seconds
     fetchGraphQL(SCRAPE_ITEM, {
@@ -116,20 +117,15 @@ const ListDisplay = ({
     })
       .then((res) => {
         if (res.errors || !res.data.scrape_item.itemIdToItem) {
-          itemName.onChangeText("");
           setIsSubmitting(false);
         } else {
           addListItem(list.id, res.data.scrape_item.itemIdToItem);
-          itemName.onChangeText("");
           setIsSubmitting(false);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-    setTimeout(() => {
-      itemName.onChangeText("");
-    }, 500);
   };
 
   const handleEnableDelete = () => {
@@ -372,7 +368,7 @@ const ListDisplay = ({
             ) : (
               listFilter.length === 0 && (
                 <Flex onPress={() => {}} w="48%">
-                  <ItemCard item={{ ...placeholderItem, name: 'No Results' }} />
+                  <ItemCard item={{ ...placeholderItem, name: "No Results" }} />
                 </Flex>
               )
             )}

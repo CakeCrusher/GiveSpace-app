@@ -24,11 +24,11 @@ const RemoveFriendModal = ({ isOpen, onClose, handleRemoveFriend }) => {
         </Modal.Header>
         <Modal.Body>
           <HStack space="4">
-            <Button flex="1" colorScheme="info" onPress={onClose}>
-              No
-            </Button>
-            <Button onPress={handleConfirm} flex="1" colorScheme="danger">
+            <Button variant="outline" onPress={handleConfirm} flex="1">
               Yes
+            </Button>
+            <Button flex="1" onPress={onClose}>
+              No
             </Button>
           </HStack>
         </Modal.Body>
