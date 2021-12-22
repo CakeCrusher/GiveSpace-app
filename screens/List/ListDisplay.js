@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Text,
   Avatar,
@@ -13,30 +13,29 @@ import {
   HStack,
   VStack,
   ScrollView,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
 
 import {
   ItemInput,
   ItemCard,
-  Flare,
   ScreenContainer,
   DateInput,
   ShareButton,
   PopoverIcon,
   Fab,
   InnerTitle,
-} from '../../components';
-import { useField, fetchGraphQL } from '../../utils/helperFunctions';
+} from "../../components";
+import { useField, fetchGraphQL } from "../../utils/helperFunctions";
 import {
   SCRAPE_ITEM,
   UPDATE_LIST_TITLE,
   MARK_ITEM_FOR_PURCHASE,
   CANCEL_ITEM_FOR_PURCHASE,
   UPDATE_LIST_DATE_EVENT,
-} from '../../utils/schemas';
+} from "../../utils/schemas";
 
-import SelectItemModal from './SelectItemModal';
+import SelectItemModal from "./SelectItemModal";
 
 const ListDisplay = ({
   navigation,
@@ -49,13 +48,25 @@ const ListDisplay = ({
   editListTitle,
   editListDateEvent,
 }) => {
-  const title = useField('text', list.title);
+  const placeholderItem = {
+    id: "",
+    list_id: list.id,
+    name: "No Items",
+    image_url: "https://i.imgur.com/BF1G9HV.png",
+    item_url: "",
+    price: "",
+  };
+  const title = useField("text", list.title);
+
+  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+  const togglePopover = () =>
+    setTimeout(() => setPopoverIsOpen((prev) => !prev), 100);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const itemName = useField('text');
+  const itemName = useField("text");
 
   const [enableSearch, setEnableSearch] = useState(false);
-  const searchInput = useField('text');
+  const searchInput = useField("text");
 
   const [selectItem, setSelectItem] = useState(null);
 
@@ -64,7 +75,7 @@ const ListDisplay = ({
   const [deleteModal, setDeleteModal] = useState(false);
 
   const [date, setDate] = useState(
-    list.date_event ? new Date(list.date_event) : null,
+    list.date_event ? new Date(list.date_event) : null
   );
 
   /** OTHER USER functions **/
@@ -97,6 +108,7 @@ const ListDisplay = ({
 
   /** LIST OWNER functions **/
   const handleItemSubmit = () => {
+    itemName.onChangeText("");
     setIsSubmitting(true);
     // create a promise called that resolves after 2 seconds
     fetchGraphQL(SCRAPE_ITEM, {
@@ -108,23 +120,21 @@ const ListDisplay = ({
           setIsSubmitting(false);
         } else {
           addListItem(list.id, res.data.scrape_item.itemIdToItem);
+          setIsSubmitting(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setIsSubmitting(false);
       });
-    setTimeout(() => {
-      setIsSubmitting(false);
-      itemName.onChangeText('');
-    }, 500);
   };
 
   const handleEnableDelete = () => {
+    togglePopover();
     setEnableDelete(true);
   };
 
   const handleCancelDelete = () => {
+    togglePopover();
     setDeleteModal(false);
     setEnableDelete(false);
     setSelectDelete(new Set());
@@ -170,19 +180,23 @@ const ListDisplay = ({
         } else {
           editListDateEvent(
             list.id,
-            fetchRes.data.update_list.returning[0].date_event,
+            fetchRes.data.update_list.returning[0].date_event
           );
         }
       })
       .catch((err) => console.warn(err));
   };
 
-  const listFilter =
-    enableSearch && searchInput.value !== ''
+  let listFilter =
+    enableSearch && searchInput.value !== ""
       ? list.items.filter((item) =>
-          item.name.toLowerCase().includes(searchInput.value.toLowerCase()),
+          item.name.toLowerCase().includes(searchInput.value.toLowerCase())
         )
       : list.items;
+
+  listFilter = isSubmitting
+    ? [...listFilter, { id: 0, name: "loading..." }]
+    : listFilter;
 
   const handleSelectDelete = (itemId) => {
     console.log(itemId);
@@ -200,20 +214,20 @@ const ListDisplay = ({
     setEnableSearch((prev) => !prev);
   };
 
-  if (list.title.includes('Christmas')) {
-    console.log('!list', list);
+  if (list.title.includes("Christmas")) {
+    console.log("!list", list);
   }
 
   const handleLoadAccount = () => {
-    console.log('handleLoadAccount');
+    console.log("handleLoadAccount");
     // navigation.navigate("FriendAccount", {
     //   userId: userData.id,
     // });
     if (isUser) {
-      navigation.navigate('Account');
+      navigation.navigate("Account");
     } else {
-      navigation.navigate('Friends', {
-        screen: 'FriendAccount',
+      navigation.navigate("Friends", {
+        screen: "FriendAccount",
         params: { userId: userData.id },
       });
     }
@@ -237,13 +251,13 @@ const ListDisplay = ({
               source={{
                 uri:
                   userData.profile_pic_url ||
-                  'https://via.placeholder.com/50/66071A/FFFFFF?text=GS',
+                  "https://via.placeholder.com/50/66071A/FFFFFF?text=GS",
               }}
             />
           </Pressable>
         </Center>
         <VStack flex="5" pl="4" justifyContent="center">
-          <Text fontSize="lg">{isUser ? 'You' : userData.username}</Text>
+          <Text fontSize="lg">{isUser ? "You" : userData.username}</Text>
           {isUser ? (
             <Flex h="10">
               <Input
@@ -289,7 +303,12 @@ const ListDisplay = ({
                 <Icon as={<Feather name="search" />} size="sm" />
               </Pressable>
               {isUser && (
-                <PopoverIcon iconName="more-vertical" menuTitle="List Options">
+                <PopoverIcon
+                  isOpen={popoverIsOpen}
+                  toggleOpen={togglePopover}
+                  iconName="more-vertical"
+                  menuTitle="List Options"
+                >
                   {enableDelete ? (
                     <Pressable onPress={handleCancelDelete}>
                       <Box p="2">
@@ -315,7 +334,6 @@ const ListDisplay = ({
         <VStack flex="2">
           <ItemInput
             itemName={itemName}
-            isSubmitting={isSubmitting}
             handleItemSubmit={handleItemSubmit}
             listId={list.id}
           />
@@ -343,7 +361,17 @@ const ListDisplay = ({
                 )}
               </Flex>
             ))}
-            {isSubmitting && <Flex onPress={() => {}} w="48%"></Flex>}
+            {list.items.length === 0 ? (
+              <Flex onPress={() => {}} w="48%">
+                <ItemCard item={placeholderItem} />
+              </Flex>
+            ) : (
+              listFilter.length === 0 && (
+                <Flex onPress={() => {}} w="48%">
+                  <ItemCard item={{ ...placeholderItem, name: "No Results" }} />
+                </Flex>
+              )
+            )}
           </HStack>
         </ScrollView>
       </VStack>
@@ -370,20 +398,16 @@ const ListDisplay = ({
             <VStack space="4">
               <HStack space="4">
                 <Button
-                  onPress={handleCancelDelete}
-                  flex="1"
-                  colorScheme="info"
-                >
-                  No
-                </Button>
-                <Button
                   onPress={() =>
                     handleConfirmDelete([...selectDelete], handleCancelDelete)
                   }
                   flex="1"
-                  colorScheme="danger"
+                  variant="outline"
                 >
                   Yes
+                </Button>
+                <Button onPress={handleCancelDelete} flex="1">
+                  No
                 </Button>
               </HStack>
             </VStack>

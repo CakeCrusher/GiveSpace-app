@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, VStack, HStack, Button } from 'native-base';
+import React from "react";
+import { Modal, VStack, HStack, Button } from "native-base";
 
 const DeleteAccountModal = ({ isOpen, onClose, handleConfirmDelete }) => {
   return (
@@ -11,15 +11,15 @@ const DeleteAccountModal = ({ isOpen, onClose, handleConfirmDelete }) => {
         <Modal.Body>
           <VStack space="4">
             <HStack space="4">
-              <Button flex="1" colorScheme="info">
-                No
-              </Button>
               <Button
                 onPress={handleConfirmDelete}
                 flex="1"
-                colorScheme="danger"
+                variant="outline"
               >
                 Yes
+              </Button>
+              <Button flex="1" onPress={onClose}>
+                No
               </Button>
             </HStack>
           </VStack>

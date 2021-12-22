@@ -1,19 +1,19 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Text, VStack, Center } from 'native-base';
+import React from "react";
+import { connect } from "react-redux";
+import { Text, VStack, Center } from "native-base";
 
 import {
   editListDateEvent,
   editListTitle,
   populateListUser,
   removeItems,
-} from '../../redux/actions/user';
-import { populateListFriends } from '../../redux/actions/friends';
-import { addListItem } from '../../redux/actions/user';
-import { fetchGraphQL } from '../../utils/helperFunctions';
-import { DELETE_ITEM } from '../../utils/schemas';
-import useListSubscription from './useListSubscription';
-import ListDisplay from './ListDisplay';
+} from "../../redux/actions/user";
+import { populateListFriends } from "../../redux/actions/friends";
+import { addListItem } from "../../redux/actions/user";
+import { fetchGraphQL } from "../../utils/helperFunctions";
+import { DELETE_ITEM } from "../../utils/schemas";
+import useListSubscription from "./useListSubscription";
+import ListDisplay from "./ListDisplay";
 
 const ListWrapper = ({
   route,
@@ -22,6 +22,7 @@ const ListWrapper = ({
   removeItems,
   editListTitle,
   editListDateEvent,
+  addListItem,
 }) => {
   const { listData, userData } = route.params;
   const isUser = userState.id === listData.user_id;
@@ -37,8 +38,8 @@ const ListWrapper = ({
       itemIds.map((item_id) =>
         fetchGraphQL(DELETE_ITEM, {
           item_id,
-        }),
-      ),
+        })
+      )
     )
       .then((res) => {
         for (let result of res) {

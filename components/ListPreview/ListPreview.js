@@ -27,7 +27,7 @@ const ListPreview = (props) => {
   delete styles.avatar;
 
   return (
-    <ZStack minH="42" {...styles}>
+    <ZStack minH="44" {...styles}>
       <Box
         position="absolute"
         bottom="0"

@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
-import { Center, Icon, Text } from 'native-base';
+import React, { useEffect } from "react";
+import * as ScreenOrientation from "expo-screen-orientation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { connect } from "react-redux";
+import { Feather } from "@expo/vector-icons";
+import { Center, Icon, Text } from "native-base";
 
-import { fetchGraphQL } from './utils/helperFunctions';
-import { setStateUsername, signinUser } from './redux/actions/user';
-import { signinFriends, reloadFriends } from './redux/actions/friends';
-import { Home, Login, Friends, MyLists, Account } from './screens';
-import { GET_FRIEND_RELS, SIGN_IN_USER_BY_USERNAME } from './utils/schemas';
-import Welcome from './screens/Login/Welcome';
-import { TabIcon } from './components';
+import { fetchGraphQL } from "./utils/helperFunctions";
+import { setStateUsername, signinUser } from "./redux/actions/user";
+import { signinFriends, reloadFriends } from "./redux/actions/friends";
+import { Home, Login, Friends, MyLists, Account } from "./screens";
+import { GET_FRIEND_RELS, SIGN_IN_USER_BY_USERNAME } from "./utils/schemas";
+import Welcome from "./screens/Login/Welcome";
+import { TabIcon } from "./components";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,22 +24,26 @@ const View = ({
 }) => {
   useEffect(async () => {
     await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.PORTRAIT,
+      ScreenOrientation.OrientationLock.PORTRAIT
     );
     const retrieveUserId = async () => {
-      // await AsyncStorage.setItem('username', 'Sebas');
+      // await AsyncStorage.setItem("username", "Sebas");
       // await AsyncStorage.removeItem('username')
-      const _username = await AsyncStorage.getItem('username');
+      const _username = await AsyncStorage.getItem("username");
       if (_username) {
         setStateUsername(_username);
       } else {
         setStateUsername(false);
       }
       if (!userState.id && _username) {
-        const registerRes = await fetchGraphQL(SIGN_IN_USER_BY_USERNAME, {
+        const signinRes = await fetchGraphQL(SIGN_IN_USER_BY_USERNAME, {
           username: _username,
         });
-        signinDispatch(registerRes.data.user[0]);
+        if (signinRes.errors || !signinRes.data.user[0]) {
+          setStateUsername(false);
+        } else {
+          signinDispatch(signinRes.data.user[0]);
+        }
       }
       return;
     };

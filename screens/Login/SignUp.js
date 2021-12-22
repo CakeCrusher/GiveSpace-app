@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 import {
   Text,
   Heading,
@@ -10,23 +10,23 @@ import {
   Flex,
   VStack,
   Center,
-} from 'native-base';
-import { connect } from 'react-redux';
-import { fetchGraphQL, useField } from '../../utils/helperFunctions';
-import { signinUser } from '../../redux/actions/user';
-import { signinFriends } from '../../redux/actions/friends';
-import * as Contacts from 'expo-contacts';
-import parsePhoneNumber from 'libphonenumber-js';
-import PhoneInput from 'react-native-phone-number-input';
-import { REGISTER_USER } from '../../utils/schemas';
-import { FriendsSvg, PresentsSvg } from '../../resources';
+} from "native-base";
+import { connect } from "react-redux";
+import { fetchGraphQL, useField } from "../../utils/helperFunctions";
+import { signinUser } from "../../redux/actions/user";
+import { signinFriends } from "../../redux/actions/friends";
+import * as Contacts from "expo-contacts";
+import parsePhoneNumber from "libphonenumber-js";
+import PhoneInput from "react-native-phone-number-input";
+import { REGISTER_USER } from "../../utils/schemas";
+import { FriendsSvg, PresentsSvg } from "../../resources";
 
 // TODO: Need to do a 2nd pass and implement validation
 const Signup = ({ signinDispatch, toSignIn }) => {
-  const username = useField('text');
-  const password = useField('password');
-  const passwordConfirm = useField('password');
-  const phoneNumber = useField('text');
+  const username = useField("text");
+  const password = useField("password");
+  const passwordConfirm = useField("password");
+  const phoneNumber = useField("text");
   const phoneInput = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +37,8 @@ const Signup = ({ signinDispatch, toSignIn }) => {
   const handleForewardStep = () => {
     if (password.value !== passwordConfirm.value) {
       setError('Passwords do not match');
+    } else if (password.length < 8) {
+      setError('Passwords must be at least 8 characters');
     } else {
       setError(null);
 
@@ -49,7 +51,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
         <Text fontSize="xl">Create an account</Text>
         <HStack>
           <Text fontSize="xl" lineHeight="xs">
-            or{' '}
+            or{" "}
           </Text>
           <Pressable onPress={toSignIn}>
             <Text fontSize="xl" lineHeight="xs" underline>
@@ -85,7 +87,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
   const handleBackStep = () => setSignUpStep(signUpStep - 1);
   const getContacts = async () => {
     const { status } = await Contacts.requestPermissionsAsync();
-    if (status === 'granted') {
+    if (status === "granted") {
       const { data } = await Contacts.getContactsAsync({
         fields: [
           Contacts.Fields.FirstName,
@@ -99,7 +101,7 @@ const Signup = ({ signinDispatch, toSignIn }) => {
       data.forEach((contact) => {
         try {
           const parsedNumber = parsePhoneNumber(
-            contact.phoneNumbers[0].number,
+            contact.phoneNumbers[0].number
           ).number;
           if (parsedNumber) {
             numbers.push(parsedNumber);
@@ -110,13 +112,13 @@ const Signup = ({ signinDispatch, toSignIn }) => {
           failedContacts.push(contact);
         }
       });
-      return ['0'].concat(numbers);
+      return ["0"].concat(numbers);
     }
-    return ['0'].concat([]);
+    return ["0"].concat([]);
   };
   const handleSubmit = async () => {
     if (!phoneInput.current.isValidNumber(phoneNumber.value)) {
-      setError('Invalid Phone Number');
+      setError("Invalid Phone Number");
       return;
     }
 
@@ -126,12 +128,12 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     const userRes = await fetchGraphQL(REGISTER_USER, {
       username: username.value,
       password: password.value,
-      phone_number: '+' + phoneInput.current.state.code + phoneNumber.value,
-      contacts_phone_numbers: ['0', ...contactsPhoneNumbers],
+      phone_number: "+" + phoneInput.current.state.code + phoneNumber.value,
+      contacts_phone_numbers: ["0", ...contactsPhoneNumbers],
     });
-    console.log('!userRes', userRes);
+    console.log("!userRes", userRes);
     if (userRes.errors || !userRes.data.register.userIdToUser) {
-      setError('Username or phone number already exist');
+      setError("Username or phone number already exist");
     } else {
       signinDispatch(userRes.data.register.userIdToUser);
     }
@@ -142,10 +144,10 @@ const Signup = ({ signinDispatch, toSignIn }) => {
     <>
       <VStack my={8} justifyContent="center" alignItems="center">
         <Text fontSize="xl" textAlign="center">
-          Add your phone number to{' '}
+          Add your phone number to{" "}
         </Text>
         <Text fontSize="xl" lineHeight="xs" textAlign="center">
-          get connected with contacts{' '}
+          get connected with contacts{" "}
         </Text>
       </VStack>
       <VStack w="48" flex="3" space={4} justifyContent="flex-start">
