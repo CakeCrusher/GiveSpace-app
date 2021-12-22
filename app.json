@@ -2,11 +2,9 @@
   "expo": {
     "name": "GiveSpace",
     "slug": "give-space",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "icon": "./resources/img/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "plugins": [
       "expo-contacts",
       "expo-screen-orientation",
@@ -41,7 +39,7 @@
       ]
     },
     "android": {
-      "versionCode": 7,
+      "versionCode": 8,
       "icon": "./resources/img/icon.png",
       "adaptiveIcon": {
         "backgroundColor": "#c9042c",
