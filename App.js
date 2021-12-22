@@ -83,12 +83,12 @@ export default function App() {
     },
     fontConfig: {},
     sizes: {
-      18: 72,
       22: 88,
       42: 168,
       44: 176,
       50: 202,
       52: 214,
+      18: 72,
     },
     fontConfig: {
       SansSource: {
@@ -146,7 +146,7 @@ export default function App() {
       },
       Input: {
         baseStyle: {
-          _focus: { borderColor: '#0F0' },
+          _focus: { borderColor: 'secondary.300' },
           bg: '#FFFFFF',
           color: '#3a3a3a',
           flex: 1,
