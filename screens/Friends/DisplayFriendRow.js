@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Pressable,
   Avatar,
@@ -8,15 +8,16 @@ import {
   Button,
   Icon,
   Spinner,
-} from 'native-base';
+} from "native-base";
 import {
   friendState,
   acceptFriendRel,
   deleteFriendRel,
-} from '../../utils/helperFunctions';
-import { Feather } from '@expo/vector-icons';
-import { connect } from 'react-redux';
-import { acceptFriend, removeFriend } from '../../redux/actions/friends';
+} from "../../utils/helperFunctions";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
+import { acceptFriend, removeFriend } from "../../redux/actions/friends";
+import RemoveFriendModal from "./RemoveFriendModal";
 
 const DisplayFriendRow = ({
   friend,
@@ -28,28 +29,30 @@ const DisplayFriendRow = ({
   isPending,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [removeModalOpen, setRemoveModalOpen] = useState(false);
   //const handleLoadLists = () => {
   //  navigation.navigate('FriendsLists', { userId, screenName: 'FriendList' });
   //};
 
   const handleLoadAccount = () => {
-    console.log('handleLoadAccount');
-    navigation.navigate('FriendAccount', {
+    console.log("handleLoadAccount");
+    navigation.navigate("FriendAccount", {
       userId: friend.id,
     });
   };
 
   const handleLoadLists = () => {
-    navigation.navigate('FriendsLists', {
-      tabName: 'Friends',
+    navigation.navigate("FriendsLists", {
+      tabName: "Friends",
       userId: friend.id,
     });
   };
 
   const handleAcceptFriend = async () => {
+    setRemoveModalOpen(false);
     setIsLoading(true);
     const friendRes = await acceptFriendRel(userState.id, friend.id);
-    console.log('!friendRes', friendRes);
+    console.log("!friendRes", friendRes);
     acceptFriend(friendRes.data.update_friend_rel.returning[0].user);
     setIsLoading(false);
   };
@@ -57,7 +60,7 @@ const DisplayFriendRow = ({
   const handleRemoveFriend = async (type) => {
     setIsLoading(true);
     const fetchRes = await deleteFriendRel(userState.id, friend.id);
-    console.log('!fetchRes', fetchRes);
+    console.log("!fetchRes", fetchRes);
     removeFriend(friend.id, type);
     setIsLoading(false);
   };
@@ -82,19 +85,19 @@ const DisplayFriendRow = ({
           {friend.username}
         </Text>
       </Flex>
-      {friendState(friend.id, friendsState) === 'friends' && (
+      {friendState(friend.id, friendsState) === "friends" && (
         <HStack space="4" alignItems="center">
           <Button
-            isDisabled={friend.username === 'GiveSpace'}
+            isDisabled={friend.username === "GiveSpace"}
             isLoading={isLoading}
-            onPress={() => handleRemoveFriend('friends')}
+            onPress={() => setRemoveModalOpen(true)}
             h="9"
             w="9"
           >
             <Feather name="user-minus" size={16} color="white" />
           </Button>
           <Button
-            _text={{ fontSize: 'md' }}
+            _text={{ fontSize: "md" }}
             _stack={{ px: 3, mt: -1.5 }}
             isLoading={isLoading}
             onPress={handleLoadLists}
@@ -104,14 +107,14 @@ const DisplayFriendRow = ({
           </Button>
         </HStack>
       )}
-      {friendState(friend.id, friendsState) === 'pendingMe' && (
+      {friendState(friend.id, friendsState) === "pendingMe" && (
         <HStack space="4" alignItems="center">
           {isLoading && <Spinner />}
           <Button onPress={handleAcceptFriend} colorScheme="green" h="9" w="9">
             <Icon as={<Feather name="check" />} size="sm" color="white" />
           </Button>
           <Button
-            onPress={() => handleRemoveFriend('pendingMe')}
+            onPress={() => handleRemoveFriend("pendingMe")}
             colorScheme="red"
             h="9"
             w="9"
@@ -120,7 +123,7 @@ const DisplayFriendRow = ({
           </Button>
         </HStack>
       )}
-      {friendState(friend.id, friendsState) === 'pendingThem' && (
+      {friendState(friend.id, friendsState) === "pendingThem" && (
         <HStack space="4" alignItems="center">
           {/* <Button
             isLoading={isLoading}
@@ -129,6 +132,13 @@ const DisplayFriendRow = ({
             <Feather name="user-minus" size={16} color="white" h="8" />
           </Button> */}
         </HStack>
+      )}
+      {removeModalOpen && (
+        <RemoveFriendModal
+          isOpen={removeModalOpen}
+          onClose={() => setRemoveModalOpen(false)}
+          handleRemoveFriend={() => handleRemoveFriend("friends")}
+        />
       )}
     </HStack>
   );

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Share, Linking } from 'react-native';
+import React, { useState } from "react";
+import { Share, Linking } from "react-native";
 import {
   Modal,
   Text,
@@ -10,8 +10,8 @@ import {
   Button,
   Pressable,
   Icon,
-} from 'native-base';
-import { Feather } from '@expo/vector-icons';
+} from "native-base";
+import { Feather } from "@expo/vector-icons";
 
 const SelectItemModal = ({
   navigation,
@@ -38,7 +38,7 @@ const SelectItemModal = ({
 
   const handleAmazonLink = () => {
     onClose();
-    const formatted = item.name.split(' ').join('+');
+    const formatted = item.name.split(" ").join("+");
     Linking.openURL(`https://www.amazon.com/s?k=${formatted}&ref=nb_sb_noss_2`);
     //navigation.navigate('WebView', {
     //  uri: `https://www.amazon.com/s?k=${formatted}`,
@@ -47,35 +47,35 @@ const SelectItemModal = ({
 
   const handleWalmartLink = () => {
     onClose();
-    const formatted = item.name.split(' ').join('+');
+    const formatted = item.name.split(" ").join("+");
     Linking.openURL(`https://www.walmart.com/search?q=${formatted}`);
   };
 
   const handleTargetLink = () => {
     onClose();
-    const formatted = item.name.split(' ').join('+');
+    const formatted = item.name.split(" ").join("+");
     Linking.openURL(`https://www.target.com/s?searchTerm=${formatted}`);
   };
 
   const copyAmazonLink = () => {
-    const formatted = item.name.split(' ').join('+');
+    const formatted = item.name.split(" ").join("+");
     Share.share({
       message: `https://www.amazon.com/s?k=${formatted}`,
-    }).catch((err) => console.log('Could not create Link', err));
+    }).catch((err) => console.log("Could not create Link", err));
   };
 
   const copyWalmartLink = () => {
-    const formatted = item.name.split(' ').join('+');
+    const formatted = item.name.split(" ").join("+");
     Share.share({
       message: `https://www.walmart.com/search?q=${formatted}`,
-    }).catch((err) => console.log('Could not create Link', err));
+    }).catch((err) => console.log("Could not create Link", err));
   };
 
   const copyTargetLink = () => {
-    const formatted = item.name.split(' ').join('+');
+    const formatted = item.name.split(" ").join("+");
     Share.share({
       message: `https://www.target.com/s?searchTerm=${formatted}`,
-    }).catch((err) => console.log('Could not create Link', err));
+    }).catch((err) => console.log("Could not create Link", err));
   };
 
   return (
@@ -98,18 +98,18 @@ const SelectItemModal = ({
             <Text fontSize="xl" fontWeight="bold">
               {item.name}
             </Text>
-            <Text fontSize="md">{'$' + item.price}</Text>
+            <Text fontSize="md">{"$" + item.price}</Text>
             {!isUser &&
               (!item.status ? (
                 <Button
                   onPress={handlePurchase}
                   mr="auto"
                   isLoading={isLoading}
-                  colorScheme={'primary'}
+                  colorScheme={"primary"}
                 >
                   {item.status === userState.id
-                    ? 'Cancel'
-                    : 'Mark for Purchase'}
+                    ? "Cancel"
+                    : "Mark for Purchase"}
                 </Button>
               ) : (
                 <Button
@@ -117,11 +117,13 @@ const SelectItemModal = ({
                   mr="auto"
                   isLoading={isLoading}
                   colorScheme={
-                    item.status !== userState.id ? 'gray' : 'primary'
+                    item.status !== userState.id ? "gray" : "primary"
                   }
                   disabled={item.status !== userState.id}
                 >
-                  {item.status === userState.id ? 'Cancel' : 'Reserved'}
+                  {item.status === userState.id
+                    ? "Unmark for purchase"
+                    : "Reserved"}
                 </Button>
               ))}
           </Flex>
