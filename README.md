@@ -2,6 +2,7 @@
      alt="GiveSpace icon" width="60" style="border-radius: 10px;" height="60">
 # GiveSpace
 ### Hassle-free gift wishlists for friends and family
+GiveSpace enables the user to effortlessly create, and share wish lists with friends and family.
 - [Android app](https://play.google.com/store/apps/details?id=com.reservadex)
 
 
