@@ -57,7 +57,7 @@ GiveSpace is the ultimate tool for holidays, birthdays, weddings, baby showers, 
 ⬜ ...
 
 ## Future
-This project is only an initial stepping stone for collaborative purchases among broader fintech ambitions.
+Provide an all-encompassing gift giving tool from discovering desired gifts to the gift arriving on the gift recipient's doorstep.
 
 ## Repositories
 
